@@ -13,13 +13,26 @@ with lib.hm.gvariant; {
   xdg.mimeApps.defaultApplications = {
     "inode/directory" = ["org.gnome.Nautilus.desktop"];
   };
-
-  home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    allowOther = true;
-    directories = [
-      ".local/share/keyrings" # GNOME Keyring
-      ".local/state/wireplumber" # Audio settings, such as microphone volume
-    ];
+  
+  home.persistence = {
+    "/nix/persist${config.home.homeDirectory}" = {
+      allowOther = true;
+      directories = [
+        ".local/share/keyrings" # GNOME Keyring
+        ".local/state/wireplumber" # Audio settings, such as microphone volume
+      ];
+    };
+    "/nix/backup${config.home.homeDirectory}" = {
+      allowOther = true;
+      directories = [
+        "Documents"
+        "Downloads"
+        "Pictures"
+        "Videos"
+        "Music"
+        "Desktop"
+      ];
+    };
   };
 
   dconf.settings = {

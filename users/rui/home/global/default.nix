@@ -26,24 +26,11 @@
   home = {
     username = "rui";
     homeDirectory = "/home/rui";
-    persistence = {
-      "/nix/persist${config.home.homeDirectory}" = {
-        allowOther = true;
-        directories = [
-          ".local/share/nix"
-        ];
-      };
-      "/nix/backup${config.home.homeDirectory}" = {
-        allowOther = true;
-        directories = [
-          "Documents"
-          "Downloads"
-          "Pictures"
-          "Videos"
-          "Music"
-          "Desktop"
-        ];
-      };
+    persistence."/nix/persist${config.home.homeDirectory}" = {
+      allowOther = true;
+      directories = [
+        ".local/share/nix"
+      ];
     };
   };
 
@@ -51,7 +38,9 @@
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
 
   # Global packages
-  home.packages = with pkgs; [];
+  home.packages = with pkgs; [
+    eza
+  ];
 
   # Enable home-manager
   programs.home-manager.enable = true;
