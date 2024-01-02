@@ -1,0 +1,17 @@
+keys:
+  - &users
+    - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
+  # Hosts
+  - &hosts
+    - &soyuz age15yahwftet0jdz6mpy8lxk26sx27xdmdkwawseqst9dqskt8aw54q8w2qvj
+
+creation_rules:
+  - path_regex: users/rui/secrets.ya?ml$
+    key_groups:
+    - age: *hosts
+      pgp:
+      - *rui
+  - path_regex: hosts/common-secrets.ya?ml$
+    key_groups:
+    - age: *hosts
+      pgp: *users
