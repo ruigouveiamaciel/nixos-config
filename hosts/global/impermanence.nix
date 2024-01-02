@@ -10,11 +10,15 @@
 
   environment.persistence = {
     "/nix/persist" = {
+      hideMounts = true;
       directories = [
         "/var/lib/bluetooth" # Bluetooth devices
         "/var/lib/systemd/coredump" # Core dumps
         "/var/lib/nixos" # NixOS stuff
         "/var/log" # Logs
+      ];
+      files = [
+        "/etc/machine-id" # Machine ID
       ];
     };
   };
