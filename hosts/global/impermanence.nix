@@ -17,9 +17,6 @@
         "/var/lib/nixos" # NixOS stuff
         "/var/log" # Logs
       ];
-      files = [
-        "/etc/machine-id" # Machine ID
-      ];
     };
   };
   programs.fuse.userAllowOther = true;

@@ -15,3 +15,8 @@ creation_rules:
     key_groups:
     - age: *hosts
       pgp: *users
+  - path_regex: hosts/presets/soyuz/secrets.ya?ml$
+    key_groups:
+    - age:
+      - *soyuz
+      pgp: *users
