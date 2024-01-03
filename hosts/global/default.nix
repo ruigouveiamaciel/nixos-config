@@ -22,6 +22,7 @@
       ./nix-ld.nix
       ./cloudflare.nix
       ./docker.nix
+      ./disable-lecture.nix
     ]
     ++ builtins.attrValues outputs.nixosModules;
 
