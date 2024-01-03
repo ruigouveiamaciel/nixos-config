@@ -11,7 +11,6 @@
       allowOther = true;
       directories = [
         ".zoom"
-        ".cache/zoom"
       ];
       files = [
         ".config/zoom.conf"
