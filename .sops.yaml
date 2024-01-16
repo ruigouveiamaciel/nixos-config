@@ -1,9 +1,9 @@
 keys:
   - &users
     - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
-  # Hosts
   - &hosts
     - &soyuz age15yahwftet0jdz6mpy8lxk26sx27xdmdkwawseqst9dqskt8aw54q8w2qvj
+    - &sputnik age1xjr8754s9qcf5u9xlhhkvxyt4gr7y49xjlalu334fswtuxew9fgsws03yz
 
 creation_rules:
   - path_regex: users/rui/secrets.ya?ml$
@@ -15,8 +15,13 @@ creation_rules:
     key_groups:
     - age: *hosts
       pgp: *users
-  - path_regex: hosts/presets/soyuz/secrets.ya?ml$
+  - path_regex: hosts/configs/soyuz/.*secrets.ya?ml$
     key_groups:
     - age:
       - *soyuz
+      pgp: *users
+  - path_regex: hosts/configs/sputnik/.*secrets.ya?ml$
+    key_groups:
+    - age:
+      - *sputnik
       pgp: *users

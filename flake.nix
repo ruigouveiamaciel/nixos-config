@@ -65,21 +65,19 @@
   in {
     inherit lib;
 
-    # Custom packages. Accessible through 'nix build', 'nix shell', etc.
+    # Custom packages
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
 
-    # The formatter for nix files, available through 'nix fmt'.
+    # The formatter for nix files
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    # Custom packages and modifications, exported as overlays
+    # Overlays
     overlays = import ./overlays {inherit inputs;};
 
-    # Reusable nixos modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
+    # NixOS modules
     nixosModules = import ./modules/nixos;
 
-    # Reusable home-manager modules you might want to export
-    # These are usually stuff you would upstream into home-manager
+    # Home manager modules
     homeManagerModules = import ./modules/home-manager;
 
     # I name my personal computers and servers after orbital launch systems (a
@@ -115,8 +113,8 @@
       ariane = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          ./hosts/ariane
-          ./users/rui
+          ./hosts/configs/ariane
+          ./users/rui/nixos-module.nix
         ];
       };
 
@@ -125,8 +123,8 @@
       soyuz = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          ./hosts/presets/soyuz
-          ./users/rui
+          ./hosts/configs/soyuz
+          ./users/rui/nixos-module.nix
         ];
       };
 
@@ -135,34 +133,32 @@
       sputnik = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          ./hosts/presets/sputnik
-          ./users/rui
+          ./hosts/configs/sputnik
+          ./users/rui/nixos-module.nix
         ];
       };
     };
 
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       "rui@ariane" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          ./users/rui/home/presets/ariane.nix
+          ./users/rui/home-manager/configs/ariane
         ];
       };
       "rui@soyuz" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          ./users/rui/home/presets/soyuz.nix
+          ./users/rui/home-manager/configs/soyuz
         ];
       };
       "rui@sputnik" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          ./users/rui/home/presets/sputnik.nix
+          ./users/rui/home-manager/configs/sputnik
         ];
       };
     };

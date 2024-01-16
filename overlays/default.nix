@@ -14,12 +14,7 @@
   unstable-packages = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = final.system;
-      config = {
-        # Allow unfree packages
-        allowUnfree = true;
-        # Workaround for https://github.com/nix-community/home-manager/issues/2942
-        allowUnfreePredicate = _: true;
-      };
+      config = final.config;
     };
   };
 }
