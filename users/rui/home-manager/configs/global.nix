@@ -11,7 +11,7 @@
       inputs.impermanence.nixosModules.home-manager.impermanence
       inputs.nix-colors.homeManagerModules.default
 
-      ./cli
+      ../features/cli
     ]
     ++ (builtins.attrValues outputs.homeManagerModules);
 
