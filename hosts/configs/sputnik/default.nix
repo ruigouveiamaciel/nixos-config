@@ -24,16 +24,7 @@
   security = {
     pam.services.sudo = { config, ... }: {
       sshAgentAuth = true;
-      rules.auth.rssh = {
-        order = 10500;
-        control = "sufficient";
-        modulePath = "${pkgs.pam_rssh}/lib/libpam_rssh.so";
-      };
     };
-
-    sudo.extraConfig = ''
-      Defaults env_keep+=SSH_AUTH_SOCK
-    '';
   };
   
   security.pam.enableSSHAgentAuth = true;

@@ -34,5 +34,4 @@
   sops.templates."ssh-tunnel.env".content = ''
     TUNNEL_TOKEN=${config.sops.placeholder.ssh-tunnel-token}
   '';
-  
 }
