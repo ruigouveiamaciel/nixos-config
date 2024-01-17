@@ -1,4 +1,9 @@
-{pkgs, config, secrets, ...}:{
+{
+  pkgs,
+  config,
+  secrets,
+  ...
+}: {
   home.packages = with pkgs; [
     taskwarrior
     tasksh
@@ -9,7 +14,7 @@
       ".task"
     ];
   };
-  
+
   # TODO: Change trust to strict once server is properly setup
   # TODO: Update uuid once server is properly setup
   # TODO: Update server address and port

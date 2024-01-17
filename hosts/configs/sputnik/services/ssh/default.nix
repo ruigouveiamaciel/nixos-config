@@ -1,4 +1,8 @@
-{pkgs, config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   virtualisation.oci-containers.containers = {
     ssh-tunnel = {
       image = "cloudflare/cloudflared@sha256:0006c0e922784b9bbba542b8ccf82a6261698a82a78ff54632103f6036b34ab3";
@@ -17,7 +21,7 @@
       ];
     };
   };
-  
+
   # Only allow SSH connections through cloudflared
   services.openssh.openFirewall = false;
   services.openssh.listenAddresses = [

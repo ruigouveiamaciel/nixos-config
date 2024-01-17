@@ -1,4 +1,8 @@
-{pkgs, config, ...}:{
+{
+  pkgs,
+  config,
+  ...
+}: {
   services.taskserver = {
     enable = true;
     openFirewall = true;
@@ -16,7 +20,7 @@
       "rui"
     ];
   };
-  
+
   sops.secrets.taskwarrior-server-key = {
     sopsFile = ../../secrets.yaml;
     owner = config.services.taskserver.user;

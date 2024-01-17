@@ -38,7 +38,7 @@ in {
       ${backendBin} network inspect atm9_network >/dev/null 2>&1 || ${backendBin} network create atm9_network
     '';
   };
-  
+
   networking.firewall.allowedUDPPorts = [
     25000
   ];
@@ -46,7 +46,7 @@ in {
   networking.firewall.allowedTCPPorts = [
     25000
   ];
-  
+
   sops.secrets.curseforge-api-key = {
     sopsFile = ../../secrets.yaml;
   };

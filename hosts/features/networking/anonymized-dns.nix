@@ -4,7 +4,10 @@
       anonymized_dns = {
         skip_incompatible = true;
         routes = [
-          { server_name = "*"; via = [ "anon-cs-berlin" ]; }
+          {
+            server_name = "*";
+            via = ["anon-cs-berlin"];
+          }
         ];
       };
     };
