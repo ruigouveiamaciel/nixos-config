@@ -25,6 +25,7 @@
   sops.secrets.soyuz-machine-id = {
     sopsFile = ./secrets.yaml;
     mode = "0644";
+    neededForUsers = true;
   };
 
   # Some applications will invalidate their credentials if the machine-id

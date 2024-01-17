@@ -1,7 +1,8 @@
 {
   imports = [
-    ./firefly
     ./atm9
+    ./firefly
+    ./taskserver
   ];
 
   virtualisation.oci-containers.backend = "docker";

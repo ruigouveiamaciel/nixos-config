@@ -114,6 +114,7 @@ in {
 
   sops.templates."firefly-tunnel.env".content = ''
     TUNNEL_TOKEN=${config.sops.placeholder.firefly-tunnel-token}
+    TUNNEL_HOSTNAME=firefly.maciel.sh
   '';
 
   sops.templates."firefly-cron.env".content = ''

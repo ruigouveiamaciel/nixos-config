@@ -13,5 +13,6 @@
     ./screen.nix
     ./ssh.nix
     ./starship.nix
+    ./taskwarrior.nix
   ];
 }

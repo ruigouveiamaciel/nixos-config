@@ -12,6 +12,7 @@
     ./kitty.nix
     ./obsidian.nix
     ./opentabletdriver.nix
+    ./pipewire.nix
     ./plex-player.nix
     ./qalculate.nix
     ./signal.nix
