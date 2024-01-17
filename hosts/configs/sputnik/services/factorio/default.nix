@@ -11,7 +11,6 @@ in {
   virtualisation.oci-containers.containers = {
     factorio-server = {
       image = "factoriotools/factorio@sha256:67324ccad64e6e21b73085abad7e4a33823c6f43b074a55be10f48caf02ed1eb";
-      entrypoint = ''/bin/sh -c "mkdir -p /factorio/config && envsubst < /server-settings.json > /factorio/config/server-settings.json && exec /docker-entrypoint.sh"'';
       extraOptions = [
         "--network=factorio_network"
       ];
@@ -40,10 +39,6 @@ in {
   };
 
   networking.firewall.allowedUDPPorts = [
-    34000
-  ];
-
-  networking.firewall.allowedTCPPorts = [
     34000
   ];
 
@@ -78,11 +73,11 @@ in {
       },
 
       "_comment_credentials": "Your factorio.com login credentials. Required for games with visibility public",
-      "username": "$USERNAME",
+      "username": "SmOkEwOw",
       "password": "",
 
       "_comment_token": "Authentication token. May be used instead of 'password' above.",
-      "token": "$TOKEN",
+      "token": "${config.sops.placeholder.factorio-token}",
 
       "game_password": "",
 
