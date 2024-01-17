@@ -21,7 +21,7 @@
   #services.openssh.openFirewall = false;
   services.openssh.listenAddresses = [
     {
-      address = "::1";
+      addr = "::1";
       port = 22;
     }
   ];
