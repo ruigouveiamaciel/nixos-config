@@ -4,6 +4,7 @@
     openFirewall = true;
     fqdn = "taskserver.maciel.sh";
     listenHost = "192.168.1.76";
+    listenPort = 49591;
     dataDir = "/nix/backup/services/taskserver";
     pki.manual = {
       server.key = config.sops.secrets.taskwarrior-server-key.path;
