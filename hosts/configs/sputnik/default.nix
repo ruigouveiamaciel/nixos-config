@@ -22,8 +22,13 @@
   };
   
   security = {
-    pam.services.sudo = {
+    pam.services.sudo = { config, ... }: {
       sshAgentAuth = true;
+      rules.auth.rssh = {
+        order = config.rules.auth.unix.order - 10;
+        control = "sufficient";
+        modulePath = "${pkgs.pam_rssh}/lib/libpam_rssh.so";
+      };
     };
 
     sudo.extraConfig = ''
