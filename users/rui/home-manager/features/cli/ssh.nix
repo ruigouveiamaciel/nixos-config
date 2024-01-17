@@ -12,7 +12,7 @@ in {
     matchBlocks = {
       sputnik = {
         host = "sputnik.maciel.sh";
-        proxyCommand = "${pkgs.unstable.cloudflared}/bin/cloudflared access ssh --hostname %h";
+        proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
         forwardAgent = true;
         remoteForwards = [{
           bind.address = ''/%d/.gnupg-sockets/S.gpg-agent'';
