@@ -60,7 +60,7 @@ in {
     TOKEN=${config.sops.placeholder.factorio-token}
   '';
 
-  sops.templates."factorio-settings.json" = ''
+  sops.templates."factorio-settings.json".content = ''
     {
       "name": "SmOkEwOw's Public Factorio Server",
       "description": "Feel free to join and mess around",
