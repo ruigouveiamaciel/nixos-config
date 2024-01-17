@@ -10,15 +10,7 @@ in {
   programs.ssh = {
     enable = true;
     matchBlocks = {
-      net = {
-        host = "192.168.1.76";
-        forwardAgent = true;
-        remoteForwards = [{
-          bind.address = ''/%d/.gnupg-sockets/S.gpg-agent'';
-          host.address = ''/%d/.gnupg-sockets/S.gpg-agent.extra'';
-        }];
-      };
-      cloudd = {
+      sputnik = {
         host = "sputnik.maciel.sh";
         proxyCommand = "${pkgs.unstable.cloudflared}/bin/cloudflared access ssh --hostname %h";
         forwardAgent = true;
