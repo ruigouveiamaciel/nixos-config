@@ -18,7 +18,8 @@
     };
   };
   
-  #services.openssh.openFirewall = false;
+  # Only allow SSH connections through cloudflared
+  services.openssh.openFirewall = false;
   services.openssh.listenAddresses = [
     {
       addr = "127.0.0.1";
