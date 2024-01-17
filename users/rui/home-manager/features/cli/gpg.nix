@@ -42,7 +42,7 @@ in {
     };
   };
 
-  programs.fish.shellInit = ''
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-  '';
+  #programs.fish.shellInit = ''
+  #  export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+  #'';
 }
