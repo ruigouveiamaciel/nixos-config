@@ -2,6 +2,7 @@
   imports = [
     ./atm9
     ./firefly
+    ./ssh
     ./taskserver
   ];
 
