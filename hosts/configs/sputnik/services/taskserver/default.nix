@@ -11,7 +11,7 @@
       server.cert = config.sops.secrets.taskwarrior-server-cert.path;
       ca.cert = config.sops.secrets.taskwarrior-ca-cert.path;
     };
-    organisations."Family".users = [
+    organisations."family".users = [
       "rui"
     ];
   };

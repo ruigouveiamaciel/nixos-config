@@ -39,4 +39,33 @@ in {
     sopsFile = ./secrets.yaml;
     neededForUsers = true;
   };
+
+  sops.secrets.rui-taskwarrior-ca-cert = {
+    sopsFile = ./secrets.yaml;
+    owner = "rui";
+    group = config.users.users.rui.group;
+    mode = "0440";
+  };
+
+  sops.secrets.rui-taskwarrior-cert = {
+    sopsFile = ./secrets.yaml;
+    owner = "rui";
+    group = config.users.users.rui.group;
+    mode = "0440";
+  };
+
+  sops.secrets.rui-taskwarrior-key = {
+    sopsFile = ./secrets.yaml;
+    owner = "rui";
+    group = config.users.users.rui.group;
+    mode = "0440";
+  };
+
+  home-manager.extraSpecialArgs = {
+    secrets = {
+      rui-taskwarrior-ca-cert = config.sops.secrets.rui-taskwarrior-ca-cert.path;
+      rui-taskwarrior-cert = config.sops.secrets.rui-taskwarrior-cert.path;
+      rui-taskwarrior-key = config.sops.secrets.rui-taskwarrior-key.path;
+    };
+  };
 }
