@@ -8,7 +8,6 @@
   ];
 
   home.persistence."/nix/backup${config.home.homeDirectory}" = {
-    allowOther = true;
     directories = [
       ".local/share/PrismLauncher"
     ];

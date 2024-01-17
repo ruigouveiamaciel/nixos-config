@@ -53,7 +53,7 @@ in {
       ];
     };
     firefly-tunnel = {
-      image = "cloudflare/cloudflared@sha256:908ad63a08ed0ef2058170aea0b1164dadb147974033ed0beeff4f1a1013d709";
+      image = "cloudflare/cloudflared@sha256:0006c0e922784b9bbba542b8ccf82a6261698a82a78ff54632103f6036b34ab3";
       extraOptions = [
         "--network=firefly_network"
       ];
@@ -114,7 +114,6 @@ in {
 
   sops.templates."firefly-tunnel.env".content = ''
     TUNNEL_TOKEN=${config.sops.placeholder.firefly-tunnel-token}
-    TUNNEL_HOSTNAME=firefly.maciel.sh
   '';
 
   sops.templates."firefly-cron.env".content = ''

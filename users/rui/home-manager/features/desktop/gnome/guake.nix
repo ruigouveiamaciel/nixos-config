@@ -8,7 +8,6 @@
       guake
     ];
     persistence."/nix/persist${config.home.homeDirectory}" = {
-      allowOther = true;
       directories = [
         ".config/guake"
       ];

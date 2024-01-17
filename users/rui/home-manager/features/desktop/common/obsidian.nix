@@ -8,7 +8,6 @@
       obsidian
     ];
     persistence."/nix/persist${config.home.homeDirectory}" = {
-      allowOther = true;
       directories = [".config/obsidian"];
     };
   };

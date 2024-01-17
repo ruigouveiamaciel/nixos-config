@@ -61,7 +61,6 @@ in {
   };
 
   home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    allowOther = lib.mkDefault false;
     directories = [".local/share/fish"];
   };
 }

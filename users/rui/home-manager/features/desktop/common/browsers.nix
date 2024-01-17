@@ -17,7 +17,6 @@
   };
 
   home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    allowOther = true;
     directories = [
       ".mozilla/firefox"
       ".config/google-chrome"

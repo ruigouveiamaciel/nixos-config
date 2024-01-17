@@ -39,8 +39,6 @@ in {
     '';
   };
   
-  #networking.firewall.enable = lib.mkForce true;
-  networking.firewall.allowPing = false;
   networking.firewall.allowedUDPPorts = [
     25000
   ];

@@ -27,11 +27,14 @@
     username = "rui";
     homeDirectory = "/home/rui";
     persistence."/nix/persist${config.home.homeDirectory}" = {
-      allowOther = true;
+      allowOther = lib.mkDefault true;
       directories = [
         ".local/share/nix"
         ".cache"
       ];
+    };
+    persistence."/nix/backup${config.home.homeDirectory}" = {
+      allowOther = lib.mkDefault true;
     };
   };
 

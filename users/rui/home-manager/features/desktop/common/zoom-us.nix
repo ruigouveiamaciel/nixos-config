@@ -8,7 +8,6 @@
       unstable.zoom-us
     ];
     persistence."/nix/persist${config.home.homeDirectory}" = {
-      allowOther = true;
       directories = [
         ".zoom"
       ];
