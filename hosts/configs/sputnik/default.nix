@@ -21,6 +21,20 @@
     firewall.allowPing = false;
   };
   
+  security = {
+    pam.services.sudo = { config, ... }: {
+      rules.auth.rssh = {
+        order = config.rules.auth.unix.order - 10;
+        control = "sufficient";
+        modulePath = "${pkgs.pam_rssh}/lib/libpam_rssh.so";
+      };
+    };
+
+    sudo.extraConfig = ''
+      Defaults env_keep+=SSH_AUTH_SOCK
+    '';
+  };
+  
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
 }
