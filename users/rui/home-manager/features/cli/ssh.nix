@@ -11,7 +11,7 @@ in {
     enable = true;
     extraConfig = ''
       Host sputnik.maciel.sh
-        ProxyCommand ${pkgs.unstable.cloudflared} access ssh --hostname %h
+        ProxyCommand ${pkgs.unstable.cloudflared}/bin/cloudflared access ssh --hostname %h
     '';
   };
 

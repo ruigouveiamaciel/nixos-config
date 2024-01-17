@@ -19,6 +19,12 @@
   };
   
   #services.openssh.openFirewall = false;
+  services.openssh.listenAddresses = [
+    {
+      address = "::1";
+      port = 22;
+    }
+  ];
 
   sops.secrets.ssh-tunnel-token = {
     sopsFile = ../../secrets.yaml;
