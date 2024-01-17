@@ -1,6 +1,7 @@
 {
   imports = [
     ./atm9
+    ./factorio
     ./firefly
     ./ssh
     ./taskserver
