@@ -42,6 +42,10 @@ in {
     34000
   ];
 
+  networking.firewall.allowedTCPPorts = [
+    34000
+  ];
+
   sops.secrets.factorio-token = {
     sopsFile = ../../secrets.yaml;
   };
