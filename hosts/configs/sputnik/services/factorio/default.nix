@@ -19,7 +19,7 @@ in {
       ];
       volumes = [
         "/nix/backup/services/factorio/data:/factorio"
-        "${config.sops.templates."factorio-settings.json".path}:/server-settings.json"
+        "${config.sops.templates."factorio-settings.json".path}:/factorio/config/server-settings.json"
       ];
       ports = [
         "34000:34197"
