@@ -18,7 +18,7 @@
 
   networking = {
     hostName = "sputnik";
-    firewall.allowPing = false;
+    #firewall.allowPing = false;
   };
 
   security = {
