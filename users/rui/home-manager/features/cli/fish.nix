@@ -13,7 +13,7 @@ in {
     enable = true;
     shellAbbrs = rec {
       ls = mkIf hasEza "eza";
-      tt = mkIf hasTaskwarrior "task next due.before:tomorrow":
+      tt = mkIf hasTaskwarrior "task next due.before:tomorrow";
     };
     functions = {
       fish_greeting = "";
