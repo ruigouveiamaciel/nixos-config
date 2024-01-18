@@ -7,11 +7,13 @@
   inherit (lib) mkIf;
   hasPackage = pname: lib.any (p: p ? pname && p.pname == pname) config.home.packages;
   hasEza = hasPackage "eza";
+  hasTaskwarrior = hasPackage "taskwarrior";
 in {
   programs.fish = {
     enable = true;
     shellAbbrs = rec {
       ls = mkIf hasEza "eza";
+      tt = mkIf hasTaskwarrior "task next due.before:tomorrow":
     };
     functions = {
       fish_greeting = "";
