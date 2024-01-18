@@ -23,6 +23,7 @@
       ../features/system/nix-ld.nix
       ../features/system/nix.nix
       ../features/system/sops.nix
+      ../features/system/sudo-ssh-agent-auth.nix
 
       ../features/boot/systemd-initrd.nix
     ]
