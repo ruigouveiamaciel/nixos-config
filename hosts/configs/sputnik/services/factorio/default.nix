@@ -12,7 +12,7 @@ in {
     factorio-server = {
       image = "factoriotools/factorio@sha256:67324ccad64e6e21b73085abad7e4a33823c6f43b074a55be10f48caf02ed1eb";
       extraOptions = [
-        "--network=factorio_network"
+        "--network=host"
       ];
       environmentFiles = [
         config.sops.templates."factorio-secrets.env".path
@@ -56,6 +56,8 @@ in {
     SAVE_NAME=world
     UPDATE_MODS_ON_START=true
     USERNAME=SmOkEwOw
+    BIND=192.168.1.76
+    PORT=34197
     TOKEN=${config.sops.placeholder.factorio-token}
   '';
 
