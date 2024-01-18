@@ -25,7 +25,7 @@
     pam.services.sudo = {config, ...}: {
       sshAgentAuth = true;
       rules.auth.ssh_agent_auth = {
-        order = config.rules.account.unix.order - 10;
+        order = config.rules.auth.unix.order - 10;
       };
     };
   };
