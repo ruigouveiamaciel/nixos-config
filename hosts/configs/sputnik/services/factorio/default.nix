@@ -22,7 +22,7 @@ in {
         "${config.sops.templates."factorio-settings.json".path}:/factorio/config/server-settings.json"
       ];
       ports = [
-        "34000:34197"
+        "34197:34197"
       ];
     };
   };
