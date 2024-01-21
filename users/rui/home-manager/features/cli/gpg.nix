@@ -29,19 +29,16 @@ in {
 
   programs = let
     fixGpg =
-      /*
-      bash
-      */
       ''
-        gpgconf --launch gpg-agent
+        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       '';
   in {
     # Start gpg-agent if it's not running or tunneled in
     # SSH does not start it automatically, so this is needed to avoid having to use a gpg command at startup
     # https://www.gnupg.org/faq/whats-new-in-2.1.html#autostart
-    bash.profileExtra = fixGpg;
-    fish.loginShellInit = fixGpg;
-    zsh.loginExtra = fixGpg;
+    bash.initExtra = fixGpg;
+    fish.shellInit = fixGpg;
+    zsh.initExtra = fixGpg;
 
     gpg = {
       enable = true;
