@@ -13,23 +13,28 @@
       ];
     };
   };
-
-  systemd.user.services.start-guake = {
-    Unit = {
-      Description = "Start Guake";
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.guake}/bin/guake";
-      Restart = "on-failure";
-      RestartSec = "10s";
-    };
-    Install = {
-      WantedBy = ["graphical-session.target"];
-    };
-  };
+  
+  home.file.".config/autostart/guake.desktop".text = ''
+    [Desktop Entry]
+    Name=Guake Terminal
+    TryExec=${pkgs.guake}/bin/guake
+    Exec=${pkgs.guake}/bin/guake
+    Type=Application
+    StartupNotify=false
+    X-Desktop-File-Install-Version=0.22
+  '';
 
   dconf.settings = {
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      binding="F1";
+      command="${pkgs.guake}/bin/guake-toggle";
+      name="Toggle Guake";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/" ];
+    };
+
     "apps/guake/general" = {
       compat-delete = "delete-sequence";
       display-n = 0;
@@ -65,7 +70,7 @@
     };
 
     "apps/guake/keybindings/global" = {
-      show-hide = "F1";
+      show-hide = "disabled";
     };
 
     "apps/guake/keybindings/local" = {
