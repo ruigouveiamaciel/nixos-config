@@ -9,6 +9,7 @@ with lib.hm.gvariant; {
     ./extensions.nix
     ./guake.nix
     ./wallpaper.nix
+    ./app-shortcuts.nix
   ];
 
   xdg.mimeApps.defaultApplications = {
