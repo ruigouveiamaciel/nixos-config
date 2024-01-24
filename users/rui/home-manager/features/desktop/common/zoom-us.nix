@@ -5,7 +5,7 @@
 }: {
   home = {
     packages = with pkgs; [
-      unstable.zoom-us
+      zoom-us
     ];
     persistence."/nix/persist${config.home.homeDirectory}" = {
       directories = [

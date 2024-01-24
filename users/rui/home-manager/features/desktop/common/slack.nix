@@ -5,7 +5,7 @@
 }: {
   home = {
     packages = with pkgs; [
-      unstable.slack
+      slack
     ];
     persistence."/nix/persist${config.home.homeDirectory}" = {
       directories = [
