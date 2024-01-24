@@ -9,6 +9,7 @@
     inputs.disko.nixosModules.disko
     ./disks.nix
     ./hardware.nix
+    ./power-management.nix
 
     ../global.nix
 
