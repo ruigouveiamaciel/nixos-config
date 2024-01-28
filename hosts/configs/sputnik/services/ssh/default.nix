@@ -9,9 +9,6 @@
       extraOptions = [
         "--network=host"
       ];
-      dependsOn = [
-        "firefly-app"
-      ];
       cmd = [
         "tunnel"
         "run"
@@ -23,13 +20,13 @@
   };
 
   # Only allow SSH connections through cloudflared
-  services.openssh.openFirewall = false;
-  services.openssh.listenAddresses = [
-    {
-      addr = "127.0.0.1";
-      port = 22;
-    }
-  ];
+  #services.openssh.openFirewall = false;
+  #services.openssh.listenAddresses = [
+  #  {
+  #    addr = "127.0.0.1";
+  #    port = 22;
+  #  }
+  #];
 
   sops.secrets.ssh-tunnel-token = {
     sopsFile = ../../secrets.yaml;
