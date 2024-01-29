@@ -12,7 +12,7 @@ with lib.hm.gvariant; {
     ./wallpaper.nix
     ./app-shortcuts.nix
   ];
-  
+
   home.packages = with pkgs; [
     xclip
   ];
@@ -68,7 +68,7 @@ with lib.hm.gvariant; {
 
     "org/gnome/desktop/search-providers" = {
       disable-external = false;
-      disabled=["org.gnome.Nautilus.desktop"];
+      disabled = ["org.gnome.Nautilus.desktop"];
     };
 
     "org/gnome/desktop/interface" = {

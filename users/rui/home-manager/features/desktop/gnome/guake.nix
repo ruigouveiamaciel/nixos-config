@@ -13,7 +13,7 @@
       ];
     };
   };
-  
+
   home.file.".config/autostart/guake.desktop".text = ''
     [Desktop Entry]
     Name=Guake Terminal
@@ -26,13 +26,13 @@
 
   dconf.settings = {
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/guake" = {
-      binding="F1";
-      command="${pkgs.guake}/bin/guake-toggle";
-      name="Toggle Guake";
+      binding = "F1";
+      command = "${pkgs.guake}/bin/guake-toggle";
+      name = "Toggle Guake";
     };
 
     "org/gnome/settings-daemon/plugins/media-keys" = {
-      custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/guake/" ];
+      custom-keybindings = ["/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/guake/"];
     };
 
     "apps/guake/general" = {

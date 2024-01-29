@@ -7,7 +7,7 @@
         control = lib.mkDefault "[success=1 default=ignore]";
       };
     };
-    
+
     sudo.extraConfig = ''
       Defaults env_keep+=SSH_AUTH_SOCK
       Defaults env_keep+=SSH_CLIENT
