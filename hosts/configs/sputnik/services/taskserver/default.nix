@@ -7,7 +7,7 @@
     enable = true;
     openFirewall = true;
     fqdn = "taskserver.maciel.sh";
-    listenHost = "192.168.1.76";
+    listenHost = "138.201.17.172";
     listenPort = 49591;
     dataDir = "/nix/backup/services/taskserver";
     pki.manual = {

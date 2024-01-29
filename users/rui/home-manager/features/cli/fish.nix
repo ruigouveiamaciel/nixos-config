@@ -16,8 +16,6 @@ in {
       ls = mkIf hasEza "eza";
       tt = mkIf hasTaskwarrior "task next due.before:tomorrow";
       clip = mkIf hasXClip "xclip -selection clipboard";
-      
-      rebuild-sputnik = "NIX_SSHOPTS=\"-o RequestTTY=force\" nixos-rebuild switch --target-host rui@sputnik.maciel.sh --use-remote-sudo --flake .#sputnik";
     };
     functions = {
       fish_greeting = "";
