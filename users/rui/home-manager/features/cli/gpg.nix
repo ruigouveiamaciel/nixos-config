@@ -37,7 +37,7 @@ in {
       fi
     '';
     fish.shellInit = ''
-      if if test -z "$SSH_CLIENT" -a -z "$SSH_TTY"
+      if test -z "$SSH_CLIENT" -a -z "$SSH_TTY"
         export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       end
     '';
