@@ -21,6 +21,16 @@ in {
           }
         ];
       };
+      sputnik-ipv6 = {
+        host = "2a01:4f8:171:28a3::";
+        forwardAgent = true;
+        remoteForwards = [
+          {
+            bind.address = ''/%d/.gnupg-sockets/S.gpg-agent'';
+            host.address = ''/%d/.gnupg-sockets/S.gpg-agent.extra'';
+          }
+        ];
+      };
     };
   };
 

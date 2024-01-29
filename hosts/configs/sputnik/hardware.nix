@@ -24,21 +24,4 @@
   boot.kernelParams = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  
-  networking.useDHCP = lib.mkDefault false;
-  networking.usePredictableInterfaceNames = lib.mkDefault false;
-  systemd.network = {
-    enable = true;
-    networks."eth0".extraConfig = ''
-      [Match]
-      Name = eth0
-      [Network]
-      # Add your own assigned ipv6 subnet here here!
-      Address = 2a01:4f8:171:28a3::/64
-      Gateway = fe80::1
-      # optionally you can do the same for ipv4 and disable DHCP (networking.dhcpcd.enable = false;)
-      Address = 138.201.17.172/26
-      Gateway = 138.201.17.191
-    '';
-  };
 }

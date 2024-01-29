@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   config,
   ...
@@ -10,6 +11,10 @@ with lib.hm.gvariant; {
     ./guake.nix
     ./wallpaper.nix
     ./app-shortcuts.nix
+  ];
+  
+  home.packages = with pkgs; [
+    xclip
   ];
 
   xdg.mimeApps.defaultApplications = {

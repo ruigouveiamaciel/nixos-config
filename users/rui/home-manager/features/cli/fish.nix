@@ -8,23 +8,21 @@
   hasPackage = pname: lib.any (p: p ? pname && p.pname == pname) config.home.packages;
   hasEza = hasPackage "eza";
   hasTaskwarrior = hasPackage "taskwarrior";
+  hasXClip = hasPackage "xclip";
 in {
   programs.fish = {
     enable = true;
     shellAbbrs = rec {
       ls = mkIf hasEza "eza";
       tt = mkIf hasTaskwarrior "task next due.before:tomorrow";
+      clip = mkIf hasXClip "xclip -selection clipboard";
+      
+      rebuild-sputnik = "NIX_SSHOPTS=\"-o RequestTTY=force\" nixos-rebuild switch --target-host rui@sputnik.maciel.sh --use-remote-sudo --flake .#sputnik";
     };
     functions = {
       fish_greeting = "";
     };
     interactiveShellInit = ''
-      # kitty integration
-      set --global KITTY_INSTALLATION_DIR "${pkgs.kitty}/lib/kitty"
-      set --global KITTY_SHELL_INTEGRATION enabled
-      source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
-      set --prepend fish_complete_path "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_completions.d"
-
       # Use vim bindings and cursors
       fish_vi_key_bindings
       set fish_cursor_default     block      blink

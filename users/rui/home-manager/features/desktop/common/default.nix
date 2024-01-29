@@ -9,7 +9,6 @@
     ./gimp.nix
     ./gthumb.nix
     ./gtk.nix
-    ./kitty.nix
     ./obsidian.nix
     ./opentabletdriver.nix
     ./pipewire.nix
