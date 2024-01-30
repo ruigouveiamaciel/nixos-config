@@ -5,7 +5,7 @@
 }: {
   virtualisation.oci-containers.containers = {
     ssh-tunnel = {
-      image = "cloudflare/cloudflared@sha256:0006c0e922784b9bbba542b8ccf82a6261698a82a78ff54632103f6036b34ab3";
+      image = "cloudflare/cloudflared@sha256:01d46a12aa9e10f679a6a62b1b2052ce67675845caef268c7929249d08e5fbbd";
       extraOptions = [
         "--network=host"
       ];

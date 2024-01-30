@@ -18,7 +18,7 @@ in {
         config.sops.templates."factorio-secrets.env".path
       ];
       volumes = [
-        "/nix/backup/services/factorio/data:/factorio"
+        "/nix/backup/services/factorio:/factorio"
         "${config.sops.templates."factorio-settings.json".path}:/factorio/config/server-settings.json"
       ];
       ports = [
@@ -33,7 +33,7 @@ in {
       "${backend}-factorio-server.service"
     ];
     script = ''
-      mkdir -p /nix/backup/services/factorio/data
+      mkdir -p /nix/backup/services/factorio
       ${backendBin} network inspect factorio_network >/dev/null 2>&1 || ${backendBin} network create factorio_network
     '';
   };

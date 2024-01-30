@@ -9,7 +9,7 @@
 in {
   virtualisation.oci-containers.containers = {
     firefly-app = {
-      image = "fireflyiii/core@sha256:7c2a4290d11c12b79b7ce41202c199efcc797afd30c3f5e50cc5ca28d24abfcd";
+      image = "fireflyiii/core@sha256:cbd32feae2068326a240d845425efa3fb773830521dc2ca5a560f964220870a2";
       extraOptions = [
         "--network=firefly_network"
       ];
@@ -24,7 +24,7 @@ in {
       ];
     };
     firefly-db = {
-      image = "mariadb@sha256:f746d9ff0212256f9fbc3ee12a51ef89cc41c03cb9428ba8f76f1457e33fade5";
+      image = "mariadb@sha256:e4a9a6f3644538084d84aa6ad99a0466d34457b095d06099a99e61f3a73e886c";
       extraOptions = [
         "--network=firefly_network"
       ];
@@ -36,7 +36,7 @@ in {
       ];
     };
     firefly-cron = {
-      image = "alpine@sha256:13b7e62e8df80264dbb747995705a986aa530415763a6c58f84a3ca8af9a5bcd";
+      image = "alpine@sha256:6457d53fb065d6f250e1504b9bc42d5b6c65941d57532c072d929dd0628977d0"
       extraOptions = [
         "--network=firefly_network"
       ];
@@ -53,7 +53,7 @@ in {
       ];
     };
     firefly-tunnel = {
-      image = "cloudflare/cloudflared@sha256:0006c0e922784b9bbba542b8ccf82a6261698a82a78ff54632103f6036b34ab3";
+      image = "cloudflare/cloudflared@sha256:01d46a12aa9e10f679a6a62b1b2052ce67675845caef268c7929249d08e5fbbd";
       extraOptions = [
         "--network=firefly_network"
       ];
