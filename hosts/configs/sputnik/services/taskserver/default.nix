@@ -21,6 +21,10 @@
     ];
   };
 
+  systemd.services."taskserver" = {
+    preStart = "${pkgs.coreutils}/bin/sleep 15";
+  };
+
   sops.secrets.taskwarrior-server-key = {
     sopsFile = ../../secrets.yaml;
     owner = config.services.taskserver.user;

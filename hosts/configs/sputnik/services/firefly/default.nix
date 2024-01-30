@@ -71,11 +71,11 @@ in {
   };
 
   systemd.services."${backend}-firefly-db" = {
-    wantedBy = ["${backend}-firefly-app.service"];
+    requiredBy = ["${backend}-firefly-app.service"];
   };
 
   systemd.services."${backend}-firefly-app" = {
-    wantedBy = [
+    requiredBy = [
       "${backend}-firefly-cron.service"
       "${backend}-firefly-tunnel.service"
     ];
