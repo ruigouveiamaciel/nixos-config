@@ -22,7 +22,8 @@
   };
 
   systemd.services."taskserver" = {
-    preStart = "${pkgs.coreutils}/bin/sleep 15";
+    startLimitIntervalSec = 15;
+    startLimitBurst = 10;
   };
 
   sops.secrets.taskwarrior-server-key = {

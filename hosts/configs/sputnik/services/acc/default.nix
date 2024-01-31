@@ -22,10 +22,15 @@ in {
         DATA_PERM="770";
       };
       volumes = [
-        "/nix/backup/services/acc:/acc"
+        "/nix/backup/services/acc/accServer.exe:/acc/accServer.exe"
+        "${config.sops.templates."acc-configuration.json".path}:/acc/cfg/configuration.json"
+        "${config.sops.templates."acc-settings.json".path}:/acc/cfg/settings.json"
+        "${config.sops.templates."acc-eventRules.json".path}:/acc/cfg/eventRules.json"
+        "${config.sops.templates."acc-event.json".path}:/acc/cfg/event.json"
       ];
       ports = [
-        "9206:9201"
+        "9201:9201"
+        "9201:9201/udp"
       ];
     };
   };
@@ -42,10 +47,94 @@ in {
   };
 
   networking.firewall.allowedUDPPorts = [
-    9206
+    9201
   ];
 
   networking.firewall.allowedTCPPorts = [
-    9206
+    9201
   ];
+
+  sops.templates."acc-settings.json".content = ''
+    {
+      "serverName": "SmOkEwOw ACC Server",
+      "adminPassword": "frigorifico",
+      "carGroup": "FreeForAll",
+      "trackMedalsRequirement": 0,
+      "safetyRatingRequirement": -1,
+      "racecraftRatingRequirement": -1,
+      "password": "",
+      "spectatorPassword": "",
+      "dumpLeaderboards": 0,
+      "dumpEntryList": 0,
+      "isRaceLocked": 0,
+      "shortFormationLap": 1,
+      "formationLapType": 3,
+      "doDriverSwapBroadcast": 1,
+      "centralEntryListPath": "",
+      "ignorePrematureDisconnects": 0,
+      "allowAutoDQ": 0,
+      "configVersion": 1
+  }
+  '';
+
+  sops.templates."acc-configuration.json".content = ''
+    {
+      "udpPort": 9201,
+      "tcpPort": 9201,
+      "maxConnections": 10,
+      "registerToLobby": 1,
+      "configVersion": 1
+    }
+  '';
+
+  sops.templates."acc-eventRules.json".content = ''
+    {
+        "qualifyStandingType": 1,
+        "superpoleMaxCar": -1,
+        "pitWindowLengthSec": -1,
+        "driverStintTimeSec": -1,
+        "isRefuellingAllowedInRace": true,
+        "isRefuellingTimeFixed": false,
+        "maxDriversCount": 1,
+        "mandatoryPitstopCount": 0,
+        "maxTotalDrivingTime": -1,
+        "isMandatoryPitstopRefuellingRequired": false,
+        "isMandatoryPitstopTyreChangeRequired": false,
+        "isMandatoryPitstopSwapDriverRequired": false,
+        "tyreSetCount": 50
+    }
+  '';
+
+  sops.templates."acc-event.json".content = ''
+    {
+        "track": "monza",
+        "eventType": "E_6h",
+        "preRaceWaitingTimeSeconds": 80,
+        "postQualySeconds": 10,
+        "postRaceSeconds": 10,
+        "sessionOverTimeSeconds": 150,
+        "ambientTemp": 25,
+        "trackTemp": 25,
+        "cloudLevel": 0.3,
+        "rain": 0.0,
+        "weatherRandomness": 0,
+        "sessions": [
+            {
+                "hourOfDay": 14,
+                "dayOfWeekend": 2,
+                "timeMultiplier": 1,
+                "sessionType": "Q",
+                "sessionDurationMinutes": 10
+            },
+            {
+                "hourOfDay": 14,
+                "dayOfWeekend": 3,
+                "timeMultiplier": 1,
+                "sessionType": "R",
+                "sessionDurationMinutes": 15
+            }
+        ],
+        "configVersion": 1
+    }
+  '';
 }
