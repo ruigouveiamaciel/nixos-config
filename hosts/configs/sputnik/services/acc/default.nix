@@ -23,7 +23,7 @@ in {
       };
       volumes = [
         "/nix/backup/services/acc/accServer.exe:/acc/accServer.exe"
-        "${config.sops.templates."acc-configuration.json".path}:/acc/cfg/configuration.json"
+        "${config.sops.templates."acc-spa-configuration.json".path}:/acc/cfg/configuration.json"
         "${config.sops.templates."acc-spa-settings.json".path}:/acc/cfg/settings.json"
         "${config.sops.templates."acc-eventRules.json".path}:/acc/cfg/eventRules.json"
         "${config.sops.templates."acc-spa-event.json".path}:/acc/cfg/event.json"
@@ -47,14 +47,14 @@ in {
       };
       volumes = [
         "/nix/backup/services/acc/accServer.exe:/acc/accServer.exe"
-        "${config.sops.templates."acc-configuration.json".path}:/acc/cfg/configuration.json"
+        "${config.sops.templates."acc-monza-configuration.json".path}:/acc/cfg/configuration.json"
         "${config.sops.templates."acc-monza-settings.json".path}:/acc/cfg/settings.json"
         "${config.sops.templates."acc-eventRules.json".path}:/acc/cfg/eventRules.json"
         "${config.sops.templates."acc-monza-event.json".path}:/acc/cfg/event.json"
       ];
       ports = [
-        "9202:9201"
-        "9202:9201/udp"
+        "9202:9202"
+        "9202:9202/udp"
       ];
     };
   };
@@ -127,10 +127,20 @@ in {
   }
   '';
 
-  sops.templates."acc-configuration.json".content = ''
+  sops.templates."acc-spa-configuration.json".content = ''
     {
       "udpPort": 9201,
       "tcpPort": 9201,
+      "maxConnections": 10,
+      "registerToLobby": 1,
+      "configVersion": 1
+    }
+  '';
+  
+  sops.templates."acc-monza-configuration.json".content = ''
+    {
+      "udpPort": 9202,
+      "tcpPort": 9202,
       "maxConnections": 10,
       "registerToLobby": 1,
       "configVersion": 1
