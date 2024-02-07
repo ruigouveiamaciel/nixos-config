@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: {
   services.taskserver = {
@@ -22,8 +23,10 @@
   };
 
   systemd.services."taskserver" = {
-    startLimitIntervalSec = 15;
-    startLimitBurst = 10;
+    serviceConfig = {
+      Restart = lib.mkForce "always";
+      RestartSec = 3;
+    };
   };
 
   sops.secrets.taskwarrior-server-key = {

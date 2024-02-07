@@ -83,7 +83,7 @@ in {
 
   systemd.services.prepare-firefly = {
     serviceConfig.Type = "oneshot";
-    wantedBy = [
+    requiredBy = [
       "${backend}-firefly-db.service"
       "${backend}-firefly-app.service"
       "${backend}-firefly-cron.service"
