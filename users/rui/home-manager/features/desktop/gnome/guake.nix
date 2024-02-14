@@ -17,7 +17,7 @@
   home.file.".config/autostart/guake.desktop".text = ''
     [Desktop Entry]
     Name=Guake Terminal
-    TryExec=${pkgs.guake}/bin/guakui
+    TryExec=${pkgs.guake}/bin/guake
     Exec=${pkgs.guake}/bin/guake
     Type=Application
     StartupNotify=false
