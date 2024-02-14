@@ -15,7 +15,8 @@
 
     ../../features/boot/systemd-boot.nix
     ../../features/desktop/gnome
-    ../../features/networking/wireless.nix
+    #../../features/networking/wireless.nix
+    ../../features/networking/network-manager.nix
     ../../features/desktop/gaming
   ];
 
