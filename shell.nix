@@ -23,6 +23,7 @@
       gnupg
       age
       dconf2nix
+      vscodium
     ];
   };
 }

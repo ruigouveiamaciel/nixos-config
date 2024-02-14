@@ -17,7 +17,7 @@
   home.file.".config/autostart/guake.desktop".text = ''
     [Desktop Entry]
     Name=Guake Terminal
-    TryExec=${pkgs.guake}/bin/guake
+    TryExec=${pkgs.guake}/bin/guakui
     Exec=${pkgs.guake}/bin/guake
     Type=Application
     StartupNotify=false
@@ -121,7 +121,7 @@
     };
 
     "apps/guake/style/background" = {
-      transparency = 90;
+      transparency = 100;
     };
 
     "apps/guake/style/font" = {

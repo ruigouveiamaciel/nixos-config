@@ -4,6 +4,7 @@ keys:
   - &hosts
     - &soyuz age15yahwftet0jdz6mpy8lxk26sx27xdmdkwawseqst9dqskt8aw54q8w2qvj
     - &sputnik age1xjr8754s9qcf5u9xlhhkvxyt4gr7y49xjlalu334fswtuxew9fgsws03yz
+    - &ariane age1hfwae629u7s3xsrmns6spxlghh2adrkuasmxz09yfufswgy5gf6qnka0n9
 
 creation_rules:
   - path_regex: users/rui/secrets.ya?ml$
@@ -24,4 +25,9 @@ creation_rules:
     key_groups:
     - age:
       - *sputnik
+      pgp: *users
+  - path_regex: hosts/configs/ariane/.*secrets.ya?ml$
+    key_groups:
+    - age:
+      - *ariane
       pgp: *users
