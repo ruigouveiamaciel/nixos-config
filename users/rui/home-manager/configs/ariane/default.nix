@@ -1,5 +1,7 @@
 {pkgs, ...}: {
   imports = [
+    ./monitors.nix
+
     ../global.nix
     ../../features/desktop/gnome
     ../../features/desktop/gaming
