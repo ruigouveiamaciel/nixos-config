@@ -15,9 +15,6 @@
     ];
   };
 
-  # TODO: Change trust to strict once server is properly setup
-  # TODO: Update uuid once server is properly setup
-  # TODO: Update server address and port
   home.file.".taskrc".text = ''
     data.location=${config.home.homeDirectory}/.task
     taskd.ca=${secrets.rui-taskwarrior-ca-cert}
