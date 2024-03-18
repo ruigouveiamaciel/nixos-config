@@ -1,5 +1,5 @@
 {
-  home.file.".config/".text = ''
+  home.file.".config/monitors.xml".text = ''
     <monitors version="2">
       <configuration>
         <logicalmonitor>
