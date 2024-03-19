@@ -10,7 +10,7 @@
 in {
   virtualisation.oci-containers.containers = {
     atm9-minecraft-server = {
-      image = "itzg/minecraft-server@sha256:0536b2d59e98ab5980571310a87b14d51e9b965fc881ea4bd4d8d1ee93defb1d";
+      image = "itzg/minecraft-server@sha256:eff50e31e26aa2a5f0c84ee83496f0a9f92743fafc7876760a6be7ea7a462c74";
       extraOptions = [
         "--network=atm9_network"
       ];
@@ -55,8 +55,8 @@ in {
     EULA=true
     MOD_PLATFORM=AUTO_CURSEFORGE
     CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-9
-    CF_FILENAME_MATCHER=0.2.34
-    MEMORY=8G
+    CF_FILENAME_MATCHER=0.2.53
+    MEMORY=12G
     CF_API_KEY=${config.sops.placeholder.curseforge-api-key}
   '';
 }

@@ -10,7 +10,7 @@
 in {
   virtualisation.oci-containers.containers = {
     factorio-server = {
-      image = "factoriotools/factorio@sha256:67324ccad64e6e21b73085abad7e4a33823c6f43b074a55be10f48caf02ed1eb";
+      image = "factoriotools/factorio@sha256:69959634d2d76a96b8550e3a80a99b62aba9a146452efedfb61546d26c6b404a";
       extraOptions = [
         "--network=factorio_network"
       ];
