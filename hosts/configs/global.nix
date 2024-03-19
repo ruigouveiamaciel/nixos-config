@@ -14,6 +14,7 @@
       ../features/cli/disable-lecture.nix
       ../features/cli/fish.nix
       ../features/cli/git.nix
+      ../features/cli/utils.nix
 
       ../features/virtualisation/docker.nix
 
