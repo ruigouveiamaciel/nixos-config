@@ -57,8 +57,4 @@ in {
       set -U fish_pager_color_progress      'brwhite' '--background=cyan'
     '';
   };
-
-  home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    directories = [".local/share/fish"];
-  };
 }

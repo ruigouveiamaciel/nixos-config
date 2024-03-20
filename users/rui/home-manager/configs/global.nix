@@ -8,8 +8,8 @@
 }: {
   imports =
     [
-      inputs.impermanence.nixosModules.home-manager.impermanence
       inputs.nix-colors.homeManagerModules.default
+      inputs.nur.hmModules.nur
 
       ../features/cli
     ]
@@ -26,16 +26,6 @@
   home = {
     username = "rui";
     homeDirectory = "/home/rui";
-    persistence."/nix/persist${config.home.homeDirectory}" = {
-      allowOther = lib.mkDefault true;
-      directories = [
-        ".local/share/nix"
-        ".cache"
-      ];
-    };
-    persistence."/nix/backup${config.home.homeDirectory}" = {
-      allowOther = lib.mkDefault true;
-    };
   };
 
   # Color scheme

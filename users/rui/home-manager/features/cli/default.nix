@@ -6,7 +6,6 @@
     ./fish.nix
     ./git.nix
     ./gpg.nix
-    ./htop.nix
     ./neofetch.nix
     ./nix-index.nix
     ./nvim.nix

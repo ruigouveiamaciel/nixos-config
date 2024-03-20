@@ -21,25 +21,6 @@ with lib.hm.gvariant; {
     "inode/directory" = ["org.gnome.Nautilus.desktop"];
   };
 
-  home.persistence = {
-    "/nix/persist${config.home.homeDirectory}" = {
-      directories = [
-        ".local/share/keyrings" # GNOME Keyring
-        ".local/state/wireplumber" # Audio settings, such as microphone volume
-      ];
-    };
-    "/nix/backup${config.home.homeDirectory}" = {
-      directories = [
-        "Documents"
-        "Downloads"
-        "Pictures"
-        "Videos"
-        "Music"
-        "Desktop"
-      ];
-    };
-  };
-
   dconf.settings = {
     "org/gnome/tweaks" = {
       show-extensions-notice = false;
@@ -79,11 +60,11 @@ with lib.hm.gvariant; {
 
     "org/gnome/desktop/screensaver" = {
       lock-delay = mkUint32 3600;
-      lock-enabled = true;
+      lock-enabled = false;
     };
 
     "org/gnome/desktop/session" = {
-      idle-delay = mkUint32 300;
+      idle-delay = mkUint32 0;
     };
 
     "org/gnome/desktop/notifications" = {

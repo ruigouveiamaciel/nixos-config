@@ -15,7 +15,6 @@
     ../../features/boot/systemd-boot.nix
     ../../features/desktop/gnome
     ../../features/desktop/gaming
-    ../../features/networking/network-manager.nix
   ];
 
   networking = {

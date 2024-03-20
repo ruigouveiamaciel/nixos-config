@@ -9,12 +9,6 @@
     tasksh
   ];
 
-  home.persistence."/nix/backup${config.home.homeDirectory}" = {
-    directories = [
-      ".task"
-    ];
-  };
-
   home.file.".taskrc".text = ''
     data.location=${config.home.homeDirectory}/.task
     taskd.ca=${secrets.rui-taskwarrior-ca-cert}

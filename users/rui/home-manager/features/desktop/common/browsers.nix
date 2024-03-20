@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   ...
 }: {
   programs.firefox = {
@@ -14,15 +13,6 @@
 
   programs.qutebrowser = {
     enable = true;
-  };
-
-  home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    directories = [
-      ".mozilla/firefox"
-      ".config/google-chrome"
-      ".config/qutebrowser"
-      ".local/share/qutebrowser"
-    ];
   };
 
   xdg.mimeApps.defaultApplications = {

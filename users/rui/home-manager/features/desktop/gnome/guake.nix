@@ -3,16 +3,9 @@
   config,
   ...
 }: {
-  home = {
-    packages = with pkgs; [
+  home.packages = with pkgs; [
       guake
     ];
-    persistence."/nix/persist${config.home.homeDirectory}" = {
-      directories = [
-        ".config/guake"
-      ];
-    };
-  };
 
   home.file.".config/autostart/guake.desktop".text = ''
     [Desktop Entry]

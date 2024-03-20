@@ -19,7 +19,6 @@
       ../features/virtualisation/docker.nix
 
       ../features/system/home-manager.nix
-      ../features/system/impermanence.nix
       ../features/system/locale.nix
       ../features/system/nix-ld.nix
       ../features/system/nix.nix
@@ -27,6 +26,7 @@
       ../features/system/sudo-ssh-agent-auth.nix
 
       ../features/boot/systemd-initrd.nix
+      inputs.nur.nixosModules.nur
     ]
     ++ builtins.attrValues outputs.nixosModules;
 

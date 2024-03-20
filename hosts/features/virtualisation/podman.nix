@@ -12,17 +12,4 @@ in {
     dockerSocket.enable = !dockerEnabled;
     defaultNetwork.settings.dns_enabled = true;
   };
-
-  environment.persistence = {
-    "/nix/persist" = {
-      directories = [
-        {
-          directory = "/var/lib/containers";
-          user = "root";
-          group = "root";
-          mode = "0751";
-        }
-      ];
-    };
-  };
 }

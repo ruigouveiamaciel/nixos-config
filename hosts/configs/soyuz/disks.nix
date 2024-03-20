@@ -29,7 +29,7 @@
                 content = {
                   type = "filesystem";
                   format = "ext4";
-                  mountpoint = "/nix";
+                  mountpoint = "/";
                 };
               };
             };
@@ -46,9 +46,9 @@
       };
     };
     nodev = {
-      "/" = {
+      "/ram" = {
         fsType = "tmpfs";
-        mountOptions = ["mode=0755" "size=4G"];
+        mountOptions = ["mode=0777" "size=8G"];
       };
     };
   };

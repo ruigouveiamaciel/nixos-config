@@ -15,7 +15,7 @@
 
     hostKeys = [
       {
-        path = "/nix/backup/ssh_host_ed25519_key";
+        path = "/persist/ssh_host_ed25519_key";
         type = "ed25519";
       }
     ];

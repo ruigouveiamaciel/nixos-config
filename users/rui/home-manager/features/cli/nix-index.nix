@@ -41,10 +41,4 @@ in {
       WantedBy = ["timers.target"];
     };
   };
-
-  home.persistence."/nix/persist${config.home.homeDirectory}" = {
-    directories = [
-      ".cache/nix-index"
-    ];
-  };
 }

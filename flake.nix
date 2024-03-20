@@ -21,9 +21,6 @@
     # Useful Hardware Configurations
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
-    # Impermanence
-    impermanence.url = "github:nix-community/impermanence";
-
     # Disko
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -44,6 +41,7 @@
 
     # Other useful stuff
     nix-colors.url = "github:misterio77/nix-colors";
+    nur.url = "github:nix-community/NUR";
   };
 
   outputs = {
