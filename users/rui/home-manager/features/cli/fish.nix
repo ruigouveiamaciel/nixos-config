@@ -16,6 +16,7 @@ in {
       ls = mkIf hasEza "eza";
       tt = mkIf hasTaskwarrior "task next due.before:tomorrow";
       clip = mkIf hasXClip "xclip -selection clipboard";
+      rebuild-from-git = "sudo nixos-rebuild switch --refresh --flake github:ruigouveiamaciel/nixos-config#${config.networking.hostName}";
     };
     functions = {
       fish_greeting = "";
