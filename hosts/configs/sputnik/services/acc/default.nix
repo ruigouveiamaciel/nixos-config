@@ -66,8 +66,8 @@ in {
           DATA_PERM = "770";
         };
         volumes = [
-          "/nix/backup/services/acc/accServer.exe:/acc/accServer.exe"
-          "/nix/backup/services/acc/results:/acc/results"
+          "/persist/services/acc/accServer.exe:/acc/accServer.exe"
+          "/persist/services/acc/results:/acc/results"
           "${config.sops.templates."acc-${name}-configuration.json".path}:/acc/cfg/configuration.json"
           "${config.sops.templates."acc-${name}-settings.json".path}:/acc/cfg/settings.json"
           "${config.sops.templates."acc-${name}-event.json".path}:/acc/cfg/event.json"
@@ -85,8 +85,11 @@ in {
   systemd.services.prepare-acc-server = {
     serviceConfig.Type = "oneshot";
     wantedBy = builtins.map (x: "${backend}-${x}-server.service") (builtins.attrNames servers);
+    before = builtins.map (x: "${backend}-${x}-server.service") (builtins.attrNames servers);
     script = ''
-      mkdir -p /nix/backup/services/acc/results
+      mkdir -p /persist/services/acc/results
+      chown -R 99:100 /persist/services/acc
+      chmod -R 770 /persist/services/atm9/downloads
       ${backendBin} network inspect acc_network >/dev/null 2>&1 || ${backendBin} network create acc_network
     '';
   };
@@ -96,104 +99,109 @@ in {
 
   sops.templates =
     builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = "acc-${name}-settings.json";
-      value = {
-        content = ''
-          {
-            "serverName": "SmOkEwOw ${value.name}",
-            "adminPassword": "${config.sops.placeholder.acc-admin-password}",
-            "carGroup": "FreeForAll",
-            "trackMedalsRequirement": ${builtins.toString value.trackMedalsRequirement},
-            "safetyRatingRequirement": ${builtins.toString value.safetyRatingRequirement},
-            "maxCarSlots": ${builtins.toString value.maxCarSlots},
-            "spectatorPassword": "${config.sops.placeholder.acc-spectator-password}",
-            "dumpLeaderboards": 1,
-            "dumpEntryList": 0,
-            "isRaceLocked": 0,
-            "shortFormationLap": 1,
-            "formationLapType": 3,
-            "doDriverSwapBroadcast": 1,
-            "centralEntryListPath": "",
-            "ignorePrematureDisconnects": 0,
-            "allowAutoDQ": 0,
-            "configVersion": 1
-          }
-        '';
-      };
-    }) servers))
-    // builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = "acc-${name}-configuration.json";
-      value = {
-        content = ''
-          {
-            "udpPort": ${builtins.toString value.port},
-            "tcpPort": ${builtins.toString value.port},
-            "maxConnections": ${builtins.toString (value.maxCarSlots + 5)},
-            "registerToLobby": 1,
-            "configVersion": 1
-          }
-        '';
-      };
-    }) servers))
-    // builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = "acc-${name}-event.json";
-      value = {
-        content = ''
-          {
-              "track": "${value.track}",
-              "eventType": "E_6h",
-              "preRaceWaitingTimeSeconds": 80,
-              "postQualySeconds": 10,
-              "postRaceSeconds": 10,
-              "sessionOverTimeSeconds": 180,
-              "ambientTemp": 25,
-              "trackTemp": 25,
-              "cloudLevel": 0.3,
-              "rain": 0.0,
-              "weatherRandomness": 0,
-              "sessions": [
-                  {
-                      "hourOfDay": 14,
-                      "dayOfWeekend": 2,
-                      "timeMultiplier": 1,
-                      "sessionType": "Q",
-                      "sessionDurationMinutes": ${builtins.toString value.qualifyingDuration}
-                  },
-                  {
-                      "hourOfDay": 14,
-                      "dayOfWeekend": 3,
-                      "timeMultiplier": 1,
-                      "sessionType": "R",
-                      "sessionDurationMinutes": ${builtins.toString value.raceDuration}
-                  }
-              ],
+        name = "acc-${name}-settings.json";
+        value = {
+          content = ''
+            {
+              "serverName": "SmOkEwOw ${value.name}",
+              "adminPassword": "${config.sops.placeholder.acc-admin-password}",
+              "carGroup": "FreeForAll",
+              "trackMedalsRequirement": ${builtins.toString value.trackMedalsRequirement},
+              "safetyRatingRequirement": ${builtins.toString value.safetyRatingRequirement},
+              "maxCarSlots": ${builtins.toString value.maxCarSlots},
+              "spectatorPassword": "${config.sops.placeholder.acc-spectator-password}",
+              "dumpLeaderboards": 1,
+              "dumpEntryList": 0,
+              "isRaceLocked": 0,
+              "shortFormationLap": 1,
+              "formationLapType": 3,
+              "doDriverSwapBroadcast": 1,
+              "centralEntryListPath": "",
+              "ignorePrematureDisconnects": 0,
+              "allowAutoDQ": 0,
               "configVersion": 1
-          }
-        '';
-      };
-    }) servers))
+            }
+          '';
+        };
+      })
+      servers))
     // builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = "acc-${name}-eventRules.json";
-      value = {
-        content = ''
-          {
-            "qualifyStandingType": 1,
-            "superpoleMaxCar": -1,
-            "pitWindowLengthSec": -1,
-            "driverStintTimeSec": -1,
-            "isRefuellingAllowedInRace": true,
-            "isRefuellingTimeFixed": false,
-            "maxDriversCount": 1,
-            "mandatoryPitstopCount": 0,
-            "maxTotalDrivingTime": -1,
-            "isMandatoryPitstopRefuellingRequired": false,
-            "isMandatoryPitstopTyreChangeRequired": false,
-            "isMandatoryPitstopSwapDriverRequired": false,
-            "tyreSetCount": 50
-          }
-        '';
-      };
-    }) servers)) // {
+        name = "acc-${name}-configuration.json";
+        value = {
+          content = ''
+            {
+              "udpPort": ${builtins.toString value.port},
+              "tcpPort": ${builtins.toString value.port},
+              "maxConnections": ${builtins.toString (value.maxCarSlots + 5)},
+              "registerToLobby": 1,
+              "configVersion": 1
+            }
+          '';
+        };
+      })
+      servers))
+    // builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
+        name = "acc-${name}-event.json";
+        value = {
+          content = ''
+            {
+                "track": "${value.track}",
+                "eventType": "E_6h",
+                "preRaceWaitingTimeSeconds": 80,
+                "postQualySeconds": 10,
+                "postRaceSeconds": 10,
+                "sessionOverTimeSeconds": 180,
+                "ambientTemp": 25,
+                "trackTemp": 25,
+                "cloudLevel": 0.3,
+                "rain": 0.0,
+                "weatherRandomness": 0,
+                "sessions": [
+                    {
+                        "hourOfDay": 14,
+                        "dayOfWeekend": 2,
+                        "timeMultiplier": 1,
+                        "sessionType": "Q",
+                        "sessionDurationMinutes": ${builtins.toString value.qualifyingDuration}
+                    },
+                    {
+                        "hourOfDay": 14,
+                        "dayOfWeekend": 3,
+                        "timeMultiplier": 1,
+                        "sessionType": "R",
+                        "sessionDurationMinutes": ${builtins.toString value.raceDuration}
+                    }
+                ],
+                "configVersion": 1
+            }
+          '';
+        };
+      })
+      servers))
+    // builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
+        name = "acc-${name}-eventRules.json";
+        value = {
+          content = ''
+            {
+              "qualifyStandingType": 1,
+              "superpoleMaxCar": -1,
+              "pitWindowLengthSec": -1,
+              "driverStintTimeSec": -1,
+              "isRefuellingAllowedInRace": true,
+              "isRefuellingTimeFixed": false,
+              "maxDriversCount": 1,
+              "mandatoryPitstopCount": 0,
+              "maxTotalDrivingTime": -1,
+              "isMandatoryPitstopRefuellingRequired": false,
+              "isMandatoryPitstopTyreChangeRequired": false,
+              "isMandatoryPitstopSwapDriverRequired": false,
+              "tyreSetCount": 50
+            }
+          '';
+        };
+      })
+      servers))
+    // {
       "acc-entrylist.json".content = ''
         {
           "forceEntryList": 0,
@@ -257,12 +265,12 @@ in {
         }
       '';
     };
-    
-    sops.secrets.acc-admin-password = {
-      sopsFile = ../../secrets.yaml;
-    };
 
-    sops.secrets.acc-spectator-password = {
-      sopsFile = ../../secrets.yaml;
-    };
+  sops.secrets.acc-admin-password = {
+    sopsFile = ../../secrets.yaml;
+  };
+
+  sops.secrets.acc-spectator-password = {
+    sopsFile = ../../secrets.yaml;
+  };
 }

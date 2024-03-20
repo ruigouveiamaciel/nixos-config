@@ -10,7 +10,7 @@
 in {
   virtualisation.oci-containers.containers = {
     factorio-server = {
-      image = "factoriotools/factorio@sha256:69959634d2d76a96b8550e3a80a99b62aba9a146452efedfb61546d26c6b404a";
+      image = "factoriotools/factorio@sha256:e2afc4fd036cb2532dec3e4e35c84dc6b28d42005f27171113f48e38399ed127";
       extraOptions = [
         "--network=factorio_network"
       ];
@@ -18,7 +18,7 @@ in {
         config.sops.templates."factorio-secrets.env".path
       ];
       volumes = [
-        "/nix/backup/services/factorio:/factorio"
+        "/persist/services/factorio:/factorio"
         "${config.sops.templates."factorio-settings.json".path}:/factorio/config/server-settings.json"
       ];
       ports = [
@@ -32,8 +32,13 @@ in {
     wantedBy = [
       "${backend}-factorio-server.service"
     ];
+    before = [
+      "${backend}-factorio-server.service"
+    ];
     script = ''
-      mkdir -p /nix/backup/services/factorio
+      mkdir -p /persist/services/factorio
+      chown -R 845:845 /persist/services/factorio
+      chmod -R 770 /persist/services/factorio
       ${backendBin} network inspect factorio_network >/dev/null 2>&1 || ${backendBin} network create factorio_network
     '';
   };

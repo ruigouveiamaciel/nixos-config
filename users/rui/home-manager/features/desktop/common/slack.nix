@@ -1,10 +1,7 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
-      slack
-    ];
+    slack
+  ];
 
   xdg.mimeApps.defaultApplications = {
     "x-scheme-handler/slack" = "slack.desktop";

@@ -73,7 +73,7 @@
       };
     };
     nodev = {
-      "/" = {
+      "/ram" = {
         fsType = "tmpfs";
         mountOptions = ["mode=0755" "size=16G"];
       };
@@ -101,7 +101,7 @@
               content = {
                 type = "filesystem";
                 format = "ext4";
-                mountpoint = "/nix";
+                mountpoint = "/";
               };
             };
           };

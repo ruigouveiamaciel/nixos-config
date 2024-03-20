@@ -103,7 +103,7 @@
       intellihide-use-pressure = true;
       intellihide-animation-time = 100;
       intellihide-close-delay = 200;
-      isolate-monitors = true;
+      isolate-monitors = false;
       isolate-workspaces = true;
       leftbox-padding = -1;
       panel-anchors = ''

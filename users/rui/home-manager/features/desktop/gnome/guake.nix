@@ -4,8 +4,8 @@
   ...
 }: {
   home.packages = with pkgs; [
-      guake
-    ];
+    guake
+  ];
 
   home.file.".config/autostart/guake.desktop".text = ''
     [Desktop Entry]

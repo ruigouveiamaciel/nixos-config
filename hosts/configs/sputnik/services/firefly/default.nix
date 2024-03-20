@@ -20,7 +20,7 @@ in {
         "firefly-db"
       ];
       volumes = [
-        "/nix/backup/services/firefly/upload:/var/www/html/storage/upload"
+        "/persist/services/firefly/upload:/var/www/html/storage/upload"
       ];
     };
     firefly-db = {
@@ -32,7 +32,7 @@ in {
         config.sops.templates."firefly-database.env".path
       ];
       volumes = [
-        "/nix/backup/services/firefly/db:/var/lib/mysql"
+        "/persist/services/firefly/db:/var/lib/mysql"
       ];
     };
     firefly-cron = {
@@ -70,17 +70,6 @@ in {
     };
   };
 
-  systemd.services."${backend}-firefly-db" = {
-    requiredBy = ["${backend}-firefly-app.service"];
-  };
-
-  systemd.services."${backend}-firefly-app" = {
-    requiredBy = [
-      "${backend}-firefly-cron.service"
-      "${backend}-firefly-tunnel.service"
-    ];
-  };
-
   systemd.services.prepare-firefly = {
     serviceConfig.Type = "oneshot";
     requiredBy = [
@@ -89,9 +78,19 @@ in {
       "${backend}-firefly-cron.service"
       "${backend}-firefly-tunnel.service"
     ];
+    before = [
+      "${backend}-firefly-db.service"
+      "${backend}-firefly-app.service"
+      "${backend}-firefly-cron.service"
+      "${backend}-firefly-tunnel.service"
+    ];
     script = ''
-      mkdir -p /nix/backup/services/firefly/db
-      mkdir -p /nix/backup/services/firefly/upload
+      mkdir -p /persist/services/firefly/db
+      mkdir -p /persist/services/firefly/upload
+      chown -R 999:999 /persist/services/firefly/db
+      chown -R 33:33 /persist/services/firefly/upload
+      chmod -R 750 /persist/services/firefly/db
+      chmod -R 770 /persist/services/firefly/upload
       ${backendBin} network inspect firefly_network >/dev/null 2>&1 || ${backendBin} network create firefly_network
     '';
   };

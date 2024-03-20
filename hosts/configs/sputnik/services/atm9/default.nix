@@ -18,8 +18,8 @@ in {
         config.sops.templates."atm9-secrets.env".path
       ];
       volumes = [
-        "/nix/backup/services/atm9/data:/data"
-        "/nix/backup/services/atm9/downloads:/downloads"
+        "/persist/services/atm9/data:/data"
+        "/persist/services/atm9/downloads:/downloads"
       ];
       ports = [
         "25000:25565"
@@ -32,9 +32,16 @@ in {
     wantedBy = [
       "${backend}-atm9-minecraft-server.service"
     ];
+    before = [
+      "${backend}-atm9-minecraft-server.service"
+    ];
     script = ''
-      mkdir -p /nix/backup/services/atm9/data
-      mkdir -p /nix/backup/services/atm9/downloads
+      mkdir -p /persist/services/atm9/data
+      mkdir -p /persist/services/atm9/downloads
+      chown -R 1000:1000 /persist/services/atm9/data
+      chown -R 0:0 /persist/services/atm9/downloads
+      chmod -R 755 /persist/services/atm9/data
+      chmod -R 755 /persist/services/atm9/downloads
       ${backendBin} network inspect atm9_network >/dev/null 2>&1 || ${backendBin} network create atm9_network
     '';
   };

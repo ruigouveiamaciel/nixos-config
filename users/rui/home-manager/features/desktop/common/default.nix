@@ -12,7 +12,7 @@
   ];
 
   xdg.mimeApps.enable = true;
-  
+
   home.packages = with pkgs; [
     audacity
     deluge
@@ -21,7 +21,6 @@
     plex-media-player
     qalculate-gtk
     spotify
-    synergy
     vlc
     xournalpp
     zoom-us

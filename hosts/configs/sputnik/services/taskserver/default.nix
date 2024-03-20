@@ -10,7 +10,7 @@
     fqdn = "taskserver.maciel.sh";
     listenHost = "138.201.17.172";
     listenPort = 49591;
-    dataDir = "/nix/backup/services/taskserver";
+    dataDir = "/persist/services/taskserver";
     pki.manual = {
       server.key = config.sops.secrets.taskwarrior-server-key.path;
       server.crl = config.sops.secrets.taskwarrior-server-crl.path;
@@ -27,6 +27,17 @@
       Restart = lib.mkForce "always";
       RestartSec = 3;
     };
+  };
+
+  systemd.services.prepare-taskserver = {
+    serviceConfig.Type = "oneshot";
+    requiredBy = ["taskserver.service"];
+    before = ["taskserver.service"];
+    script = ''
+      mkdir -p /persist/services/taskserver
+      chown -R 240:240 /persist/services/taskserver
+      chmod -R 770 /persist/services/taskserver
+    '';
   };
 
   sops.secrets.taskwarrior-server-key = {
