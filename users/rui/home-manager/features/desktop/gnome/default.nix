@@ -150,7 +150,7 @@ with lib.hm.gvariant; {
     "org/gnome/shell/keybindings" = {
       focus-active-notification = [];
       screenshot = ["Print"];
-      show-screenshot-ui = ["<Control>Print"];
+      show-screenshot-ui = ["<Control>Print" "<Control>End"];
       toggle-message-tray = [];
       toggle-quick-settings = [];
       toggle-application-view = ["<Super>a"];
