@@ -128,7 +128,7 @@ in {
     outputPath = "simplebackups"
 
     [mod_compat]
-      #Should backup notifications be sent to Discord by using mc2discord? (needs to be installed)
-      mc2discord = true
+    #Should backup notifications be sent to Discord by using mc2discord? (needs to be installed)
+    mc2discord = true
   '';
 }
