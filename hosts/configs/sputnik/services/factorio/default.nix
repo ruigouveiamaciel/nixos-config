@@ -10,7 +10,7 @@
 in {
   virtualisation.oci-containers.containers = {
     factorio-server = {
-      image = "factoriotools/factorio@sha256:fd14131063ac5588fc5b6a58d02ace45f557d53327421b74e6013972ead25c5a";
+      image = "factoriotools/factorio@sha256:853ba95a34e7eca01fac769e2f6043cd232355a5dd2ab1a50e190dbf2e90858c";
       extraOptions = [
         "--network=factorio_network"
       ];
@@ -67,8 +67,8 @@ in {
 
   sops.templates."factorio-settings.json".content = ''
     {
-      "name": "SmOkEwOw's Public Factorio Server",
-      "description": "Feel free to join and mess around",
+      "name": "SmOkEwOw's Public World",
+      "description": "Feel free to join and mess around, lets see how far this world can get",
       "tags": ["vanilla", "public"],
 
       "_comment_max_players": "Maximum number of players allowed, admins can join even a full server. 0 means unlimited.",
