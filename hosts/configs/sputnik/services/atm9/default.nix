@@ -21,7 +21,6 @@ in {
         "/persist/services/atm9/data:/data"
         "${config.sops.templates."atm9-whitelist.json".path}:/data/whitelist.json"
         "${config.sops.templates."atm9-ops.json".path}:/data/ops.json"
-        "${config.sops.templates."atm9-simplebackups-common.toml".path}:/data/config/simplebackups-common.toml"
         "/persist/services/atm9/downloads:/downloads"
       ];
       ports = [
