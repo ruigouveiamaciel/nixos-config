@@ -75,7 +75,7 @@
     nodev = {
       "/ram" = {
         fsType = "tmpfs";
-        mountOptions = ["mode=0755" "size=16G"];
+        mountOptions = ["mode=0777" "size=16G"];
       };
     };
     mdadm = {
