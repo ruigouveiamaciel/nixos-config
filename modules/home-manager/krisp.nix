@@ -7,8 +7,8 @@
   cfg = config.programs.discord;
 
   patcher = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/sersorrel/sys/0650ef773268ea7b03dc86aa397af8dda48d5892/hm/discord/krisp-patcher.py";
-    hash = "sha256-8AM6v+gR7VH0gXT0orqDSRyXaxv7eV4EnLum5FgW6Yk=";
+    url = "https://raw.githubusercontent.com/sersorrel/sys/c0b6eebb7751e4ec33369bbe189e9d3a38cef70f/hm/discord/krisp-patcher.py";
+    hash = "sha256-87VlZKw6QoXgQwEgxT3XeFY8gGoTDWIopGLOEdXkkjE=";
   };
 
   python = pkgs.python3.withPackages (ps: [ps.pyelftools ps.capstone]);
