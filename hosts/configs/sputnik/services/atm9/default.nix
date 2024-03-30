@@ -10,7 +10,7 @@
 in {
   virtualisation.oci-containers.containers = {
     atm9-minecraft-server = {
-      image = "itzg/minecraft-server@sha256:eff50e31e26aa2a5f0c84ee83496f0a9f92743fafc7876760a6be7ea7a462c74";
+      image = "itzg/minecraft-server@sha256:e375502625e9ab27357ef15670f9c3030305bfd4ef151bb6629418223a10b987";
       extraOptions = [
         "--network=atm9_network"
       ];
