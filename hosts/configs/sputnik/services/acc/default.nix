@@ -57,7 +57,7 @@
       name = "Nurburgring 24h";
       track = "nurburgring_24h";
       port = 9205;
-      maxCarSlots = 30;
+      maxCarSlots = 27;
       trackMedalsRequirement = 0;
       safetyRatingRequirement = 70;
       qualifyingDuration = 12;
