@@ -18,6 +18,7 @@
       safetyRatingRequirement = -1;
       qualifyingDuration = 10;
       raceDuration = 15;
+      sessionOverTimeSeconds = 120;
     };
     spa-amateur = {
       name = "Spa Amateur";
@@ -28,6 +29,7 @@
       safetyRatingRequirement = -1;
       qualifyingDuration = 10;
       raceDuration = 15;
+      sessionOverTimeSeconds = 150;
     };
     monza-intermediate = {
       name = "Monza Intermediate";
@@ -38,6 +40,7 @@
       safetyRatingRequirement = 50;
       qualifyingDuration = 15;
       raceDuration = 20;
+      sessionOverTimeSeconds = 120;
     };
     spa-intermediate = {
       name = "Spa Intermediate";
@@ -48,6 +51,18 @@
       safetyRatingRequirement = 50;
       qualifyingDuration = 15;
       raceDuration = 20;
+      sessionOverTimeSeconds = 150;
+    };
+    nurburgring-24h = {
+      name = "Nurburgring 24h";
+      track = "nurburgring_24h";
+      port = 9205;
+      maxCarSlots = 30;
+      trackMedalsRequirement = 0;
+      safetyRatingRequirement = 70;
+      qualifyingDuration = 12;
+      raceDuration = 30;
+      sessionOverTimeSeconds = 600;
     };
   };
 in {
@@ -89,7 +104,7 @@ in {
     script = ''
       mkdir -p /persist/services/acc/results
       chown -R 99:100 /persist/services/acc
-      chmod -R 770 /persist/services/atm9/downloads
+      chmod -R 770 /persist/services/acc
       ${backendBin} network inspect acc_network >/dev/null 2>&1 || ${backendBin} network create acc_network
     '';
   };
@@ -150,7 +165,7 @@ in {
                 "preRaceWaitingTimeSeconds": 80,
                 "postQualySeconds": 10,
                 "postRaceSeconds": 10,
-                "sessionOverTimeSeconds": 180,
+                "sessionOverTimeSeconds": ${builtins.toString value.sessionOverTimeSeconds},
                 "ambientTemp": 25,
                 "trackTemp": 25,
                 "cloudLevel": 0.3,
@@ -256,7 +271,7 @@ in {
                   "playerID": "S76561198007092868"
                 }
               ],
-              "raceNumber": 5,
+              "raceNumber": 27,
               "forcedCarModel": -1,
               "overrideDriverInfo": 0,
               "isServerAdmin": 0
