@@ -14,5 +14,6 @@
     ./ssh.nix
     ./starship.nix
     ./taskwarrior.nix
+    ./runtimes.nix
   ];
 }
