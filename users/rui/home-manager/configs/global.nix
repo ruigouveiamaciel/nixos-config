@@ -34,6 +34,7 @@
   # Global packages
   home.packages = with pkgs; [
     eza
+    ripgrep
   ];
 
   # Enable home-manager

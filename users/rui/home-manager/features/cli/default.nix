@@ -8,7 +8,7 @@
     ./gpg.nix
     ./neofetch.nix
     ./nix-index.nix
-    ./nvim.nix
+    ./nvim
     ./ranger.nix
     ./screen.nix
     ./ssh.nix
