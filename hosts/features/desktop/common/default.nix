@@ -4,5 +4,6 @@
     ./quietboot.nix
     ./pipewire.nix
     ./pentablet.nix
+    ./oryx.nix
   ];
 }

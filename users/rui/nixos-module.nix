@@ -24,6 +24,7 @@ in {
         "podman"
         "git"
         "dialout"
+        "plugdev"
       ];
 
     openssh.authorizedKeys.keys = [

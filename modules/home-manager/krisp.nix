@@ -7,7 +7,7 @@
   cfg = config.programs.discord;
 
   patcher = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/sersorrel/sys/c0b6eebb7751e4ec33369bbe189e9d3a38cef70f/hm/discord/krisp-patcher.py";
+    url = "https://raw.githubusercontent.com/sersorrel/sys/f3c8e8b4812f8069279da492fd830025e08ef580/hm/discord/krisp-patcher.py";
     hash = "sha256-87VlZKw6QoXgQwEgxT3XeFY8gGoTDWIopGLOEdXkkjE=";
   };
 
