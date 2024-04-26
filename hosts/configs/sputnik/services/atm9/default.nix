@@ -62,7 +62,7 @@ in {
     EULA=true
     MOD_PLATFORM=AUTO_CURSEFORGE
     CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-9
-    CF_FILENAME_MATCHER=0.2.54
+    CF_FILENAME_MATCHER=0.2.58
     MEMORY=16G
     CF_API_KEY=${config.sops.placeholder.curseforge-api-key}
   '';
