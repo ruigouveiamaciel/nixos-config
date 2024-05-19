@@ -8,12 +8,11 @@
     ./gpg.nix
     ./neofetch.nix
     ./nix-index.nix
-    ./nvim
+    ./neovim.nix
     ./ranger.nix
     ./screen.nix
     ./ssh.nix
     ./starship.nix
-    ./taskwarrior.nix
-    ./runtimes.nix
+    ./sdks.nix
   ];
 }

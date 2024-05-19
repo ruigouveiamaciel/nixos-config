@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   ...
@@ -7,14 +6,12 @@
   inherit (lib) mkIf;
   hasPackage = pname: lib.any (p: p ? pname && p.pname == pname) config.home.packages;
   hasEza = hasPackage "eza";
-  hasTaskwarrior = hasPackage "taskwarrior";
   hasXClip = hasPackage "xclip";
 in {
   programs.fish = {
     enable = true;
-    shellAbbrs = rec {
+    shellAbbrs = {
       ls = mkIf hasEza "eza";
-      tt = mkIf hasTaskwarrior "task next due.before:tomorrow";
       clip = mkIf hasXClip "xclip -selection clipboard";
     };
     functions = {

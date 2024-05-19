@@ -1,4 +1,24 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  oil-nvim-github = pkgs.vimUtils.buildVimPlugin {
+    name = "oil-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "ruigouveiamaciel";
+      repo = "oil.nvim";
+      rev = "9ab8c1a7ac4c761d0f8a23a2cd0f430482aed684";
+      hash = "sha256-12jCar73hnLBtW135GbPi1WtVyv11fYTI/tLecQktX0=";
+    };
+  };
+
+  harpoon-nvim-github = pkgs.vimUtils.buildVimPlugin {
+    name = "harpoon-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "ThePrimeagen";
+      repo = "harpoon";
+      rev = "0378a6c428a0bed6a2781d459d7943843f374bce";
+      hash = "sha256-FZQH38E02HuRPIPAog/nWM55FuBxKp8AyrEldFkoLYk=";
+    };
+  };
+in {
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -12,14 +32,13 @@
       ''
         -- Set <space> as the leader key
         -- See `:help mapleader`
-        --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+        --  NOTE: This must be set before plugins are loaded (otherwise wrong
+        --  leader will be used)
         vim.g.mapleader = ' '
         vim.g.maplocalleader = ' '
 
         -- [[ Setting options ]]
         -- See `:help vim.opt`
-        -- NOTE: You can change these options as you wish!
-        --  For more options, you can see `:help option-list`
 
         -- Set to true if you have a Nerd Font installed and selected in the terminal
         vim.g.have_nerd_font = true
@@ -76,9 +95,8 @@
         -- Disable line wrap
         vim.opt.wrap = false
 
-
         -- Minimal number of screen lines to keep above and below the cursor.
-        vim.opt.scrolloff = 10
+        vim.opt.scrolloff = 15
 
         -- [[ Basic Keymaps ]]
         --  See `:help vim.keymap.set()`
@@ -119,6 +137,10 @@
         vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
         vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
         vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+        -- Disable keybinds that are redudant or useless
+        vim.keymap.set('n', '-', '<nop>')
+        vim.keymap.set('n', '+', '<nop>')
 
         -- [[ Basic Autocommands ]]
         --  See `:help lua-guide-autocommands`
@@ -187,6 +209,7 @@
             }
           '';
       }
+
       # Git utilities
       vim-fugitive
 
@@ -229,19 +252,13 @@
             vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
             vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
             vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
-            -- Slightly advanced example of overriding default behavior and theme
-            vim.keymap.set('n', '<leader>/', function()
-              -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+            vim.keymap.set('n', '<leader>sc', function()
               builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-                winblend = 10,
+                -- winblend = 10,
                 previewer = false,
               })
             end, { desc = '[/] Fuzzily search in current buffer' })
-
-            -- It's also possible to pass additional configuration options.
-            --  See `:help telescope.builtin.live_grep()` for information about particular keys
-            vim.keymap.set('n', '<leader>s/', function()
+            vim.keymap.set('n', '<leader>so', function()
               builtin.live_grep {
                 grep_open_files = true,
                 prompt_title = 'Live Grep in Open Files',
@@ -251,7 +268,7 @@
       }
 
       # Provides LSP features and a code completion source for code embedded in
-      # other documents
+      # other documents, such as the lua configs in this nix file.
       otter-nvim
 
       # Automatically install LSPs and related tools
@@ -296,21 +313,13 @@
                 --  the definition of its *type*, not where it was *defined*.
                 map('gt', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
 
-                -- Fuzzy find all the symbols in your current document.
-                --  Symbols are things like variables, functions, types, etc.
-                -- map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-                -- Fuzzy find all the symbols in your current workspace.
-                --  Similar to document symbols, except searches over your entire project.
-                -- map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
                 -- Rename the variable under your cursor.
                 --  Most Language Servers support renaming across files, etc.
                 map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
                 -- Execute a code action, usually your cursor needs to be on top of an error
                 -- or a suggestion from your LSP for this to activate.
-                map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+                map('<Ctrl>.', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
                 -- Opens a popup that displays documentation about the word under your cursor
                 --  See `:help K` for why this keymap.
@@ -319,24 +328,6 @@
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.
                 map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-                -- The following two autocommands are used to highlight references of the
-                -- word under your cursor when your cursor rests there for a little while.
-                --    See `:help CursorHold` for information about when this is executed
-                --
-                -- When you move your cursor, the highlights will be cleared (the second autocommand).
-                local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client and client.server_capabilities.documentHighlightProvider then
-                  vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-                    buffer = event.buf,
-                    callback = vim.lsp.buf.document_highlight,
-                  })
-
-                  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-                    buffer = event.buf,
-                    callback = vim.lsp.buf.clear_references,
-                  })
-                end
 
                 -- The following autocommand is used to enable inlay hints in your
                 -- code, if the language server you are using supports them
@@ -374,6 +365,7 @@
               svelte = {},
               eslint = {},
               html = {},
+              csharp_ls = {},
               nil_ls = {
                 settings = {
                   ['nil'] = {
@@ -381,21 +373,15 @@
                   }
                 }
               },
-
               lua_ls = {
-                -- cmd = {...},
-                -- filetypes = { ...},
-                -- capabilities = {},
                 settings = {
                   Lua = {
                     completion = {
                       callSnippet = 'Replace',
-                    },
-                    -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                    -- diagnostics = { disable = { 'missing-fields' } },
-                  },
-                },
-              },
+                    }
+                  }
+                }
+              }
             }
 
             -- Ensure the servers and tools above are installed
@@ -404,7 +390,32 @@
             --    :Mason
             --
             --  You can press `g?` for help in this menu.
-            require('mason').setup()
+            require('mason').setup({
+              keymaps = {
+                -- Keymap to expand a package
+                toggle_package_expand = "<CR>",
+                -- Keymap to install the package under the current cursor position
+                install_package = "i",
+                -- Keymap to reinstall/update the package under the current cursor position
+                update_package = "u",
+                -- Keymap to check for new version for the package under the current cursor position
+                check_package_version = "c",
+                -- Keymap to update all installed packages
+                update_all_packages = "U",
+                -- Keymap to check which installed packages are outdated
+                check_outdated_packages = "C",
+                -- Keymap to uninstall a package
+                uninstall_package = "X",
+                -- Keymap to cancel a package installation
+                cancel_installation = "<C-c>",
+                -- Keymap to apply language filter
+                apply_language_filter = "<C-f>",
+                -- Keymap to toggle viewing package installation log
+                toggle_package_install_log = "<CR>",
+                -- Keymap to toggle the help view
+                toggle_help = "gh",
+              }
+            })
 
             -- You can add other tools here that you want Mason to install
             -- for you, so that they are available from within Neovim.
@@ -448,24 +459,23 @@
 
             cmp.setup {
               completion = { completeopt = 'menu,menuone,noinsert' },
-
               -- For an understanding of why these mappings were
               -- chosen, you will need to read `:help ins-completion`
               mapping = cmp.mapping.preset.insert {
                 -- Select the [n]ext item
                 ['<C-n>'] = cmp.mapping.select_next_item(),
+                ['<Down>'] = cmp.mapping.select_next_item(),
                 -- Select the [p]revious item
                 ['<C-p>'] = cmp.mapping.select_prev_item(),
-
+                ['<Up>'] = cmp.mapping.select_prev_item(),
                 -- Scroll the documentation window [b]ack / [f]orward
                 ['<C-b>'] = cmp.mapping.scroll_docs(-4),
                 ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
                 -- Accept ([y]es) the completion.
                 --  This will auto-import if your LSP supports it.
                 --  This will expand snippets if the LSP sent a snippet.
                 ['<C-y>'] = cmp.mapping.confirm { select = true },
-
+                ['<CR>'] = cmp.mapping.confirm { select = true },
                 -- Manually trigger a completion from nvim-cmp.
                 --  Generally you don't need this, because nvim-cmp will display
                 --  completions whenever it has completion options available.
@@ -597,15 +607,122 @@
       }
 
       # Hide enviroment variables
-      pkgs.unstable.vimPlugins.cloak-nvim
-    ];
+      {
+        plugin = pkgs.unstable.vimPlugins.cloak-nvim;
+        type = "lua";
+        config =
+          /*
+          lua
+          */
+          ''
+            require('cloak').setup({
+              enabled = true,
+              cloak_character = '*',
+              highlight_group = 'Comment',
+              try_all_patterns = true,
+              cloak_telescope = true,
+              patterns = {
+                {
+                  file_pattern = '.env*',
+                  cloak_pattern = '=.+',
+                },
+              },
+            })
+          '';
+      }
 
-    # TODO:
-    # - Undo tree
-    # - Trouble
-    # - How to change to file system quickly
-    # - How to create a file quickly
-    # - Harpoon
-    # - Fix help keymap for Mason and vim fugitive (i think they conflict)
+      # Edit the file system as if it was a buffer
+      {
+        plugin = oil-nvim-github;
+        type = "lua";
+        config =
+          /*
+          lua
+          */
+          ''
+            require("oil").setup({
+              default_file_explorer = true,
+              use_default_keymaps = false,
+              keymaps = {
+                ["gh"] = "actions.show_help",
+                ["<CR>"] = "actions.select",
+                ["<C-p>"] = "actions.preview",
+                ["<Esc>"] = "actions.close",
+                ["-"] = "actions.parent",
+                ["_"] = "actions.open_cwd",
+                ["gs"] = "actions.change_sort",
+                ["g."] = "actions.toggle_hidden",
+              }
+            })
+
+            vim.keymap.set('n', '-', '<CMD>Oil<CR>', {desc= 'Open parent directory'})
+          '';
+      }
+
+      # Harpoon
+      {
+        plugin = harpoon-nvim-github;
+        type = "lua";
+        config =
+          /*
+          lua
+          */
+          ''
+            local harpoon = require('harpoon')
+            harpoon:setup({})
+
+            -- basic telescope configuration
+            local conf = require("telescope.config").values
+            local function toggle_telescope(harpoon_files)
+                local file_paths = {}
+                for _, item in ipairs(harpoon_files.items) do
+                    table.insert(file_paths, item.value)
+                end
+
+                require("telescope.pickers").new({}, {
+                    prompt_title = "Harpoon",
+                    finder = require("telescope.finders").new_table({
+                        results = file_paths,
+                    }),
+                    previewer = conf.file_previewer({}),
+                    sorter = conf.generic_sorter({}),
+                }):find()
+            end
+
+            vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+                { desc = "Open harpoon window" })
+            vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+          '';
+      }
+
+      {
+        plugin = trouble-nvim;
+        type = "lua";
+        config =
+          /*
+          lua
+          */
+          ''
+            vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
+            vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
+            vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
+            vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
+            vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
+            vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
+          '';
+      }
+
+      {
+        plugin = undotree;
+        type = "lua";
+        config =
+          /*
+          lua
+          */
+          ''
+            vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+          '';
+      }
+    ];
   };
 }
