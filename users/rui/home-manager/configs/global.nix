@@ -35,7 +35,6 @@
   home.packages = with pkgs; [
     eza
     ripgrep
-    aseprite
   ];
 
   # Enable home-manager

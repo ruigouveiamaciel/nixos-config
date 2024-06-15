@@ -24,6 +24,5 @@
     vlc
     xournalpp
     zoom-us
-    soundux
   ];
 }

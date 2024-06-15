@@ -6,7 +6,7 @@
 
     ../global.nix
 
-    ../../features/boot/systemd-boot.nix
+    ../../features/boot/grub.nix
     ../../features/desktop/gnome
     ../../features/desktop/gaming
   ];
