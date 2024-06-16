@@ -1,8 +1,26 @@
-{
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.useOSProber = true;
-  boot.loader.grub.efiSupport = true;
+{inputs, ...}: {
+  imports = [
+    inputs.grub2-themes.nixosModules.default
+  ];
+
+  boot.loader = {
+    efi = {
+      efiSysMountPoint = "/boot";
+      canTouchEfiVariables = true;
+    };
+    grub = {
+      enable = true;
+      device = "nodev";
+      useOSProber = true;
+      efiSupport = true;
+      extraConfig = ''
+        set timeout=10
+      '';
+    };
+    grub2-theme = {
+      enable = true;
+      theme = "stylish";
+      footer = true;
+    };
+  };
 }

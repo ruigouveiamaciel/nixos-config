@@ -6,7 +6,9 @@
 
     ../global.nix
 
+    # Grub for dual booting with windows
     ../../features/boot/grub.nix
+
     ../../features/desktop/gnome
     ../../features/desktop/gaming
   ];

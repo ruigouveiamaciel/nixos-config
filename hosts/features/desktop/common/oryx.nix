@@ -1,5 +1,6 @@
 {
-  # Special rules for ZSA Oryx flashing tool
+  # These rules are requires in order to be able to flash the Voyager keyboard
+  # (from ZSA)
   services.udev.extraRules = ''
     # Rules for Oryx web flashing and live training
     KERNEL=="hidraw*", ATTRS{idVendor}=="16c0", MODE="0664", GROUP="plugdev"

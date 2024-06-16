@@ -24,6 +24,7 @@
       age
       dconf2nix
       vscodium
+      neovim
     ];
   };
 }

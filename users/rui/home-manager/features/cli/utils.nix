@@ -1,5 +1,9 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    obsidian
+    ranger
+    neofetch
+    eza
+    ripgrep
+    jq
   ];
 }

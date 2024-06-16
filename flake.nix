@@ -25,22 +25,13 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Hyprland
-    hyprland = {
-      url = "github:hyprwm/hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprwm-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
+    # Grub themes
+    grub2-themes.url = "github:vinceliuice/grub2-themes";
 
-    # Other useful stuff
+    # Color schemes
     nix-colors.url = "github:misterio77/nix-colors";
+
+    # Nix User Repository
     nur.url = "github:nix-community/NUR";
   };
 

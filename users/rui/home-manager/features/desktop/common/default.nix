@@ -14,7 +14,6 @@
   xdg.mimeApps.enable = true;
 
   home.packages = with pkgs; [
-    audacity
     deluge
     gimp
     qjackctl
@@ -24,5 +23,6 @@
     vlc
     xournalpp
     zoom-us
+    synergy
   ];
 }

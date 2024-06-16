@@ -1,9 +1,6 @@
 {
   inputs,
   outputs,
-  lib,
-  config,
-  pkgs,
   ...
 }: {
   imports =
@@ -30,12 +27,6 @@
 
   # Color scheme
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
-
-  # Global packages
-  home.packages = with pkgs; [
-    eza
-    ripgrep
-  ];
 
   # Enable home-manager
   programs.home-manager.enable = true;

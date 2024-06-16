@@ -8,10 +8,6 @@
     package = pkgs.google-chrome;
   };
 
-  programs.qutebrowser = {
-    enable = true;
-  };
-
   xdg.mimeApps.defaultApplications = {
     "text/html" = ["google-chrome.desktop"];
     "text/xml" = ["google-chrome.desktop"];

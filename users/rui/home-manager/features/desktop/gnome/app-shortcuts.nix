@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: let
+{pkgs, ...}: let
   echo = "${pkgs.coreutils}/bin/echo";
   grep = "${pkgs.gnugrep}/bin/grep";
   wmctrl = "${pkgs.wmctrl}/bin/wmctrl";

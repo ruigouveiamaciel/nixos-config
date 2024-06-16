@@ -10,7 +10,7 @@
             boot = {
               label = "boot";
               type = "EF00";
-              size = "500M";
+              size = "3G";
               content = {
                 type = "filesystem";
                 format = "vfat";

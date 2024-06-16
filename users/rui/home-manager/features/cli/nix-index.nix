@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: let
+{pkgs, ...}: let
   update-script = pkgs.writeShellApplication {
     name = "fetch-nix-index-database";
     runtimeInputs = with pkgs; [wget coreutils];
