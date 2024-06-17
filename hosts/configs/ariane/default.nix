@@ -5,6 +5,7 @@
     ./hardware.nix
 
     ../global.nix
+    ../features/networking/encrypted-dns.nix
 
     # Grub for dual booting with windows
     ../../features/boot/grub.nix

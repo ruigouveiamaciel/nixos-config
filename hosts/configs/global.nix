@@ -1,7 +1,6 @@
 {outputs, ...}: {
   imports =
     [
-      ../features/networking/encrypted-dns.nix
       ../features/networking/openssh.nix
 
       ../features/cli

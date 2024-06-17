@@ -9,6 +9,7 @@
     ./hardware.nix
 
     ../global.nix
+    ../features/networking/encrypted-dns.nix
     ../../features/boot/grub.nix
     ../../features/server
     ../../features/networking/encrypted-dns.nix
