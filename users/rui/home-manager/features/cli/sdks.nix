@@ -10,6 +10,8 @@
     dotnet-sdk_8
     lua
     stylua
+    nodejs_20
+    python3
   ];
 
   home.sessionVariables = {

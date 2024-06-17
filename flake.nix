@@ -38,6 +38,9 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    
+    # NixOS WSL
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # Other useful stuff
     nix-colors.url = "github:misterio77/nix-colors";
@@ -116,6 +119,13 @@
         ];
       };
 
+shenzhou = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          ./hosts/configs/shenzhou
+          ./users/rui/nixos-module.nix
+        ];
+      };
       # Soyuz - My work laptop. Only runs NixOS even though I have to use
       # a remote Windows environment for pretty much everything.
       soyuz = nixpkgs.lib.nixosSystem {
@@ -157,6 +167,13 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           ./users/rui/home-manager/configs/sputnik
+        ];
+      };
+      "rui@shenzhou" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          ./users/rui/home-manager/configs/shenzhou
         ];
       };
     };
