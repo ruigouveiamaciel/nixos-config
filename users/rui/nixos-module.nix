@@ -28,8 +28,8 @@ in {
       ];
 
     openssh.authorizedKeys.keys = [
-      (builtins.readFile ./yubikeys/cardno_18_657_927.pub)
-      (builtins.readFile ./yubikeys/shenzhou.pub)
+      (builtins.readFile ./authorized-keys/cardno_18_657_927.pub)
+      (builtins.readFile ./authorized-keys/shenzhou.pub)
     ];
     hashedPasswordFile = config.sops.secrets.rui-password.path;
     packages = [pkgs.home-manager];

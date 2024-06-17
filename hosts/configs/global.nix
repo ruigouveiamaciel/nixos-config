@@ -1,6 +1,11 @@
-{outputs, ...}: {
+{
+  outputs,
+  inputs,
+  ...
+}: {
   imports =
     [
+      inputs.nixos-wsl.nixosModules.default
       ../features/networking/openssh.nix
 
       ../features/cli
