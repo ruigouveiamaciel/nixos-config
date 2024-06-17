@@ -1,5 +1,5 @@
 {
-  boot.loader.systemd-boot = {
+  boot.loader = {
     systemd-boot = {
       enable = true;
       consoleMode = "max";
