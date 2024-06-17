@@ -1,12 +1,4 @@
-{
-  outputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  hostnames = builtins.attrNames outputs.nixosConfigurations;
-in {
+{pkgs, ...}: {
   programs.ssh = {
     enable = true;
     matchBlocks = {

@@ -1,14 +1,4 @@
 {pkgs, ...}: let
-  oil-nvim-github = pkgs.vimUtils.buildVimPlugin {
-    name = "oil-nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "ruigouveiamaciel";
-      repo = "oil.nvim";
-      rev = "9ab8c1a7ac4c761d0f8a23a2cd0f430482aed684";
-      hash = "sha256-12jCar73hnLBtW135GbPi1WtVyv11fYTI/tLecQktX0=";
-    };
-  };
-
   harpoon-nvim-github = pkgs.vimUtils.buildVimPlugin {
     name = "harpoon-nvim";
     src = pkgs.fetchFromGitHub {
@@ -608,7 +598,7 @@ in {
 
       # Hide enviroment variables
       {
-        plugin = pkgs.unstable.vimPlugins.cloak-nvim;
+        plugin = cloak-nvim;
         type = "lua";
         config =
           /*
@@ -633,7 +623,7 @@ in {
 
       # Edit the file system as if it was a buffer
       {
-        plugin = oil-nvim-github;
+        plugin = oil-nvim;
         type = "lua";
         config =
           /*
@@ -689,8 +679,9 @@ in {
                 }):find()
             end
 
-            vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+            vim.keymap.set("n", "<C-E>", function() toggle_telescope(harpoon:list()) end,
                 { desc = "Open harpoon window" })
+            vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
             vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
           '';
       }

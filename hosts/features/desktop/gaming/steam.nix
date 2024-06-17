@@ -1,4 +1,14 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: let
+  userHomeDirs =
+    builtins.map (
+      user: "/home/${user.name}/.steam/root/compatibilitytools.d"
+    )
+    (builtins.attrValues config.users.users);
+in {
   programs.steam = {
     enable = true;
     gamescopeSession.enable = true;
@@ -23,12 +33,10 @@
   environment.systemPackages = with pkgs; [
     mangohud
     protonup
-    bottles
   ];
 
   environment.sessionVariables = {
-    # TODO: Move this into home manager
-    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/rui/.steam/root/compatibilitytools.d";
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = builtins.concatStringsSep ":" userHomeDirs;
   };
 
   programs.gamemode.enable = true;

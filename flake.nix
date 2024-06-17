@@ -3,13 +3,13 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     # Unstable Nixpkgs
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home Manager
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Secret Management
@@ -25,25 +25,13 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Hyprland
-    hyprland = {
-      url = "github:hyprwm/hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprwm-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-    
-    # NixOS WSL
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    # Grub themes
+    grub2-themes.url = "github:vinceliuice/grub2-themes";
 
-    # Other useful stuff
+    # Color schemes
     nix-colors.url = "github:misterio77/nix-colors";
+
+    # Nix User Repository
     nur.url = "github:nix-community/NUR";
   };
 
@@ -119,7 +107,7 @@
         ];
       };
 
-shenzhou = nixpkgs.lib.nixosSystem {
+      shenzhou = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
           ./hosts/configs/shenzhou

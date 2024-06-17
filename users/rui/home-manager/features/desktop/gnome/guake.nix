@@ -50,6 +50,7 @@
       schema-version = "3.9.0";
       scroll-keystroke = true;
       start-at-login = false;
+      start-fullscreen = true;
       use-default-font = false;
       use-popup = true;
       use-scrollbar = true;
@@ -102,7 +103,7 @@
       switch-tab8 = "<Alt>8";
       switch-tab9 = "<Alt>9";
       toggle-fullscreen = "<Alt>f";
-      toggle-hide-on-lose-focus = "disabled";
+      toggle-hide-on-lose-focus = "enabled";
       zoom-in = "<Primary>plus";
       zoom-in-alt = "disabled";
       zoom-out = "<Primary>minus";
@@ -121,7 +122,7 @@
       allow-bold = true;
       palette = "#282828282828:#CCCC24241D1D:#989897971A19:#D7D799992120:#454585858888:#B1B162618685:#68689D9D6A6A:#EBEBDBDBB2B2:#3C3C38383636:#FBFB49493434:#B8B8BBBB2626:#FAFABDBC2F2F:#8383A5A59898:#D3D386869B9B:#8E8EC0C07C7B:#FBFBF1F1C7C7:#EBEBDBDBB2B2:#282828282828";
       palette-name = "Gruvbox Dark";
-      style = "${config.fontProfiles.monospace.family} 12";
+      style = "${config.fontProfiles.monospace.family} 16";
     };
   };
 }

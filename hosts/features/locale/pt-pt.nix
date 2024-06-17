@@ -18,8 +18,8 @@
 
   console.keyMap = lib.mkDefault "pt-latin1";
 
-  services.xserver = {
+  services.xserver.xkb = {
     layout = lib.mkDefault "pt";
-    xkbVariant = lib.mkDefault "";
+    variant = lib.mkDefault "";
   };
 }

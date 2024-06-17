@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }: rec {
   gtk = {
@@ -15,8 +14,8 @@
       package = pkgs.gruvbox-gtk-theme;
     };
     iconTheme = {
-      name = "Papirus";
-      package = pkgs.papirus-icon-theme;
+      name = "Gruvbox-Plus-Dark";
+      package = pkgs.gruvbox-plus-icons;
     };
     cursorTheme = {
       name = "volantes_cursors";
