@@ -10,10 +10,6 @@
     dotnet-sdk_8
     lua
     stylua
-    nodejs_20
-    python311Full
-    python311Packages.pip
-    python311Packages.pipx
   ];
 
   home.sessionVariables = {
