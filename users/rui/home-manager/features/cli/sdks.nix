@@ -11,7 +11,9 @@
     lua
     stylua
     nodejs_20
-    python3
+    python311Full
+    python311Packages.pip
+    python311Packages.pipx
   ];
 
   home.sessionVariables = {

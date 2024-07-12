@@ -355,7 +355,7 @@ in {
               svelte = {},
               eslint = {},
               html = {},
-              csharp_ls = {},
+              omnisharp = {},
               nil_ls = {
                 settings = {
                   ['nil'] = {
@@ -412,6 +412,7 @@ in {
             local ensure_installed = vim.tbl_keys(servers or {})
             vim.list_extend(ensure_installed, {
               'stylua', -- Used to format Lua code
+              'csharpier', -- Used to format C# code
             })
             require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -434,6 +435,7 @@ in {
       cmp-nvim-lsp
       cmp-path
       cmp-git
+      cmp-nvim-lsp-signature-help
 
       # Auto complete
       {
@@ -476,6 +478,7 @@ in {
                 { name = 'nvim_lsp' },
                 { name = 'path' },
                 { name = 'git' },
+                { name = 'nvim_lsp_signature_help' },
               },
             }
           '';
@@ -504,6 +507,7 @@ in {
               end,
               formatters_by_ft = {
                 lua = { 'stylua' },
+                cs = { "csharpier" },
                 -- Conform can also run multiple formatters sequentially
                 -- python = { "isort", "black" },
                 --
@@ -516,6 +520,25 @@ in {
             vim.keymap.set('n', '<leader>f', function()
               require("conform").format { async = true, lsp_fallback = true }
             end, { desc = '[F]ormat buffer' })
+
+            vim.api.nvim_create_user_command("FormatDisable", function(args)
+                if args.bang then
+                        -- FormatDisable! will disable formatting just for this buffer
+                        vim.b.disable_autoformat = true
+                else
+                        vim.g.disable_autoformat = true
+                end
+            end, {
+                desc = "Disable autoformat-on-save",
+                bang = true,
+            })
+
+            vim.api.nvim_create_user_command("FormatEnable", function()
+                vim.b.disable_autoformat = false
+                vim.g.disable_autoformat = false
+            end, {
+                desc = "Re-enable autoformat-on-save",
+            })
           '';
       }
 
@@ -572,6 +595,10 @@ in {
             statusline.section_location = function()
               return '%2l:%-2v'
             end
+
+            -- Comment blocks of code
+            local comment = require 'mini.comment'
+            comment.setup {}
 
             -- ... and there is more!
             --  Check out: https://github.com/echasnovski/mini.nvim
@@ -679,8 +706,8 @@ in {
                 }):find()
             end
 
-            vim.keymap.set("n", "<C-E>", function() toggle_telescope(harpoon:list()) end,
-                { desc = "Open harpoon window" })
+            --vim.keymap.set("n", "<C-E>", function() toggle_telescope(harpoon:list()) end,
+            --    { desc = "Open harpoon window" })
             vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
             vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
           '';
@@ -714,6 +741,9 @@ in {
             vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
           '';
       }
+
+      # Allow direnv support
+      direnv-vim
     ];
   };
 }
