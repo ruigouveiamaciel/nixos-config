@@ -1,6 +1,11 @@
-{
+{pkgs}: {
   imports = [
     ../global.nix
+  ];
+
+  home.packages = with pkgs; [
+    nodejs_20
+    python3
   ];
 
   wsl.enable = true;
