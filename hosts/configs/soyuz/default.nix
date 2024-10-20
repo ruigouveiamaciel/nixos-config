@@ -6,7 +6,7 @@
     ./power-management.nix
 
     ../global.nix
-    ../features/networking/encrypted-dns.nix
+    #../../features/networking/encrypted-dns.nix
 
     ../../features/boot/systemd-boot.nix
     ../../features/desktop/gnome

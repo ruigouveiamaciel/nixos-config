@@ -356,6 +356,7 @@ in {
               eslint = {},
               html = {},
               omnisharp = {},
+              jq = {},
               nil_ls = {
                 settings = {
                   ['nil'] = {
@@ -508,6 +509,7 @@ in {
               formatters_by_ft = {
                 lua = { 'stylua' },
                 cs = { "csharpier" },
+                json = { "jq" },
                 -- Conform can also run multiple formatters sequentially
                 -- python = { "isort", "black" },
                 --

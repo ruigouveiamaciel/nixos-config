@@ -5,6 +5,9 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
+    # Nixpkgs
+    discord-nixpkgs.url = "github:nixos/nixpkgs/b60793b86201040d9dee019a05089a9150d08b5b";
+
     # Unstable Nixpkgs
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -19,7 +22,7 @@
     };
 
     # Useful Hardware Configurations
-    nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware.url = "github:nixos/nixos-hardware/c5013aa7ce2c7ec90acee5d965d950c8348db751";
 
     # Disko
     disko.url = "github:nix-community/disko";
@@ -27,6 +30,7 @@
 
     # Grub themes
     grub2-themes.url = "github:vinceliuice/grub2-themes";
+    grub2-themes.inputs.nixpkgs.follows = "nixpkgs";
 
     # Color schemes
     nix-colors.url = "github:misterio77/nix-colors";

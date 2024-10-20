@@ -17,4 +17,14 @@
       config = final.config;
     };
   };
+
+  discord-replace = final: _prev: {
+    discord =
+      (import inputs.discord-nixpkgs
+        {
+          system = final.system;
+          config = final.config;
+        })
+      .discord;
+  };
 }

@@ -88,7 +88,7 @@
       quit = "<Alt>q";
       rename-current-tab = "<Alt>r";
       search-on-web = "<Alt>l";
-      search-terminal = "<Primary>f";
+      search-terminal = "disabled";
       split-tab-horizontal = "disabled";
       split-tab-vertical = "disabled";
       switch-tab-last = "disabled";

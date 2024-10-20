@@ -12,5 +12,6 @@
     ./starship.nix
     ./sdks.nix
     ./utils.nix
+    ./tmux.nix
   ];
 }
