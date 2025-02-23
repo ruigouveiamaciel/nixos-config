@@ -9,15 +9,19 @@
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
   ];
 
+  services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
+
   myNixOS = {
     bundles.core.enable = true;
     networking.openssh.enable = true;
-    nix.home-manager.enable = true;
     users = {
       enable = true;
-      users.nixos = {
-        inherit (config.myNixOS.users.users.rui) authorizedKeys;
-        homeManagerConfigFile = ./home.nix;
+      rui.enable = true;
+      users = {
+        nixos = {
+          authorizedKeys = config.myNixOS.users.authorized-keys.users.rui;
+          homeManagerConfigFile = ./home/nixos.nix;
+        };
       };
     };
   };

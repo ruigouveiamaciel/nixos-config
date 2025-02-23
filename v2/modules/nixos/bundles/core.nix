@@ -6,6 +6,7 @@ _: {
       nix = {
         nix-settings.enable = true;
         sops.enable = true;
+        home-manager.enable = true;
       };
 
       security = {
@@ -17,6 +18,10 @@ _: {
         fish.enable = true;
         git.enable = true;
         ssh.enable = true;
+      };
+
+      users = {
+        authorized-keys.enable = true;
       };
     };
   };

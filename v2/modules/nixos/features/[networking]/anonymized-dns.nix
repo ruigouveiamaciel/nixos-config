@@ -1,4 +1,4 @@
-{...}: {
+_: {
   config = {
     services.dnscrypt-proxy2 = {
       settings = {

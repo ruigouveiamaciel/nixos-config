@@ -1,30 +1,21 @@
 {
   pkgs,
   config,
-  lib,
   ...
 }: let
-  pinentry =
+  pinentryPackage =
     if config.gtk.enable
-    then {
-      name = "gnome3";
-      package = pkgs.pinentry-gnome3;
-    }
-    else {
-      name = "curses";
-      package = pkgs.pinentry-curses;
-    };
+    then pkgs.pinentry-gnome3
+    else pkgs.pinentry-tty;
 in {
   config = {
-    home.packages = [pinentry.package];
-
     services.gpg-agent = {
+      inherit pinentryPackage;
       enable = true;
       enableSshSupport = true;
       enableFishIntegration = true;
       enableScDaemon = true;
       sshKeys = ["308155094625A2F5BA83D78EC1FEBB4FA9C3AC52"];
-      pinentryPackage = pinentry.package;
       enableExtraSocket = true;
     };
 
@@ -32,17 +23,17 @@ in {
       # Start gpg-agent if it's not running or tunneled in
       # SSH does not start it automatically, so this is needed to avoid having to use a gpg command at startup
       # https://www.gnupg.org/faq/whats-new-in-2.1.html#autostart
-      bash.initExtra = lib.mkIf (!config.wsl.enable) ''
+      bash.initExtra = ''
         if [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
           export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
         fi
       '';
-      fish.shellInit = lib.mkIf (!config.wsl.enable) ''
+      fish.shellInit = ''
         if test -z "$SSH_CLIENT" -a -z "$SSH_TTY"
           export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
         end
       '';
-      zsh.initExtra = lib.mkIf (!config.wsl.enable) ''
+      zsh.initExtra = ''
         if [[ -z $SSH_CLIENT && -z $SSH_TTY ]]; then
           export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
         fi
@@ -62,7 +53,7 @@ in {
       };
     };
 
-    systemd.user.services = lib.mkIf (!config.wsl.enable) {
+    systemd.user.services = {
       # Link /run/user/$UID/gnupg to ~/.gnupg-sockets
       # So that SSH config does not have to know the UID
       link-gnupg-sockets = {

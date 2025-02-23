@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  outputs,
   myLib,
   ...
 }: let
@@ -49,7 +48,7 @@
       };
       configExtension = config: (lib.mkIf (lib.getAttrFromPath (configPath ++ ["enable"]) cfg.bundles) config);
     })
-    (myLib.resolveDir ./features);
+    (myLib.resolveDir ./bundles);
 in {
   imports = features ++ bundles;
 }

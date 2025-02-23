@@ -32,6 +32,7 @@
     with myLib; {
       nixosConfigurations = {
         minimal-live-iso = mkSystem ./hosts/live-iso/minimal/configuration.nix;
+        devbox = mkSystem ./hosts/virtual-machine/devbox/configuration.nix;
       };
 
       homeConfigurations = {

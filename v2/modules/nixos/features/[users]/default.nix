@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.myNixOS.users;
+  ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -33,6 +34,12 @@ in {
             description = "The path for this user's home manager config";
           };
 
+          extraGroups = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Additional groups for the user";
+          };
+
           extraSettings = lib.mkOption {
             type = lib.types.attrs;
             default = {};
@@ -54,9 +61,10 @@ in {
             {
               inherit (user) hashedPasswordFile;
               description = name;
-              openssh.authorizedKeys.keys = lib.mkIf (user.hashedPasswordFile != null) user.authorizedKeys;
+              openssh.authorizedKeys.keys = lib.mkIf (user.authorizedKeys != null) user.authorizedKeys;
               isNormalUser = true;
               shell = pkgs.fish;
+              extraGroups = lib.mkIf (user.extraGroups != null) (ifTheyExist user.extraGroups);
               packages = lib.mkIf (user.homeManagerConfigFile != null) [pkgs.home-manager];
             }
             // user.extraSettings

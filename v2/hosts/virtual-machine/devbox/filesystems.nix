@@ -1,8 +1,4 @@
-{inputs, ...}: {
-  imports = [
-    inputs.disko.nixosModules.disko
-  ];
-
+{
   disko.devices = {
     disk = {
       nvme0n1 = {
@@ -14,7 +10,7 @@
             boot = {
               label = "boot";
               type = "EF00";
-              size = "3G";
+              size = "1G";
               content = {
                 type = "filesystem";
                 format = "vfat";
@@ -29,14 +25,6 @@
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
-              };
-            };
-            swap = {
-              label = "swap";
-              size = "4G";
-              content = {
-                type = "swap";
-                randomEncryption = true;
               };
             };
           };

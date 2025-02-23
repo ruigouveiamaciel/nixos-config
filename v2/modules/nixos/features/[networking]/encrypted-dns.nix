@@ -1,4 +1,4 @@
-{...}: {
+_: {
   config = {
     # Ensure that the system does not use any DNS servers provided by DHCP.
     networking = {

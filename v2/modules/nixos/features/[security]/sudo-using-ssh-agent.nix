@@ -1,4 +1,4 @@
-{...}: {
+_: {
   config = {
     security = {
       pam.services.sudo = {config, ...}: {
@@ -7,15 +7,11 @@
         # Without this it will occasionally fall back to a password prompt.
         rules.auth.ssh_agent_auth_retry = {
           order = config.rules.auth.ssh_agent_auth.order + 1;
-          control = config.rules.auth.ssh_agent_auth.control;
-          modulePath = config.rules.auth.ssh_agent_auth.modulePath;
-          args = config.rules.auth.ssh_agent_auth.args;
+          inherit (config.rules.auth.ssh_agent_auth) control modulePath args;
         };
         rules.auth.ssh_agent_auth_retry_retry = {
           order = config.rules.auth.ssh_agent_auth.order + 2;
-          control = config.rules.auth.ssh_agent_auth.control;
-          modulePath = config.rules.auth.ssh_agent_auth.modulePath;
-          args = config.rules.auth.ssh_agent_auth.args;
+          inherit (config.rules.auth.ssh_agent_auth) control modulePath args;
         };
       };
 

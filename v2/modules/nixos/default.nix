@@ -1,10 +1,9 @@
 {
   config,
   lib,
-  outputs,
   myLib,
   ...
-} @ args: let
+}: let
   cfg = config.myNixOS;
 
   # Taking all modules in ./features and adding enables to them

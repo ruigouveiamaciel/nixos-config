@@ -1,16 +1,27 @@
-_: {
+{config, ...}: {
   config = {
     myNixOS = {
       nix.home-manager.enable = true;
       users = {
         enable = true;
+        authorized-keys.enable = true;
         users = {
           rui = {
-            authorizedKeys = [
-              builtins.readFile
-              ./authorized-keys/cardno_18_657_927.pub
-            ];
+            authorizedKeys = config.myNixOS.users.authorized-keys.users.rui;
             homeManagerConfigFile = ./home.nix;
+            extraGroups = [
+              "wheel"
+              "video"
+              "audio"
+              "network"
+              "networkmanager"
+              "net"
+              "docker"
+              "podman"
+              "git"
+              "dialout"
+              "plugdev"
+            ];
             extraSettings = {
               password = "12345678";
             };

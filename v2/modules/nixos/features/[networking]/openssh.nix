@@ -3,10 +3,12 @@
     services.openssh = {
       enable = true;
       settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = lib.mkForce "no";
-        StreamLocalBindUnlink = "yes";
+        PasswordAuthentication = lib.mkForce false;
+        PermitRootLogin = "no";
         GatewayPorts = "clientspecified";
+        StreamLocalBindUnlink = "yes";
+        AllowTcpForwarding = "yes";
+        AllowAgentForwarding = "yes";
       };
 
       hostKeys = [

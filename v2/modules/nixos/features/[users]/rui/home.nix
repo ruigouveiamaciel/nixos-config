@@ -1,6 +1,13 @@
 {outputs, ...}: {
   imports = [outputs.homeManagerModules.default];
 
+  myHomeManager = {
+    bundles = {
+      core.enable = true;
+      development.enable = true;
+    };
+  };
+
   home = {
     username = "rui";
     homeDirectory = "/home/rui";
