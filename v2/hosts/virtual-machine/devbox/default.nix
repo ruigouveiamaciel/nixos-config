@@ -40,7 +40,7 @@
   fileSystems."/".autoResize = true;
 
   networking = {
-    hostName = "devbox";
+    hostName = "sshwifty";
     useDHCP = lib.mkDefault true;
   };
 
