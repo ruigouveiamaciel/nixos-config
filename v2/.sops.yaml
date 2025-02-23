@@ -3,7 +3,7 @@ keys:
     - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
   - &hosts
     - &devbox age1l9ceachwp0x3v3s0nl6g90upg3fqvq60x7dfmgeewef2pee2jaaqh78duk
-    - &sshwifty age1l9ceachwp0x3v3s0nl6g90upg3fqvq60x7dfmgeewef2pee2jaaqh78duk
+    - &sshwifty age1hduxj5q2ejjd7ys7wmwh9lygnjy6gydz4n02kwyg0f90j2revqeqz8j2xe
 
 creation_rules:
   - path_regex: ./modules/nixos/features/[users]/rui/secrets.ya?ml$

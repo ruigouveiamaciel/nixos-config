@@ -10,7 +10,7 @@ in {
       image = "niruix/sshwifty@sha256:837fd62b5cccab6ca2233058b2c5e001f1aae434e2a97f7c2da4307b01460b0e";
       extraOptions = ["--network=${networkName}"];
       dependsOn = ["sshwifty-cloudflared-tunnel"];
-      volumes = ["${config.sops.templates."sshwifty.config.json".path}:/sshwifty.conf.json:ro"];
+      volumes = ["${config.sops.templates."sshwifty.conf.json".path}:/sshwifty.conf.json:ro"];
       environment = {
         SSHWIFTY_CONFIG = "/sshwifty.conf.json";
       };
@@ -48,7 +48,7 @@ in {
   sops = {
     secrets = {
       sshwifty-cloudflared-tunnel-token.sopsFile = ./secrets.yaml;
-      secrets.devbox-ssh-password.sopsFile = ./secrets.yaml;
+      devbox-ssh-password.sopsFile = ./secrets.yaml;
     };
 
     templates = {
