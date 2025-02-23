@@ -22,9 +22,6 @@
               "dialout"
               "plugdev"
             ];
-            extraSettings = {
-              password = "12345678";
-            };
           };
         };
       };

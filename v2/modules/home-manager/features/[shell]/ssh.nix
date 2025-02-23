@@ -4,7 +4,7 @@
       enable = true;
       matchBlocks = {
         sputnik = {
-          host = "code.maciel.sh";
+          host = "devbox.maciel.sh";
           proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
           forwardAgent = true;
           remoteForwards = [
