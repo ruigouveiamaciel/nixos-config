@@ -63,7 +63,6 @@ in {
               description = name;
               openssh.authorizedKeys.keys = lib.mkIf (user.authorizedKeys != null) user.authorizedKeys;
               isNormalUser = true;
-              shell = pkgs.fish;
               extraGroups = lib.mkIf (user.extraGroups != null) (ifTheyExist user.extraGroups);
               packages = lib.mkIf (user.homeManagerConfigFile != null) [pkgs.home-manager];
             }

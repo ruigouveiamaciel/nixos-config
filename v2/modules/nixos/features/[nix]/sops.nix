@@ -1,7 +1,6 @@
 {
   inputs,
   config,
-  pkgs,
   ...
 }: let
   isEd25519 = k: k.type == "ed25519";
@@ -16,11 +15,5 @@ in {
     sops = {
       age.sshKeyPaths = map getKeyPath keys;
     };
-
-    environment.systemPackages = with pkgs; [
-      sops
-      age
-      ssh-to-age
-    ];
   };
 }

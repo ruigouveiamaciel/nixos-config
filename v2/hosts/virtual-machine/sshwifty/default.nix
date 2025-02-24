@@ -8,8 +8,6 @@
 
     inputs.disko.nixosModules.disko
     ./disko.nix
-
-    ./openssh.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -30,6 +28,21 @@
   };
 
   services.qemuGuest.enable = true;
+
+  security.sudo.extraRules = [
+    {
+      users = ["rui"];
+      commands = [
+        {
+          command = "ALL";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
+
+  nix.settings.require-sigs = false;
+  nix.settings.secret-key-files = [];
 
   system.stateVersion = "24.11";
 }

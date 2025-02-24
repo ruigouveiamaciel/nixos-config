@@ -2,7 +2,6 @@
   inputs,
   lib,
   modulesPath,
-  config,
   ...
 }: {
   imports = [
@@ -12,29 +11,32 @@
 
     inputs.disko.nixosModules.disko
     ./disko.nix
-
-    ./openssh.nix
   ];
 
   myNixOS = {
-    bundles.core.enable = true;
-    bundles.server.enable = true;
-
-    users.rui.enable = true;
+    locale.pt-pt.enable = true;
+    networking.openssh.enable = true;
+    nix = {
+      nix-settings.enable = true;
+      sops.enable = true;
+    };
+    security = {
+      disable-lecture.enable = true;
+      sudo-using-ssh-agent.enable = true;
+    };
+    users.admin.enable = true;
   };
 
-  sops.secrets.deploy-key = {
-    sopsFile = ./secrets.yaml;
-  };
-
-  nix.settings.secret-key-files = [
-    config.sops.secrets.deploy-key.path
-  ];
+  environment.defaultPackages = [];
 
   networking = {
-    hostName = "devbox";
-    useDHCP = lib.mkDefault true;
+    hostName = "minimal";
+    useDHCP = lib.mkForce true;
   };
+
+  #nix.settings.require-sigs = false;
+  #nix.settings.secret-key-files = [];
+  nix.settings.trusted-public-keys = ["deploy-key:VRnp+EA2o8IqWp2YgUI41gtvQaeG/OI6nj5Rg+r0yZA="];
 
   # QEMU Stuff
   boot.loader.systemd-boot.enable = true;

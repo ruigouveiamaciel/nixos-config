@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   config = {
     myNixOS = {
       nix.home-manager.enable = true;
@@ -22,6 +26,9 @@
               "dialout"
               "plugdev"
             ];
+            extraSettings = {
+              shell = pkgs.fish;
+            };
           };
         };
       };
