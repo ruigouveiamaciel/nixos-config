@@ -13,9 +13,9 @@
     ./openssh.nix
   ];
 
-  myNixOS = {
-    bootloader.grub.enable = true;
+  boot.loader.systemd-boot.enable = true;
 
+  myNixOS = {
     bundles.core.enable = true;
     bundles.server.enable = true;
 
