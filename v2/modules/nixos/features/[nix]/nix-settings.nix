@@ -8,6 +8,13 @@
     nix = {
       settings = {
         trusted-users = ["root" "@wheel"];
+        trusted-public-keys = [
+          "deploy-key:VRnp+EA2o8IqWp2YgUI41gtvQaeG/OI6nj5Rg+r0yZA="
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        ];
+        extra-substituters = [
+          "https://nix-community.cachix.org"
+        ];
         auto-optimise-store = true;
         experimental-features = ["nix-command" "flakes"];
         warn-dirty = false;

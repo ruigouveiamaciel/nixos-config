@@ -4,7 +4,7 @@
       enable = true;
       settings = {
         PasswordAuthentication = lib.mkForce false;
-        PermitRootLogin = lib.mkForce "no";
+        PermitRootLogin = lib.mkDefault "no";
         GatewayPorts = "clientspecified";
         StreamLocalBindUnlink = "yes";
         AllowTcpForwarding = "yes";
@@ -18,7 +18,5 @@
         }
       ];
     };
-
-    security.pam.sshAgentAuth.enable = true;
   };
 }

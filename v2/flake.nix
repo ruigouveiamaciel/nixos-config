@@ -26,6 +26,11 @@
     nvf.url = "github:notashelf/nvf";
 
     deploy-rs.url = "github:serokell/deploy-rs";
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -33,44 +38,40 @@
   in
     with myLib; {
       nixosConfigurations = {
-        minimal-live-iso = mkSystem ./hosts/live-iso/minimal/configuration.nix;
-        "virtual-machine.devbox" = mkSystem ./hosts/virtual-machine/devbox;
-        "virtual-machine.sshwifty" = mkSystem ./hosts/virtual-machine/sshwifty;
-        "virtual-machine.minimal" = mkSystem ./hosts/virtual-machine/minimal;
-      };
-
-      homeConfigurations = {
-        "rui@minimal-live-iso" = mkHome "x86_64-linux" ./hosts/live-iso/minimal/home.nix;
+        proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
+        proxmox-devbox-lxc = mkSystem ./hosts/proxmox/devbox-lxc;
+        proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
+        proxmox-minimal-virtual-machine = mkSystem ./hosts/proxmox/minimal-virtual-machine;
+        proxmox-minimal-live-iso = mkSystem ./hosts/proxmox/minimal-live-iso;
+        proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
       };
 
       deploy = {
-        sshUser = "rui";
-        sshOpts = ["-A"];
         user = "root";
-        fastConnection = false;
-        magicRollback = false;
-        remoteBuild = true;
+        sshUser = "root";
+        sshOpts = [];
+        fastConnection = true;
+        autoRollback = true;
+        magicRollback = true;
+        interactiveSudo = false;
+        remoteBuild = false;
         nodes = {
-          minimal = {
-            hostname = "10.0.100.3";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."virtual-machine.minimal";
-            };
+          devbox = {
+            hostname = "devbox";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-devbox-lxc;
+          };
+          unifi = {
+            hostname = "10.0.0.29";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
         };
       };
 
       checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
-
       nixosModules.default = ./modules/nixos;
       homeManagerModules.default = ./modules/home-manager;
-
-      packages =
-        pkgsForAllSystems ({pkgs, ...}:
-          import ./packages {inherit pkgs inputs;});
-
+      packages = pkgsForAllSystems ({pkgs, ...}: import ./packages {inherit pkgs inputs;});
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);
-
       overlays = import ./overlays {inherit inputs;};
     };
 }

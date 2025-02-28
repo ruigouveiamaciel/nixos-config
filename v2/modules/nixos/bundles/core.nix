@@ -1,7 +1,7 @@
 _: {
   config = {
     myNixOS = {
-      locale.pt-pt.enable = true;
+      locales.pt-pt.enable = true;
 
       nix = {
         nix-settings.enable = true;
