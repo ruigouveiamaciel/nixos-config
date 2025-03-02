@@ -4,12 +4,16 @@ _: {
       enable = true;
       settings = {
         format = ''
-          $all$fill$time$line_break$jobs$battery$status$os$container$shell$character
+          $all$fill$time$line_break$jobs$battery$status$os$shell$character
         '';
 
         fill = {
           disabled = false;
           symbol = " ";
+        };
+
+        container = {
+          disabled = true;
         };
 
         character = {

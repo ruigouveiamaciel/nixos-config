@@ -2,8 +2,7 @@ keys:
   - &users
     - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
   - &hosts
-    - &devbox age18p8klj04t39eu9a33u95sa7qt3enhwf959v5sn90d88mcs7n6pgs9vylen
-    - &sshwifty age1r8m3c493p73zm4wc4geddjenj4x9v8df38dka8kah3hl6kr564wq4024pw
+    - &devbox age19atlktxfg70wnp92av7ghgevghvxwy2hkd6yfdu2ufc5wns6svmst4jh59
 
 creation_rules:
   - path_regex: ./modules/nixos/features/[users]/rui/secrets.ya?ml$
@@ -11,13 +10,8 @@ creation_rules:
       - age: *hosts
         pgp:
           - *rui
-  - path_regex: hosts/virtual-machine/devbox/secrets.ya?ml$
+  - path_regex: hosts/proxmox/devbox-lxc/secrets.ya?ml$
     key_groups:
       - age:
           - *devbox
-        pgp: *users
-  - path_regex: hosts/virtual-machine/sshwifty/secrets.ya?ml$
-    key_groups:
-      - age:
-          - *sshwifty
         pgp: *users
