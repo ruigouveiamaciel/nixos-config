@@ -38,8 +38,7 @@
   in
     with myLib; {
       nixosConfigurations = {
-        proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
-        proxmox-devbox-lxc = mkSystem ./hosts/proxmox/devbox-lxc;
+        proxmox-devbox = mkSystem ./hosts/proxmox/devbox-lxc;
         proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
         proxmox-minimal-virtual-machine = mkSystem ./hosts/proxmox/minimal-virtual-machine;
         proxmox-minimal-live-iso = mkSystem ./hosts/proxmox/minimal-live-iso;
@@ -56,12 +55,8 @@
         interactiveSudo = false;
         remoteBuild = false;
         nodes = {
-          devbox = {
-            hostname = "devbox";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-devbox-lxc;
-          };
           unifi = {
-            hostname = "10.0.0.29";
+            hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
         };

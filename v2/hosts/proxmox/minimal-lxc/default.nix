@@ -27,6 +27,8 @@
     users.authorized-keys.enable = true;
   };
 
+  sops.useTmpfs = lib.mkForce true;
+
   users.users.root.openssh.authorizedKeys.keys = config.myNixOS.users.authorized-keys.users.rui;
   services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
 
