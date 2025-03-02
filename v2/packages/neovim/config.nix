@@ -11,6 +11,7 @@
     globals = {
       mapleader = " ";
       maplocalleader = " ";
+      editorconfig = true;
     };
 
     useSystemClipboard = true;
@@ -69,13 +70,6 @@
         lspconfig.eslint.setup({
             cmd = { "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server", "--stdio" };
             filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-            on_attach = function(client, bufnr)
-                -- Enable formatting on save if needed
-                -- vim.api.nvim_create_autocmd("BufWritePre", {
-                --    buffer = bufnr,
-                --    command = "EslintFixAll"
-                -- })
-            end,
         })
       '';
 
@@ -263,8 +257,27 @@
       surround.enable = true;
     };
 
+    terminal = {
+      toggleterm = {
+        enable = true;
+        mappings.open = "<leader>tt";
+      };
+    };
+
     telescope = {
       enable = true;
+      setupOpts.defaults.vimgrep_arguments = [
+        "${pkgs.ripgrep}/bin/rg"
+        "--color=never"
+        "--with-filename"
+        "--line-number"
+        "--column"
+        "--hidden"
+        "--glob"
+        "!**/.git/*"
+        "--glob"
+        "!**/node_modules/*"
+      ];
     };
 
     statusline = {
@@ -276,10 +289,9 @@
 
     lsp = {
       formatOnSave = true;
-      lspkind.enable = false;
-      lspsaga.enable = false;
-      trouble.enable = true;
-      lspSignature.enable = true;
+      #trouble.enable = true;
+      #lspSignature.enable = true;
+        #lspsaga.enable = true;
       otter-nvim.enable = true;
       lsplines.enable = true;
     };
@@ -377,7 +389,8 @@
           lua
           */
           ''
-            require("telescope").load_extension("ui-select")
+            local telescope = require("telescope")
+            telescope.load_extension("ui-select")
           '';
       };
 
