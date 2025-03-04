@@ -6,18 +6,18 @@
       pkgs = final;
     };
 
-  # Change versions, add patches, set compilation flags, anything really.
-  # https://nixos.wiki/wiki/Overlays
-  modifications = _final: _prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
-  };
-
   # Make nixos-unstable accessible through 'pkgs.unstable'
   unstable-packages = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
       inherit (final) system config;
     };
   };
+
+  apple-silicon = final: prev:
+    inputs.nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+      pkgs-x86_64 = import inputs.nixpkgs-unstable {
+        system = "x86_64-darwin";
+        inherit (final) config;
+      };
+    };
 }

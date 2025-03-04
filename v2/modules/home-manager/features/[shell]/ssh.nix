@@ -15,8 +15,7 @@
           ];
         };
         minimal = {
-          host = "10.0.100.100";
-          #proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
+          host = "10.0.102.2";
           forwardAgent = true;
           remoteForwards = [
             {

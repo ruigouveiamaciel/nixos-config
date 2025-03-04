@@ -273,6 +273,7 @@
         "--line-number"
         "--column"
         "--hidden"
+        "--smart-case"
         "--glob"
         "!**/.git/*"
         "--glob"
@@ -291,7 +292,7 @@
       formatOnSave = true;
       #trouble.enable = true;
       #lspSignature.enable = true;
-        #lspsaga.enable = true;
+      #lspsaga.enable = true;
       otter-nvim.enable = true;
       lsplines.enable = true;
     };

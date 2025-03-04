@@ -6,6 +6,8 @@
   pinentryPackage =
     if config.gtk.enable
     then pkgs.pinentry-gnome3
+    else if pkgs.stdenv.isDarwin
+    then pkgs.pinentry_mac
     else pkgs.pinentry-tty;
 in {
   config = {

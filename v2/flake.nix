@@ -31,6 +31,9 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -43,6 +46,10 @@
         proxmox-minimal-virtual-machine = mkSystem ./hosts/proxmox/minimal-virtual-machine;
         proxmox-minimal-live-iso = mkSystem ./hosts/proxmox/minimal-live-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
+      };
+
+      darwinConfigurations = {
+        darwin-work = mkDarwinSystem ./hosts/darwin/work;
       };
 
       deploy = {
@@ -65,6 +72,7 @@
       checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
       nixosModules.default = ./modules/nixos;
       homeManagerModules.default = ./modules/home-manager;
+      darwinModules.default = ./modules/darwin;
       packages = pkgsForAllSystems ({pkgs, ...}: import ./packages {inherit pkgs inputs;});
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);
       overlays = import ./overlays {inherit inputs;};
