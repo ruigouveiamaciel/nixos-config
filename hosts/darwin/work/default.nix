@@ -14,7 +14,7 @@
   };
 
   programs.fish.shellAliases = {
-    "rebuild" = "cd ~/nixos-config/v2/ && sudo darwin-rebuild switch --flake .#darwin-work";
+    "rebuild" = "cd ~/nixos-config/ && darwin-rebuild switch --flake .#darwin-work";
   };
 
   homebrew.casks = [
@@ -23,11 +23,10 @@
     "slack"
     "notunes"
     "scroll-reverser"
-    "librewolf"
     "waterfox"
-    "google-chrome"
-    "eloston-chromium"
     "ghostty"
+    "microsoft-teams"
+    "microsoft-outlook"
   ];
 
   power = {
