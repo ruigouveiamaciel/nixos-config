@@ -185,8 +185,8 @@
 
     theme = {
       enable = true;
-      name = "gruvbox";
-      style = "dark";
+      name = "catppuccin";
+      style = "macchiato";
       transparent = false;
     };
 
@@ -284,7 +284,7 @@
     statusline = {
       lualine = {
         enable = true;
-        theme = "gruvbox";
+        theme = "auto";
       };
     };
 

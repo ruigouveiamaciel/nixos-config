@@ -27,6 +27,12 @@ in {
             description = "The path for this user's home manager config";
           };
 
+          extraHomeManagerConfigFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
+            description = "The path for this user's extra home manager config";
+          };
+
           extraSettings = lib.mkOption {
             type = lib.types.attrs;
             default = {};
@@ -54,8 +60,12 @@ in {
     };
     home-manager = lib.mkIf config.myDarwin.nix.home-manager.enable {
       users = builtins.mapAttrs (
-        _: user:
-          import user.homeManagerConfigFile
+        _: user: {
+          imports = [
+            user.homeManagerConfigFile
+            user.extraHomeManagerConfigFile
+          ];
+        }
       ) (inputs.nixpkgs.lib.filterAttrs (_: user: user.homeManagerConfigFile != null) cfg.users);
     };
   };
