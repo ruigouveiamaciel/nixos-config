@@ -33,8 +33,8 @@
   services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
 
   networking = {
-    hostName = lib.mkDefault "minimal";
-    useDHCP = lib.mkForce true;
+    hostName = lib.mkDefault "minimal-lxc";
+    useDHCP = lib.mkDefault true;
   };
 
   zramSwap.enable = true;

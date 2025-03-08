@@ -47,7 +47,7 @@
   documentation.nixos.enable = lib.mkImageMediaOverride false;
 
   networking = {
-    hostName = lib.mkForce "minimal-live-iso";
+    hostName = lib.mkForce "minimal-iso";
     useDHCP = lib.mkForce true;
   };
 

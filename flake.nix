@@ -41,10 +41,10 @@
   in
     with myLib; {
       nixosConfigurations = {
-        proxmox-devbox = mkSystem ./hosts/proxmox/devbox-lxc;
+        proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
         proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
-        proxmox-minimal-virtual-machine = mkSystem ./hosts/proxmox/minimal-virtual-machine;
-        proxmox-minimal-live-iso = mkSystem ./hosts/proxmox/minimal-live-iso;
+        proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
+        proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
       };
 
@@ -65,6 +65,12 @@
           unifi = {
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
+          };
+          minimal = {
+            autoRollback = false;
+            magicRollback = false;
+            hostname = "10.0.102.69";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-minimal-vm;
           };
         };
       };
