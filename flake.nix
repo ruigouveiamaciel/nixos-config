@@ -57,8 +57,8 @@
         sshUser = "root";
         sshOpts = [];
         fastConnection = true;
-        autoRollback = true;
-        magicRollback = true;
+        autoRollback = false;
+        magicRollback = false;
         interactiveSudo = false;
         remoteBuild = false;
         nodes = {
@@ -66,11 +66,9 @@
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
-          minimal = {
-            autoRollback = false;
-            magicRollback = false;
-            hostname = "10.0.102.69";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-minimal-vm;
+          devbox = {
+            hostname = "10.0.102.4";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-devbox;
           };
         };
       };
