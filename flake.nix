@@ -43,6 +43,7 @@
       nixosConfigurations = {
         proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
         proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
+        proxmox-storagebox = mkSystem ./hosts/proxmox/storagebox;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -68,9 +69,9 @@
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
-          devbox = {
-            hostname = "10.0.102.4";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-devbox;
+          storagebox = {
+            hostname = "10.0.102.3";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
         };
       };

@@ -1,5 +1,5 @@
 _: {
-  imports = [../minimal-vm];
+  imports = [../minimal-vm ./extra-disko];
 
   fileSystems."/export/media" = {
     device = "/mnt/media";
