@@ -57,12 +57,14 @@
         sshUser = "root";
         sshOpts = [];
         fastConnection = true;
-        autoRollback = false;
-        magicRollback = false;
+        autoRollback = true;
+        magicRollback = true;
         interactiveSudo = false;
         remoteBuild = false;
         nodes = {
           unifi = {
+            autoRollback = true;
+            magicRollback = false;
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
