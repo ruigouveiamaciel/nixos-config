@@ -30,8 +30,8 @@
 
   networking = {
     hostName = lib.mkDefault "minimal";
-    useDHCP = lib.mkForce true;
-    enableIPv6 = lib.mkForce false;
+    useDHCP = lib.mkDefault true;
+    enableIPv6 = lib.mkDefault false;
   };
 
   # QEMU Stuff

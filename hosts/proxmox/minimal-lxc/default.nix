@@ -35,6 +35,7 @@
   networking = {
     hostName = lib.mkDefault "minimal-lxc";
     useDHCP = lib.mkDefault true;
+    enableIPv6 = lib.mkDefault false;
   };
 
   zramSwap.enable = true;

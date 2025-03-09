@@ -44,6 +44,11 @@
         proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
         proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
         proxmox-storagebox = mkSystem ./hosts/proxmox/storagebox;
+        proxmox-jellyfin = mkSystem ./hosts/proxmox/jellyfin;
+        proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent;
+        proxmox-radarr = mkSystem ./hosts/proxmox/radarr;
+        proxmox-sonarr = mkSystem ./hosts/proxmox/sonarr;
+        proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -59,19 +64,37 @@
         sshOpts = [];
         fastConnection = true;
         autoRollback = true;
-        magicRollback = true;
+        magicRollback = false;
         interactiveSudo = false;
         remoteBuild = false;
         nodes = {
           unifi = {
-            autoRollback = true;
-            magicRollback = false;
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
           storagebox = {
             hostname = "10.0.102.3";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
+          };
+          jellyfin = {
+            hostname = "10.0.102.4";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyfin;
+          };
+          qbittorrent = {
+            hostname = "10.0.102.5";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
+          };
+          radarr = {
+            hostname = "10.0.102.6";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-radarr;
+          };
+          sonarr = {
+            hostname = "10.0.102.7";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-sonarr;
+          };
+          bazarr = {
+            hostname = "10.0.102.8";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-bazarr;
           };
         };
       };
