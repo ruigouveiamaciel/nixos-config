@@ -1,4 +1,4 @@
-_: {
+{pkgs, ...}: {
   myDarwin = {
     nix = {
       nix-settings.enable = true;
@@ -15,7 +15,11 @@ _: {
 
   programs.fish.shellAliases = {
     "rebuild" = "cd ~/nixos-config && darwin-rebuild switch --flake .#darwin-work";
+    "as" = "cd ~/frontend && pnpm exec nx run ace:serve:staging";
+    "ao" = "cd ~/frontend && nvim .";
   };
+
+  environment.systemPackages = with pkgs; [nodejs_20 pnpm_10];
 
   homebrew.casks = [
     "raycast"
@@ -29,6 +33,7 @@ _: {
     "microsoft-outlook"
     "capslocknodelay"
     "alt-tab"
+    "keymapp"
   ];
 
   # TODO: Setup tmux
@@ -37,6 +42,7 @@ _: {
     enable = true;
     settings = {
       on-focus-changed = ["move-mouse window-lazy-center"];
+      default-root-container-layout = "tiles";
       gaps = {
         outer = {
           left = 8;
@@ -64,6 +70,11 @@ _: {
           alt-shift-k = "move up";
           alt-shift-l = "move right";
 
+          cmd-h = "focus-monitor left";
+          cmd-j = "focus-monitor down";
+          cmd-k = "focus-monitor up";
+          cmd-l = "focus-monitor right";
+
           alt-ctrl-h = "join-with left";
           alt-ctrl-j = "join-with down";
           alt-ctrl-k = "join-with up";
@@ -72,16 +83,16 @@ _: {
           alt-slash = "resize smart -50";
           alt-equal = "resize smart +50";
 
-          alt-f1 = "workspace 1";
-          alt-f2 = "workspace 2";
-          alt-f3 = "workspace 3";
-          alt-f4 = "workspace 4";
-          alt-f5 = "workspace 5";
-          alt-f6 = "workspace 6";
-          alt-f7 = "workspace 7";
-          alt-f8 = "workspace 8";
-          alt-f9 = "workspace 9";
-          alt-f10 = "workspace 10";
+          alt-f1 = "summon-workspace 1";
+          alt-f2 = "summon-workspace 2";
+          alt-f3 = "summon-workspace 3";
+          alt-f4 = "summon-workspace 4";
+          alt-f5 = "summon-workspace 5";
+          alt-f6 = "summon-workspace 6";
+          alt-f7 = "summon-workspace 7";
+          alt-f8 = "summon-workspace 8";
+          alt-f9 = "summon-workspace 9";
+          alt-f10 = "summon-workspace 10";
 
           alt-shift-f1 = "move-node-to-workspace 1";
           alt-shift-f2 = "move-node-to-workspace 2";
@@ -95,7 +106,7 @@ _: {
           alt-shift-f10 = "move-node-to-workspace 10";
 
           alt-tab = "workspace-back-and-forth";
-          alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
+          #alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
 
           alt-f = "layout floating tiling";
           alt-r = "flatten-workspace-tree";

@@ -6,6 +6,7 @@
       userEmail = "ruigouveiamaciel@proton.me";
       userName = "Rui Maciel";
       lfs.enable = true;
+      push.autoSetupRemote = true;
     };
   };
 }

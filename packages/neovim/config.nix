@@ -259,7 +259,7 @@
 
     terminal = {
       toggleterm = {
-        enable = true;
+        enable = false;
         mappings.open = "<leader>tt";
       };
     };
@@ -364,7 +364,7 @@
                 ["g."] = "actions.toggle_hidden",
               },
               view_options = {
-                show_hidden = true;
+                show_hidden = false;
               }
             }
 
