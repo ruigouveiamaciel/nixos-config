@@ -29,8 +29,13 @@
   system.stateVersion = lib.mkForce "24.11";
 
   services.rpcbind.enable = true; # needed for NFS
-  fileSystems."/mnt/media" = {
-    device = "10.0.102.3:/media";
+  fileSystems."/mnt/media-server" = {
+    device = "10.0.102.3:/media-server";
+    fsType = "nfs";
+    options = ["nfsvers=4.2"];
+  };
+  fileSystems."/mnt/torrenting" = {
+    device = "10.0.102.3:/torrenting";
     fsType = "nfs";
     options = ["nfsvers=4.2"];
   };

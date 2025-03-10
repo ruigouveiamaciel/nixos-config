@@ -49,6 +49,7 @@
         proxmox-radarr = mkSystem ./hosts/proxmox/radarr;
         proxmox-sonarr = mkSystem ./hosts/proxmox/sonarr;
         proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr;
+        proxmox-prowlarr = mkSystem ./hosts/proxmox/prowlarr;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -95,6 +96,10 @@
           bazarr = {
             hostname = "10.0.102.8";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-bazarr;
+          };
+          prowlarr = {
+            hostname = "10.0.102.9";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-prowlarr;
           };
         };
       };
