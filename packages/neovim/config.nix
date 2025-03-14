@@ -181,6 +181,11 @@
         desc = "Move focus to the lower window";
         action = "<C-w><C-j>";
       }
+      {
+        key = "<F1>";
+        mode = "n";
+        action = "<nop>";
+      }
     ];
 
     theme = {
