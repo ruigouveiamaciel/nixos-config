@@ -1,0 +1,23 @@
+keys:
+  - &users
+    - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
+  - &hosts
+    - &devbox age19atlktxfg70wnp92av7ghgevghvxwy2hkd6yfdu2ufc5wns6svmst4jh59
+    - &homepage age19qad6e8wnfgadgdvas9xmm06590dav3ym6msrgvfjjxw3y78laxs7nmyqh
+
+creation_rules:
+  - path_regex: ./modules/nixos/features/[users]/rui/secrets.ya?ml$
+    key_groups:
+      - age: *hosts
+        pgp:
+          - *rui
+  - path_regex: hosts/proxmox/devbox/secrets.ya?ml$
+    key_groups:
+      - age:
+          - *devbox
+        pgp: *users
+  - path_regex: hosts/proxmox/homepage/secrets.ya?ml$
+    key_groups:
+      - age:
+          - *devbox
+        pgp: *users

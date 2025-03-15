@@ -1,6 +1,8 @@
 {
   pkgs,
   inputs,
+  config,
+  lib,
   ...
 }: {
   imports = [
@@ -14,6 +16,7 @@
   services.jellyfin = {
     enable = true;
     openFirewall = true;
+    dataDir = "/mnt/media/.jellyfin";
   };
 
   environment.systemPackages = [
@@ -43,20 +46,25 @@
   boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
 
   services.rpcbind.enable = true;
-  fileSystems."/mnt/media-server" = {
-    device = "10.0.102.3:/media-server";
+  fileSystems."/mnt/media" = {
+    device = "10.0.102.3:/media";
     fsType = "nfs";
     options = ["nfsvers=4.2"];
   };
 
-  systemd.services.jellyfin = {
-    after = ["remote-fs.target"]; # Ensure it starts after remote mounts
-    requires = ["remote-fs.target"]; # Stop service if remote-fs.target goes down
-    serviceConfig = {
-      RestartSec = 60; # Wait 60 seconds before restarting
-    };
-    # Stop retrying after 60 minutes (60 retries)
-    startLimitBurst = 60; # Allow up to 60 starts
-    startLimitIntervalSec = 3600; # Time window for retry count (1 hour)
-  };
+  systemd.services = let
+    inherit (config.virtualisation.oci-containers) backend;
+  in
+    lib.attrsets.mapAttrs' (serviceName: _:
+      lib.attrsets.nameValuePair "${backend}-${serviceName}" {
+        bindsTo = ["mnt-media.mount"];
+        after = ["mnt-media.mount"];
+        serviceConfig = {
+          Restart = lib.mkForce "always";
+          RestartSec = 60;
+        };
+        startLimitBurst = 60;
+        startLimitIntervalSec = 3600;
+      })
+    config.virtualisation.oci-containers.containers;
 }

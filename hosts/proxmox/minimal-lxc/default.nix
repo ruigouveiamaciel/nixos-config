@@ -38,7 +38,7 @@
     enableIPv6 = lib.mkDefault false;
   };
 
-  zramSwap.enable = true;
+  zramSwap.enable = false;
   systemd.oomd.enable = false;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

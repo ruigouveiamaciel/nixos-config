@@ -46,10 +46,8 @@
         proxmox-storagebox = mkSystem ./hosts/proxmox/storagebox;
         proxmox-jellyfin = mkSystem ./hosts/proxmox/jellyfin;
         proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent;
-        proxmox-radarr = mkSystem ./hosts/proxmox/radarr;
-        proxmox-sonarr = mkSystem ./hosts/proxmox/sonarr;
-        proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr;
-        proxmox-prowlarr = mkSystem ./hosts/proxmox/prowlarr;
+        proxmox-media-management = mkSystem ./hosts/proxmox/media-management;
+        proxmox-homepage = mkSystem ./hosts/proxmox/homepage;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -85,21 +83,13 @@
             hostname = "10.0.102.5";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
           };
-          radarr = {
-            hostname = "10.0.102.6";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-radarr;
+          media-management = {
+            hostname = "10.0.102.16";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-management;
           };
-          sonarr = {
-            hostname = "10.0.102.7";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-sonarr;
-          };
-          bazarr = {
-            hostname = "10.0.102.8";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-bazarr;
-          };
-          prowlarr = {
-            hostname = "10.0.102.9";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-prowlarr;
+          homepage = {
+            hostname = "10.0.102.254";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-homepage;
           };
         };
       };

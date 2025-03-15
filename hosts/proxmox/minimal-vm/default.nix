@@ -45,8 +45,22 @@
   fileSystems."/".autoResize = true;
 
   services.qemuGuest.enable = true;
-  zramSwap.enable = true;
-  systemd.oomd.enable = false;
+  zramSwap.enable = false;
+  systemd = {
+    oomd.enable = false;
+    services.clear-cache = {
+      description = "Clear Page Cache";
+      serviceConfig.Type = "oneshot";
+      script = "sync && echo 3 > /proc/sys/vm/drop_caches";
+    };
+    timers.clear-cache = {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "hourly";
+        Persistent = true;
+      };
+    };
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   system.stateVersion = "24.11";
