@@ -19,5 +19,5 @@ creation_rules:
   - path_regex: hosts/proxmox/homepage/secrets.ya?ml$
     key_groups:
       - age:
-          - *devbox
+          - *homepage
         pgp: *users
