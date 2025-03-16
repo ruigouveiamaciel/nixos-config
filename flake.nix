@@ -76,6 +76,7 @@
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
           jellyfin = {
+            autoRollback = false;
             hostname = "10.0.102.4";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyfin;
           };
