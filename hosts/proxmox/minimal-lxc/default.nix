@@ -36,6 +36,10 @@
     hostName = lib.mkDefault "minimal-lxc";
     useDHCP = lib.mkDefault true;
     enableIPv6 = lib.mkDefault false;
+    firewall.interfaces."podman+" = {
+      allowedUDPPorts = [53];
+      allowedTCPPorts = [53];
+    };
   };
 
   zramSwap.enable = false;

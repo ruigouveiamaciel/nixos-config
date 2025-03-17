@@ -32,6 +32,10 @@
     hostName = lib.mkDefault "minimal";
     useDHCP = lib.mkDefault true;
     enableIPv6 = lib.mkDefault false;
+    firewall.interfaces."podman+" = {
+      allowedUDPPorts = [53];
+      allowedTCPPorts = [53];
+    };
   };
 
   # QEMU Stuff

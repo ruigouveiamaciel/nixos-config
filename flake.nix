@@ -44,9 +44,11 @@
         proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
         proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
         proxmox-storagebox = mkSystem ./hosts/proxmox/storagebox;
-        proxmox-jellyfin = mkSystem ./hosts/proxmox/jellyfin;
+        proxmox-media-server = mkSystem ./hosts/proxmox/media-server;
         proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent;
         proxmox-media-management = mkSystem ./hosts/proxmox/media-management;
+        proxmox-vikunja = mkSystem ./hosts/proxmox/vikunja;
+        proxmox-paperless = mkSystem ./hosts/proxmox/paperless;
         proxmox-homepage = mkSystem ./hosts/proxmox/homepage;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
@@ -75,10 +77,9 @@
             hostname = "10.0.102.3";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
-          jellyfin = {
-            autoRollback = false;
+          media-server = {
             hostname = "10.0.102.4";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyfin;
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-server;
           };
           qbittorrent = {
             hostname = "10.0.102.5";
@@ -91,6 +92,15 @@
           homepage = {
             hostname = "10.0.102.254";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-homepage;
+          };
+          vikunja = {
+            hostname = "10.0.102.6";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-vikunja;
+          };
+          paperless = {
+            autoRollback = false;
+            hostname = "10.0.102.7";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-paperless;
           };
         };
       };

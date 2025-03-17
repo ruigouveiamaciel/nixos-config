@@ -7,12 +7,6 @@ keys:
     - &media-server age1eh0fg60ykzx9es5pn0t6pnsm2th2vuhuyjf33km2dxr8fkf8gpyqyz0923
 
 creation_rules:
-  - path_regex: ./modules/nixos/features/[users]/rui/secrets.ya?ml$
-    key_groups:
-      - age:
-          - *devbox
-        pgp:
-          - *rui
   - path_regex: hosts/proxmox/devbox/secrets.ya?ml$
     key_groups:
       - age:
@@ -23,7 +17,7 @@ creation_rules:
       - age:
           - *homepage
         pgp: *users
-  - path_regex: hosts/proxmox/jellyfin/secrets.ya?ml$
+  - path_regex: hosts/proxmox/media-server/secrets.ya?ml$
     key_groups:
       - age:
           - *media-server

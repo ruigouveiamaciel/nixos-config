@@ -14,68 +14,56 @@
     listenPort = 8080;
     environmentFile = config.sops.templates."homepage.env".path;
     settings = {
-      layout = [
-        {
-          "Main" = {
-            header = false;
-            style = "row";
-            columns = 2;
-            "Infrastructure" = {
-            };
-            "Media" = {
-              "Media Management" = {
-                header = false;
-                style = "row";
-                columns = 2;
-              };
-            };
-          };
-        }
-      ];
+      headerStyle = "clean";
+      useEqualHeights = true;
+      hideVersion = true;
+      disableUpdateCheck = true;
     };
     services = [
       {
-        "Main" = [
+        "Productivity & Documents" = [
           {
-            "Infrastructure" = [
+            "Vikunja" = rec {
+              icon = "vikunja";
+              description = "Task and project management";
+              href = "http://10.0.102.6:3456";
+              widget = {
+                type = "vikunja";
+                url = href;
+                key = "{{HOMEPAGE_VAR_VIKUNJA_KEY}}";
+                enableTaskList = true;
+              };
+            };
+          }
+          {
+            "Paperless" = rec {
+              icon = "paperless-ngx";
+              description = "Smart document management";
+              href = "";
+              widget = {
+                type = "paperlessngx";
+                url = href;
+                key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";
+              };
+            };
+          }
+          {
+            "Downloads & Storage" = [
               {
-                "Proxmox" = {
-                  icon = "proxmox-light";
-                  href = "https://10.0.0.2:8006";
-                  widget = {
-                    type = "proxmox";
-                    url = "https://10.0.0.2:8006";
-                    node = "discovery";
-                    username = "{{HOMEPAGE_VAR_PROXMOX_USERNAME}}";
-                    password = "{{HOMEPAGE_VAR_PROXMOX_PASSWORD}}";
-                  };
+                "Filebrowser" = {
+                  icon = "filebrowser";
+                  description = "Web-based file explorer";
+                  href = "http://10.0.102.3:8080";
                 };
               }
               {
-                "Unifi" = {
-                  icon = "unifi";
-                  href = "https://10.0.0.30:8443";
-                  widget = {
-                    type = "unifi";
-                    url = "https://10.0.0.30:8443";
-                    username = "{{HOMEPAGE_VAR_UNIFI_USERNAME}}";
-                    password = "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}";
-                  };
-                };
-              }
-              {
-                "pfSense" = {
-                  icon = "pfsense";
-                  href = "https://10.0.0.1";
-                };
-              }
-              {
-                "qBittorrent" = {
+                "qBittorrent" = rec {
                   icon = "qbittorrent";
+                  description = "BitTorrent client";
                   href = "http://10.0.102.5:8080";
                   widget = {
                     type = "qbittorrent";
-                    url = "http://10.0.102.5:8080";
+                    url = href;
                     username = "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}";
                     password = "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}";
                     enableLeechProgress = true;
@@ -84,122 +72,155 @@
               }
             ];
           }
-          {
-            "Media" = [
-              {
-                "Jellyfin" = {
-                  icon = "jellyfin";
-                  description = "Media server";
-                  href = "http://10.0.102.4:8096";
-                  widget = {
-                    type = "jellyfin";
-                    url = "http://10.0.102.4:8096";
-                    key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
-                    enableBlocks = true;
-                    fields = ["movies" "episodes"];
-                    enableNowPlaying = true;
-                    enableUser = false;
-                    showEpisodeNumber = true;
-                    expandOneStreamToTwoRows = false;
-                  };
-                };
-              }
-              {
-                "Immich" = {
-                  icon = "immich";
-                  description = "Personal photos and videos";
-                  href = "#";
-                };
-              }
-              {
-                "Media Management" = [
-                  {
-                    "Radarr" = {
-                      icon = "radarr";
-                      description = "Movie management";
-                      href = "http://10.0.102.16:7878";
-                      widget = {
-                        type = "radarr";
-                        url = "http://10.0.102.16:7878";
-                        key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
-                        fields = ["wanted" "queued" "movies"];
-                        enableQueue = false;
-                      };
-                    };
-                  }
-                  {
-                    "Sonarr" = {
-                      icon = "sonarr";
-                      description = "Series management";
-                      href = "http://10.0.102.16:8989";
-                      widget = {
-                        type = "sonarr";
-                        url = "http://10.0.102.16:8989";
-                        key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
-                        fields = ["wanted" "queued" "series"];
-                        enableQueue = false;
-                      };
-                    };
-                  }
-                  {
-                    "Bazarr" = {
-                      icon = "bazarr";
-                      description = "Subtitles management";
-                      href = "http://10.0.102.16:6767";
-                      widget = {
-                        type = "bazarr";
-                        url = "http://10.0.102.16:6767";
-                        key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
-                        fields = ["missingMovies" "missingEpisodes"];
-                      };
-                    };
-                  }
-                  {
-                    "Prowlarr" = {
-                      icon = "prowlarr";
-                      description = "Indexer management";
-                      href = "http://10.0.102.16:9696";
-                      widget = {
-                        type = "prowlarr";
-                        url = "http://10.0.102.16:9696";
-                        key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
-                        fields = ["numberOfGrabs" "numberOfFailGrabs"];
-                      };
-                    };
-                  }
-                ];
-              }
-            ];
-          }
         ];
       }
-    ];
-    bookmarks = [
       {
-        Developer = [
+        "Media Streaming & Libraries" = [
           {
-            Github = [
-              {
-                abbr = "GH";
-                href = "https://github.com/";
-              }
-            ];
+            "Jellyfin" = rec {
+              icon = "jellyfin";
+              description = "Media streaming server for movies and TV shows";
+              href = "http://10.0.102.4:8096";
+              widget = {
+                type = "jellyfin";
+                url = href;
+                key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
+                enableBlocks = true;
+                fields = ["movies" "episodes"];
+                enableNowPlaying = true;
+                enableUser = false;
+                showEpisodeNumber = true;
+                expandOneStreamToTwoRows = false;
+              };
+            };
+          }
+          {
+            "Immich" = rec {
+              icon = "immich";
+              description = "Personal photos and videos";
+              href = "http://10.0.102.4:2283";
+              widget = {
+                type = "immich";
+                url = href;
+                key = "{{HOMEPAGE_VAR_IMMICH_KEY}}";
+                version = 2;
+                fields = ["photos" "videos"];
+              };
+            };
           }
         ];
       }
       {
-        Entertainment = [
+        "Media Requests" = [
           {
-            YouTube = [
-              {
-                abbr = "YT";
-                href = "https://youtube.com/";
-              }
-            ];
+            "Jellyseerr" = rec {
+              icon = "jellyseerr";
+              description = "Discover and request movies and TV shows";
+              href = "http://10.0.102.16:5055";
+              widget = {
+                type = "jellyseerr";
+                url = href;
+                key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
+                fields = ["pending" "approved" "processing"];
+              };
+            };
+          }
+          {
+            "Radarr" = rec {
+              icon = "radarr";
+              description = "Automated movie management";
+              href = "http://10.0.102.16:7878";
+              widget = {
+                type = "radarr";
+                url = href;
+                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
+                fields = ["wanted" "queued" "movies"];
+                enableQueue = false;
+              };
+            };
+          }
+          {
+            "Sonarr" = rec {
+              icon = "sonarr";
+              description = "Automated TV show management";
+              href = "http://10.0.102.16:8989";
+              widget = {
+                type = "sonarr";
+                url = href;
+                key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
+                fields = ["wanted" "queued" "series"];
+                enableQueue = false;
+              };
+            };
+          }
+          {
+            "Bazarr" = rec {
+              icon = "bazarr";
+              description = "Subtitles downloader and manager";
+              href = "http://10.0.102.16:6767";
+              widget = {
+                type = "bazarr";
+                url = href;
+                key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
+                fields = ["missingMovies" "missingEpisodes"];
+              };
+            };
+          }
+          {
+            "Prowlarr" = rec {
+              icon = "prowlarr";
+              description = "Indexer manager";
+              href = "http://10.0.102.16:9696";
+              widget = {
+                type = "prowlarr";
+                url = href;
+                key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
+                fields = ["numberOfGrabs" "numberOfFailGrabs"];
+              };
+            };
+          }
+        ];
+      }
+      {
+        "Infrastructure & Networking" = [
+          {
+            "pfSense" = {
+              icon = "pfsense";
+              description = "Firewall and router";
+              href = "https://10.0.0.1";
+            };
+          }
+          {
+            "Proxmox" = rec {
+              icon = "proxmox-light";
+              description = "Virtualization and container management";
+              href = "https://10.0.0.2:8006";
+              widget = {
+                type = "proxmox";
+                url = href;
+                node = "discovery";
+                username = "{{HOMEPAGE_VAR_PROXMOX_USERNAME}}";
+                password = "{{HOMEPAGE_VAR_PROXMOX_PASSWORD}}";
+              };
+            };
+          }
+          {
+            "Unifi" = rec {
+              icon = "unifi";
+              description = "Network management and monitoring";
+              href = "https://10.0.0.30:8443";
+              widget = {
+                type = "unifi";
+                url = href;
+                username = "{{HOMEPAGE_VAR_UNIFI_USERNAME}}";
+                password = "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}";
+              };
+            };
           }
         ];
       }
     ];
+    bookmarks = [];
   };
 
   sops = {
@@ -215,6 +236,10 @@
       sonarr-key.sopsFile = ./secrets.yaml;
       bazarr-key.sopsFile = ./secrets.yaml;
       prowlarr-key.sopsFile = ./secrets.yaml;
+      jellyseerr-key.sopsFile = ./secrets.yaml;
+      immich-key.sopsFile = ./secrets.yaml;
+      paperless-key.sopsFile = ./secrets.yaml;
+      vikunja-key.sopsFile = ./secrets.yaml;
     };
 
     templates."homepage.env" = {
@@ -231,6 +256,10 @@
         HOMEPAGE_VAR_SONARR_KEY=${config.sops.placeholder.sonarr-key}
         HOMEPAGE_VAR_BAZARR_KEY=${config.sops.placeholder.bazarr-key}
         HOMEPAGE_VAR_PROWLARR_KEY=${config.sops.placeholder.prowlarr-key}
+        HOMEPAGE_VAR_JELLYSEERR_KEY=${config.sops.placeholder.jellyseerr-key}
+        HOMEPAGE_VAR_IMMICH_KEY=${config.sops.placeholder.immich-key}
+        HOMEPAGE_VAR_PAPERLESS_KEY=${config.sops.placeholder.paperless-key}
+        HOMEPAGE_VAR_VIKUNJA_KEY=${config.sops.placeholder.vikunja-key}
       '';
     };
   };

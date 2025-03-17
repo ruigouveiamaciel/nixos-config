@@ -68,6 +68,16 @@
         "/mnt/media/shows:/shows"
       ];
     };
+    jellyseerr = {
+      image = "fallenbagel/jellyseerr@sha256:52ca0b18c58ec4e769b8acae9beaae37a520a365c7ead52b7fc3ba1c3352d1f0";
+      extraOptions = ["--network=host"];
+      environment = {
+        TZ = "Etc/UTC";
+      };
+      volumes = [
+        "/mnt/torrenting/.jellyseerr:/app/config"
+      ];
+    };
   };
 
   networking.firewall = {
@@ -77,6 +87,7 @@
       6767 # Bazarr
       9696 # Prowlarr
       8989 # Sonarr
+      5055 # Jellyseerr
     ];
   };
 
@@ -85,8 +96,8 @@
   in
     lib.attrsets.mapAttrs' (serviceName: _:
       lib.attrsets.nameValuePair "${backend}-${serviceName}" {
-        bindsTo = ["mnt-torrenting.mount"];
-        after = ["mnt-torrenting.mount"];
+        bindsTo = ["mnt-torrenting.mount" "mnt-media.mount"];
+        after = ["mnt-torrenting.mount" "mnt-media.mount"];
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;

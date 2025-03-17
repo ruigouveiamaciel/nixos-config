@@ -1,4 +1,5 @@
 #!/bin/sh
 
-sops updatekeys ./users/rui/secrets.yaml
-sops updatekeys ./hosts/configs/sputnik/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/devbox/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/homepage/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/media-server/secrets.yaml

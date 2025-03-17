@@ -13,7 +13,7 @@ in {
     inputs.nixos-hardware.nixosModules.common-gpu-intel
   ];
 
-  networking.hostName = "jellyfin";
+  networking.hostName = "media-server";
 
   hardware = {
     enableRedistributableFirmware = true;
@@ -55,7 +55,12 @@ in {
     };
     immich-server = {
       image = "ghcr.io/immich-app/immich-server:${IMMICH_VERSION}";
-      extraOptions = ["--device=/dev/dri:/dev/dri" "--no-healthcheck"];
+      extraOptions = [
+        "--network=immich"
+        "--network=podman"
+        "--device=/dev/dri:/dev/dri"
+        "--no-healthcheck"
+      ];
       environmentFiles = [config.sops.templates."immich.env".path];
       ports = ["2283:2283"];
       volumes = [
@@ -69,16 +74,28 @@ in {
     };
     immich-machine-learning = {
       image = "ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION}-openvino";
-      extraOptions = ["--device=/dev/dri:/dev/dri" "--no-healthcheck"];
+      extraOptions = [
+        "--network=immich"
+        "--network=podman"
+        "--device=/dev/dri:/dev/dri"
+        "--no-healthcheck"
+      ];
       environmentFiles = [config.sops.templates."immich.env".path];
     };
     immich-redis = {
+      hostname = "redis";
       image = "docker.io/redis:6.2-alpine@sha256:148bb5411c184abd288d9aaed139c98123eeb8824c5d3fce03cf721db58066d8";
-      extraOptions = ["--health-cmd" "redis-cli ping || exit 1"];
+      extraOptions = [
+        "--network=immich"
+        "--health-cmd"
+        "redis-cli ping || exit 1"
+      ];
     };
     immich-database = {
+      hostname = "database";
       image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52";
       extraOptions = [
+        "--network=immich"
         "--health-cmd"
         ''pg_isready --dbname="''${POSTGRES_DB}" --username="''${POSTGRES_USER}" || exit 1; Chksum="''$(psql --dbname="''${POSTGRES_DB}" --username="''${POSTGRES_USER}" --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')"; echo "checksum failure count is $$Chksum"; [ "''$Chksum" = '0' ] || exit 1''
         "--health-interval"
@@ -92,6 +109,7 @@ in {
       volumes = [
         "/mnt/media/.immich/database:/var/lib/postgresql/data"
       ];
+      user = "nobody:nogroup";
       cmd = [
         "postgres"
         "-c"
@@ -104,7 +122,6 @@ in {
         "max_wal_size=2GB"
         "-c"
         "shared_buffers=512MB"
-        "-c wal_compression=on"
       ];
     };
   };
@@ -114,39 +131,61 @@ in {
     allowedTCPPorts = [8096 2283];
   };
 
-  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
-    lib.attrsets.nameValuePair serviceName {
-      bindsTo = ["mnt-media.mount"];
-      after = ["mnt-media.mount"];
-      serviceConfig = {
-        Restart = lib.mkForce "always";
-        RestartSec = 60;
+  systemd.services =
+    (lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+      lib.attrsets.nameValuePair serviceName rec {
+        bindsTo = [
+          "mnt-media.mount"
+          "run-secrets.d.mount"
+          "create-immich-network.service"
+        ];
+        after = bindsTo;
+        serviceConfig = {
+          Restart = lib.mkForce "always";
+          RestartSec = 60;
+        };
+        startLimitBurst = 60;
+        startLimitIntervalSec = 3600;
+      })
+    config.virtualisation.oci-containers.containers)
+    // {
+      create-immich-network = {
+        after = ["podman.service"];
+        script = ''
+          ${pkgs.podman}/bin/podman network exists immich || \
+          ${pkgs.podman}/bin/podman network create --internal immich
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
       };
-      startLimitBurst = 60;
-      startLimitIntervalSec = 3600;
-    })
-  config.virtualisation.oci-containers.containers;
+    };
 
   sops = {
     secrets = {
-      immich-database-passsword.sopsFile = ./secrets.yaml;
+      immich-database-password.sopsFile = ./secrets.yaml;
     };
 
     templates."immich.env" = {
       restartUnits = [
-        config.virtualisation.oci-containers.containers.immich-database.serviceName
+        "${config.virtualisation.oci-containers.containers.immich-database.serviceName}.service"
       ];
       content = ''
         TZ=Etc/UTC
-        IMMICH_VERSION="${IMMICH_VERSION}"
+        IMMICH_VERSION=${IMMICH_VERSION}
+        IMMICH_LOG_LEVEL=verbose
+
         DB_USERNAME=postgres
         DB_DATABASE_NAME=immich
-        DB_PASSWORD=postgres
+        DB_PASSWORD=${config.sops.placeholder.immich-database-password}
 
-        POSTGRES_PASSWORD: ''${DB_PASSWORD}
-        POSTGRES_USER: ''${DB_USERNAME}
-        POSTGRES_DB: ''${DB_DATABASE_NAME}
-        POSTGRES_INITDB_ARGS: '--data-checksums'
+        #IMMICH_MACHINE_LEARNING_URL=http://immich-machine-learning:3003
+
+        POSTGRES_PASSWORD=${config.sops.placeholder.immich-database-password}
+        POSTGRES_USER=postgres
+        POSTGRES_DB=immich
+        POSTGRES_INITDB_ARGS="--data-checksums"
       '';
     };
   };
