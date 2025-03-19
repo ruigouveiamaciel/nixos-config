@@ -1,6 +1,8 @@
 {
   imports = [../minimal-vm/disko.nix];
 
+  boot.supportedFilesystems = ["zfs"];
+
   disko.devices = {
     disk = {
       hdd1 = {
@@ -74,7 +76,7 @@
           compression = "zstd";
           xattr = "sa";
           atime = "off";
-          "com.sun:auto-snapshot" = true;
+          "com.sun:auto-snapshot" = "true";
         };
         mountpoint = "/mnt/zdata1";
         datasets = {
@@ -83,7 +85,7 @@
             mountpoint = "/media";
             options = {
               recordsize = "1M";
-              "com.sun:auto-snapshot" = false;
+              "com.sun:auto-snapshot" = "false";
             };
           };
           personal_media = {
@@ -91,7 +93,7 @@
             mountpoint = "/media/personal";
             options = {
               recordsize = "1M";
-              "com.sun:auto-snapshot" = true;
+              "com.sun:auto-snapshot" = "true";
             };
           };
         };
