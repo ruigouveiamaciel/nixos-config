@@ -25,13 +25,14 @@
           {
             "Vikunja" = rec {
               icon = "vikunja";
-              description = "Task and project management";
+              description = "Tasks and project management";
               href = "http://10.0.102.6:3456";
               widget = {
                 type = "vikunja";
                 url = href;
                 key = "{{HOMEPAGE_VAR_VIKUNJA_KEY}}";
-                enableTaskList = true;
+                enableTaskList = false;
+                fields = ["tasks7d" "tasksOverdue"];
               };
             };
           }
@@ -39,7 +40,7 @@
             "Paperless" = rec {
               icon = "paperless-ngx";
               description = "Smart document management";
-              href = "";
+              href = "http://10.0.102.7:8000";
               widget = {
                 type = "paperlessngx";
                 url = href;
@@ -121,7 +122,7 @@
                 type = "jellyseerr";
                 url = href;
                 key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
-                fields = ["pending" "approved" "processing"];
+                fields = ["pending" "approved" "available"];
               };
             };
           }

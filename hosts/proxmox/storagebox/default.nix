@@ -7,7 +7,6 @@
   imports = [../minimal-vm ./disko.nix];
 
   fileSystems = {
-    "/mnt/das".autoResize = true;
     "/export/media" = {
       device = "/mnt/das/media";
       options = ["bind"];
@@ -59,18 +58,25 @@
     };
   };
 
-  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
-    lib.attrsets.nameValuePair serviceName rec {
-      bindsTo = ["mnt-das.mount"];
-      after = bindsTo;
-      serviceConfig = {
-        Restart = lib.mkForce "always";
-        RestartSec = 60;
+  systemd.services =
+    lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+      lib.attrsets.nameValuePair serviceName rec {
+        bindsTo = ["nfs-server.service"];
+        after = bindsTo;
+        serviceConfig = {
+          Restart = lib.mkForce "always";
+          RestartSec = 60;
+        };
+        startLimitBurst = 60;
+        startLimitIntervalSec = 3600;
+      })
+    config.virtualisation.oci-containers.containers
+    // {
+      nfs-server = rec {
+        bindsTo = ["mnt-zdata1.mount"];
+        after = bindsTo;
       };
-      startLimitBurst = 60;
-      startLimitIntervalSec = 3600;
-    })
-  config.virtualisation.oci-containers.containers;
+    };
 
   networking.firewall = {
     enable = true;
