@@ -88,12 +88,12 @@
               "com.sun:auto-snapshot" = "false";
             };
           };
-          temporary = {
+          backup = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/temporary";
+            mountpoint = "${ROOT_MOUNTPOINT}/backup";
             options = {
-              compression = "off";
-              "com.sun:auto-snapshot" = "false";
+              compression = "zstd-15";
+              "com.sun:auto-snapshot" = "true";
             };
           };
         };
