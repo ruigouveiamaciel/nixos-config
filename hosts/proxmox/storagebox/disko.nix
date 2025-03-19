@@ -71,12 +71,14 @@
             ];
           };
         };
+        options = {
+          ashift = "12";
+        };
         rootFsOptions = {
           compression = "zstd";
           xattr = "sa";
           canmount = "noauto";
           atime = "off";
-          ashift = "12";
           "com.sun:auto-snapshot" = "true";
         };
         mountpoint = ROOT_MOUNTPOINT;
