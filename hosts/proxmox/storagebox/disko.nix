@@ -76,10 +76,10 @@
           xattr = "sa";
           canmount = "noauto";
           atime = "off";
+          ashift = "12";
           "com.sun:auto-snapshot" = "true";
         };
         mountpoint = ROOT_MOUNTPOINT;
-        extraArgs = ["-o" "ashift=12"];
         datasets = {
           media = {
             type = "zfs_fs";
