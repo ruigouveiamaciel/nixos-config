@@ -19,6 +19,46 @@
       device = "/mnt/zdata1";
       options = ["bind"];
     };
+    "/export/media" = {
+      device = "/mnt/zdata1/media";
+      options = ["bind"];
+    };
+    "/export/media/personal" = {
+      device = "/mnt/zdata1/media/personal";
+      options = ["bind"];
+    };
+    "/export/downloads" = {
+      device = "/mnt/zdata1/downloads";
+      options = ["bind"];
+    };
+    "/export/services" = {
+      device = "/mnt/zdata1/services";
+      options = ["bind"];
+    };
+    "/export/services/immich/media/backups" = {
+      device = "/mnt/zdata1/services/immich/media/backups";
+      options = ["bind"];
+    };
+    "/export/services/immich/media/upload" = {
+      device = "/mnt/zdata1/services/immich/media/upload";
+      options = ["bind"];
+    };
+    "/export/services/paperless/consume" = {
+      device = "/mnt/zdata1/services/paperless/consume";
+      options = ["bind"];
+    };
+    "/export/services/paperless/media" = {
+      device = "/mnt/zdata1/services/paperless/media";
+      options = ["bind"];
+    };
+    "/export/services/paperless/export" = {
+      device = "/mnt/zdata1/services/paperless/export";
+      options = ["bind"];
+    };
+    "/export/services/vikunja/files" = {
+      device = "/mnt/zdata1/services/vikunja/files";
+      options = ["bind"];
+    };
   };
 
   programs.msmtp = {
@@ -132,6 +172,10 @@
           "mnt-zdata1-services-vikunja-files.mount"
         ];
         after = bindsTo;
+        serviceConfig = {
+          Restart = lib.mkForce "on-failure";
+          RestartSec = 60;
+        };
       };
     };
 

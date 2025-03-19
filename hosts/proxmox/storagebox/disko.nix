@@ -78,7 +78,6 @@
           compression = "zstd";
           xattr = "sa";
           canmount = "noauto";
-          atime = "off";
           "com.sun:auto-snapshot" = "true";
         };
         mountpoint = ROOT_MOUNTPOINT;

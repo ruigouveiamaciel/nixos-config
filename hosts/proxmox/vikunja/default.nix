@@ -12,7 +12,7 @@
     "/mnt/config" = {
       device = "10.0.102.3:/services/vikunja";
       fsType = "nfs";
-      options = ["nfsvers=4.2"];
+      options = ["nfsvers=4.2" "noatime"];
     };
   };
 
