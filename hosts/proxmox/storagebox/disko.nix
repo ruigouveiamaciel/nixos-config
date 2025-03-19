@@ -129,7 +129,7 @@
           };
           services_immich_backups = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/backups";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/media/backups";
             options = {
               logbias = "throughput";
               recordsize = "1M";
