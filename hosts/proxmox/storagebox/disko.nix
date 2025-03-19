@@ -88,11 +88,12 @@
               "com.sun:auto-snapshot" = "false";
             };
           };
-          personal_media = {
+          backup = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/personal";
+            mountpoint = "${ROOT_MOUNTPOINT}/backup";
             options = {
               recordsize = "1M";
+              compression = "zstd-15";
               "com.sun:auto-snapshot" = "true";
             };
           };
