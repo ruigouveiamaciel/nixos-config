@@ -33,18 +33,29 @@
     setSendmail = true;
     accounts.default = {
       port = 587;
-      auth = "on";
-      tls = "on";
+      auth = true;
+      tls = true;
       host = "smtp.protonmail.ch";
       passwordeval = "cat ${config.sops.secrets.smtp-password.path}";
-      user = "ruigouveiamaciel@proton.me";
+      user = "noreply@maciel.sh";
       from = "noreply@maciel.sh";
     };
   };
 
   services = {
     zfs = {
-      zed.settings = {};
+      zed.settings = {
+        ZED_DEBUG_LOG = "/tmp/zed.debug.log";
+        ZED_EMAIL_ADDR = "ruigouveiamaciel@proton.me";
+        ZED_EMAIL_PROG = "${pkgs.msmtp}/bin/msmtp";
+        ZED_EMAIL_OPTS = "@ADDRESS@";
+
+        ZED_NOTIFY_INTERVAL_SECS = 3600;
+        ZED_NOTIFY_VERBOSE = true;
+
+        ZED_USE_ENCLOSURE_LEDS = true;
+        ZED_SCRUB_AFTER_RESILVER = true;
+      };
     };
     nfs.server = {
       enable = true;
