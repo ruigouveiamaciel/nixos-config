@@ -67,9 +67,6 @@
               {
                 mode = "mirror";
                 members = ["hdd1" "hdd2"];
-                options = {
-                  ashift = 12;
-                };
               }
             ];
           };
@@ -77,6 +74,7 @@
         rootFsOptions = {
           compression = "zstd";
           xattr = "sa";
+          ashift = 12;
           canmount = "noauto";
           atime = "off";
           "com.sun:auto-snapshot" = "true";
