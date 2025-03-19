@@ -6,6 +6,10 @@
 }: {
   imports = [../minimal-vm ./disko.nix];
 
+  boot.supportedFilesystems = ["zfs"];
+  boot.kernelModules = ["zfs"];
+  environment.systemPackages = with pkgs; [zfs];
+
   fileSystems = {
     "/export/media" = {
       device = "/mnt/das/media";
@@ -78,11 +82,13 @@
       };
     };
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [111 2049 4000 4001 4002 8080 20048];
-    allowedUDPPorts = [111 2049 4000 4001 4002 8080 20048];
+  networking = {
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [111 2049 4000 4001 4002 8080 20048];
+      allowedUDPPorts = [111 2049 4000 4001 4002 8080 20048];
+    };
+    hostId = "63ded08f";
+    hostName = "storagebox";
   };
-
-  networking.hostName = "storagebox";
 }

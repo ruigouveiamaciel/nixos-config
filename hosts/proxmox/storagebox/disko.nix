@@ -1,8 +1,6 @@
 {
   imports = [../minimal-vm/disko.nix];
 
-  boot.supportedFilesystems = ["zfs"];
-
   disko.devices = {
     disk = {
       hdd1 = {
@@ -58,7 +56,9 @@
     };
 
     zpool = {
-      zdata1 = {
+      zdata1 = let
+        ROOT_MOUNTPOINT = "/mnt/zdata1";
+      in {
         type = "zpool";
         mode = {
           topology = {
@@ -78,11 +78,11 @@
           atime = "off";
           "com.sun:auto-snapshot" = "true";
         };
-        mountpoint = "/mnt/zdata1";
+        mountpoint = ROOT_MOUNTPOINT;
         datasets = {
           media = {
             type = "zfs_fs";
-            mountpoint = "/media";
+            mountpoint = "${ROOT_MOUNTPOINT}/media";
             options = {
               recordsize = "1M";
               "com.sun:auto-snapshot" = "false";
@@ -90,7 +90,7 @@
           };
           personal_media = {
             type = "zfs_fs";
-            mountpoint = "/media/personal";
+            mountpoint = "${ROOT_MOUNTPOINT}/personal";
             options = {
               recordsize = "1M";
               "com.sun:auto-snapshot" = "true";
