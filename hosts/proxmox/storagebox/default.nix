@@ -10,20 +10,13 @@
     supportedFilesystems = ["zfs"];
     kernelModules = ["zfs"];
     extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
+    zfs.devNodes = "/dev/disk/by-partlabel";
   };
   environment.systemPackages = with pkgs; [zfs];
 
   fileSystems = {
-    "/export/media" = {
-      device = "/mnt/das/media";
-      options = ["bind"];
-    };
-    "/export/torrenting" = {
-      device = "/mnt/das/torrenting";
-      options = ["bind"];
-    };
-    "/export/services" = {
-      device = "/mnt/das/services";
+    "/export" = {
+      device = "/mnt/zdata1";
       options = ["bind"];
     };
   };
@@ -93,8 +86,8 @@
         '';
       in [
         "${filebrowserConfig}:/.filebrowser.json:ro"
-        "/mnt/das:/srv"
-        "/mnt/das/.filebrowser:/database"
+        "/mnt/zdata1:/srv"
+        "/mnt/zdata1/services/filebrowser:/database"
       ];
     };
   };
@@ -102,7 +95,7 @@
   systemd.services =
     lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
-        bindsTo = ["mnt-zdata1.mount"];
+        bindsTo = ["nfs-server.service"];
         after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";

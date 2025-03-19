@@ -35,24 +35,24 @@
           };
         };
       };
-      #mediadrive = {
-      #  device = "/dev/sdb";
-      #  type = "disk";
-      #  content = {
-      #    type = "gpt";
-      #    partitions = {
-      #      mediapart = {
-      #        label = "mediapart";
-      #        size = "100%";
-      #        content = {
-      #          type = "filesystem";
-      #          format = "ext4";
-      #          mountpoint = "/mnt/das";
-      #        };
-      #      };
-      #    };
-      #  };
-      #};
+      mediadrive = {
+        device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            mediapart = {
+              label = "mediapart";
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/mnt/das";
+              };
+            };
+          };
+        };
+      };
     };
 
     zpool = {
@@ -88,15 +88,97 @@
             mountpoint = "${ROOT_MOUNTPOINT}/media";
             options = {
               recordsize = "1M";
+              logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
             };
           };
-          backup = {
+          personal_media = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/backup";
+            mountpoint = "${ROOT_MOUNTPOINT}/media/personal";
+            options = {
+              recordsize = "1M";
+              logbias = "throughput";
+              "com.sun:auto-snapshot" = "true";
+            };
+          };
+          downloads = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/downloads";
+            options = {
+              compression = "off";
+              recordsize = "16k";
+              logbias = "throughput";
+              "com.sun:auto-snapshot" = "false";
+            };
+          };
+          services = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services";
+            options = {
+              logbias = "latency";
+              recordsize = "16k";
+            };
+          };
+          services_immich_media_upload = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/media/upload";
+            options = {
+              logbias = "latency";
+              recordsize = "1M";
+            };
+          };
+          services_immich_backups = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/backups";
+            options = {
+              logbias = "throughput";
+              recordsize = "1M";
+              "com.sun:auto-snapshot" = "false";
+            };
+          };
+          services_paperless_consume = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/consume";
+            options = {
+              compression = "off";
+              logbias = "throughput";
+              recordsize = "128K";
+              "com.sun:auto-snapshot" = "false";
+            };
+          };
+          services_paperless_media = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/media";
+            options = {
+              logbias = "latency";
+              recordsize = "1M";
+            };
+          };
+          services_paperless_export = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/export";
+            options = {
+              logbias = "throughput";
+              recordsize = "1M";
+              "com.sun:auto-snapshot" = "false";
+            };
+          };
+          services_vikunja_files = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja/files";
+            options = {
+              logbias = "latency";
+              recordsize = "128K";
+            };
+          };
+          backups = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/backups";
             options = {
               compression = "zstd-15";
-              "com.sun:auto-snapshot" = "true";
+              recordsize = "1M";
+              logbias = "throughput";
+              "com.sun:auto-snapshot" = "false";
             };
           };
         };
