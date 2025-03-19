@@ -5,6 +5,7 @@ keys:
     - &devbox age19atlktxfg70wnp92av7ghgevghvxwy2hkd6yfdu2ufc5wns6svmst4jh59
     - &homepage age19qad6e8wnfgadgdvas9xmm06590dav3ym6msrgvfjjxw3y78laxs7nmyqh
     - &media-server age1eh0fg60ykzx9es5pn0t6pnsm2th2vuhuyjf33km2dxr8fkf8gpyqyz0923
+    - &storagebox age17uuxk7amam07nk8f9k0c9tr95jvee39gx6tgyum5fadu764nzqcqueeyzs
 
 creation_rules:
   - path_regex: hosts/proxmox/devbox/secrets.ya?ml$
@@ -21,4 +22,9 @@ creation_rules:
     key_groups:
       - age:
           - *media-server
+        pgp: *users
+  - path_regex: hosts/proxmox/storagebox/secrets.ya?ml$
+    key_groups:
+      - age:
+          - *storagebox
         pgp: *users

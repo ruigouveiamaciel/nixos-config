@@ -6,8 +6,11 @@
 }: {
   imports = [../minimal-vm ./disko.nix];
 
-  boot.supportedFilesystems = ["zfs"];
-  boot.kernelModules = ["zfs"];
+  boot = {
+    supportedFilesystems = ["zfs"];
+    kernelModules = ["zfs"];
+    extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
+  };
   environment.systemPackages = with pkgs; [zfs];
 
   fileSystems = {
@@ -25,17 +28,40 @@
     };
   };
 
-  services.nfs.server = {
+  programs.msmtp = {
     enable = true;
-    exports = ''
-      /export         10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash) 10.0.100.0/24(ro,fsid=0,no_subtree_check,all_squash)
-      /export/torrenting  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
-      /export/services  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
-      /export/documents  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
-    '';
-    lockdPort = 4001;
-    mountdPort = 4002;
-    statdPort = 4000;
+    setSendmail = true;
+    accounts.default = {
+      port = 587;
+      auth = "on";
+      tls = "on";
+      host = "smtp.protonmail.ch";
+      passwordeval = "cat ${config.sops.secrets.smtp-password.path}";
+      user = "ruigouveiamaciel@proton.me";
+      from = "noreply@maciel.sh";
+    };
+  };
+
+  services = {
+    zfs = {
+      zed.settings = {};
+    };
+    nfs.server = {
+      enable = true;
+      exports = ''
+        /export         10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash) 10.0.100.0/24(ro,fsid=0,no_subtree_check,all_squash)
+        /export/torrenting  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
+        /export/services  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
+        /export/documents  10.0.102.0/24(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
+      '';
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
+    };
+  };
+
+  sops.secrets = {
+    smtp-password.sopsFile = ./secrets.yaml;
   };
 
   virtualisation.oci-containers.containers = {
@@ -65,7 +91,7 @@
   systemd.services =
     lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
-        bindsTo = ["nfs-server.service"];
+        bindsTo = ["mnt-zdata1.mount"];
         after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";

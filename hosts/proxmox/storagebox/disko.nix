@@ -67,9 +67,11 @@
               {
                 mode = "mirror";
                 members = ["hdd1" "hdd2"];
+                options = {
+                  ashift = 12;
+                };
               }
             ];
-            cache = [];
           };
         };
         rootFsOptions = {
