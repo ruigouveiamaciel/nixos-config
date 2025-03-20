@@ -64,7 +64,7 @@ in {
     zpool = {
       zdata1 = let
         ROOT_MOUNTPOINT = "/export";
-        DEFAULT_NFS_SETTINGS = "nohide,insecure,no_subtree_check,all_squash";
+        DEFAULT_NFS_SETTINGS = "nohide,insecure,no_subtree_check,all_squash,noatime";
       in {
         type = "zpool";
         mode = {
@@ -91,11 +91,6 @@ in {
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
-        # Make sure right permissions are set after pool & datasets creation
-        postCreateHook = ''
-          chmod -R 755 ${ROOT_MOUNTPOINT}
-          chown -R nobody:nogroup ${ROOT_MOUNTPOINT}
-        '';
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {
           downloads = {
@@ -164,10 +159,9 @@ in {
             };
           };
 
-          service_immich = rec {
+          service_immich = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/immich";
-            postCreateHook = "mkdir ${mountpoint}/{files,database,cache}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.immich.ip}"
@@ -261,16 +255,14 @@ in {
             };
           };
 
-          service_filebrowser = rec {
+          service_filebrowser = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
-            postCreateHook = "mkdir ${mountpoint}/database";
           };
 
-          service_vikunja = rec {
+          service_vikunja = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja";
-            postCreateHook = "mkdir ${mountpoint}/{files,database}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.vikunja.ip}"
@@ -280,10 +272,9 @@ in {
             };
           };
 
-          service_paperless = rec {
+          service_paperless = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/paperless";
-            postCreateHook = "mkdir ${mountpoint}/{database,export,import,files}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.paperless.ip}"

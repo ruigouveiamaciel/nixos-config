@@ -32,7 +32,7 @@
     };
     nfs.server = {
       enable = true;
-      exports = "/export *(ro,fsid=0,insecure,no_subtree_check,all_squash)";
+      exports = "/export *(ro,fsid=0,insecure,no_subtree_check,all_squash,noatime)";
       lockdPort = 4001;
       mountdPort = 4002;
       statdPort = 4000;
@@ -70,7 +70,7 @@
   systemd.services =
     lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
-        bindsTo = ["export-services-filebrowser.service"];
+        bindsTo = ["export-services-filebrowser.mount"];
         after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
@@ -79,9 +79,26 @@
       })
     config.virtualisation.oci-containers.containers
     // {
-      nfs-server = {
-        after = ["zfs-import-zdata1.service"];
-        requires = ["zfs-import-zdata1.service"];
+      nfs-server = rec {
+        bindsTo = [
+          "export.mount"
+          "export-downloads.mount"
+          "export-media-movies.mount"
+          "export-media-tvshows.mount"
+          "export-media-anime.mount"
+          "export-services-bazarr.mount"
+          "export-services-filebrowser.mount"
+          "export-services-immich.mount"
+          "export-services-jellyfin.mount"
+          "export-services-jellyseerr.mount"
+          "export-services-paperless.mount"
+          "export-services-prowlarr.mount"
+          "export-services-qbittorrent.mount"
+          "export-services-radarr.mount"
+          "export-services-sonarr.mount"
+          "export-services-vikunja.mount"
+        ];
+        after = bindsTo;
       };
     };
 

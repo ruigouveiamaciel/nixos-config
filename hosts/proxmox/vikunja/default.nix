@@ -2,7 +2,9 @@
   config,
   lib,
   ...
-}: {
+}: let
+  services = config.myNixOS.services.discovery.default;
+in {
   imports = [../minimal-vm];
 
   networking.hostName = "vikunja";
@@ -10,13 +12,9 @@
   services.rpcbind.enable = true;
   fileSystems = {
     "/mnt/config" = {
-      device = "10.0.102.3:/services/vikunja";
+      device = "${services.nfs.ip}:/services/vikunja";
       fsType = "nfs";
-      options = [
-        "noatime"
-        "hard"
-        ""
-      ];
+      options = ["nfsvers=4.2" "noatime" "bg" "_netdev"];
     };
   };
 
@@ -46,7 +44,6 @@
       lib.attrsets.nameValuePair "${backend}-${serviceName}" rec {
         bindsTo = ["mnt-config.mount"];
         after = bindsTo;
-        wants = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;
