@@ -84,8 +84,6 @@ in {
         rootFsOptions = {
           compression = "zstd";
           xattr = "sa";
-          canmount = "noauto";
-          atime = "off";
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
