@@ -11,7 +11,10 @@ in {
     supportedFilesystems = ["zfs"];
     kernelModules = ["zfs"];
     extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
-    zfs.devNodes = "/dev/disk/by-partlabel";
+    zfs = {
+      devNodes = "/dev/disk/by-partlabel";
+      forceImportRoot = false;
+    };
   };
   environment.systemPackages = with pkgs; [zfs];
 
@@ -88,6 +91,11 @@ in {
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
+        # Make sure right permissions are set after pool & datasets creation
+        postCreateHook = ''
+          chmod -R 755 ${ROOT_MOUNTPOINT}
+          chown -R nobody:nogroup ${ROOT_MOUNTPOINT}
+        '';
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {
           downloads = {
@@ -156,9 +164,10 @@ in {
             };
           };
 
-          service_immich = {
+          service_immich = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/immich";
+            postCreateHook = "mkdir ${mountpoint}/{files,database,cache}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.immich.ip}"
@@ -252,14 +261,16 @@ in {
             };
           };
 
-          service_filebrowser = {
+          service_filebrowser = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
+            postCreateHook = "mkdir ${mountpoint}/database";
           };
 
-          service_vikunja = {
+          service_vikunja = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja";
+            postCreateHook = "mkdir ${mountpoint}/{files,database}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.vikunja.ip}"
@@ -269,9 +280,10 @@ in {
             };
           };
 
-          service_paperless = {
+          service_paperless = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/paperless";
+            postCreateHook = "mkdir ${mountpoint}/{database,export,import,files}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.paperless.ip}"

@@ -12,7 +12,11 @@
     "/mnt/config" = {
       device = "10.0.102.3:/services/vikunja";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "noatime"];
+      options = [
+        "noatime"
+        "hard"
+        ""
+      ];
     };
   };
 
@@ -42,6 +46,7 @@
       lib.attrsets.nameValuePair "${backend}-${serviceName}" rec {
         bindsTo = ["mnt-config.mount"];
         after = bindsTo;
+        wants = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;

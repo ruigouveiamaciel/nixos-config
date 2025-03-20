@@ -81,6 +81,7 @@
     // {
       nfs-server = {
         after = ["zfs-import-zdata1.service"];
+        requires = ["zfs-import-zdata1.service"];
       };
     };
 
