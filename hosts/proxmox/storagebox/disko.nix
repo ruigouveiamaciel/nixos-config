@@ -57,7 +57,7 @@
 
     zpool = {
       zdata1 = let
-        ROOT_MOUNTPOINT = "/mnt/zdata1";
+        ROOT_MOUNTPOINT = "/export";
       in {
         type = "zpool";
         mode = {
@@ -78,9 +78,10 @@
           compression = "zstd";
           xattr = "sa";
           canmount = "noauto";
+          atime = "off";
           "com.sun:auto-snapshot" = "true";
         };
-        mountpoint = ROOT_MOUNTPOINT;
+        mountpoint = "/mnt/zdata1";
         datasets = {
           media = {
             type = "zfs_fs";

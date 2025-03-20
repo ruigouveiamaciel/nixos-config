@@ -14,53 +14,6 @@
   };
   environment.systemPackages = with pkgs; [zfs];
 
-  fileSystems = {
-    "/export" = {
-      device = "/mnt/zdata1";
-      options = ["bind"];
-    };
-    "/export/media" = {
-      device = "/mnt/zdata1/media";
-      options = ["bind"];
-    };
-    "/export/media/personal" = {
-      device = "/mnt/zdata1/media/personal";
-      options = ["bind"];
-    };
-    "/export/downloads" = {
-      device = "/mnt/zdata1/downloads";
-      options = ["bind"];
-    };
-    "/export/services" = {
-      device = "/mnt/zdata1/services";
-      options = ["bind"];
-    };
-    "/export/services/immich/media/backups" = {
-      device = "/mnt/zdata1/services/immich/media/backups";
-      options = ["bind"];
-    };
-    "/export/services/immich/media/upload" = {
-      device = "/mnt/zdata1/services/immich/media/upload";
-      options = ["bind"];
-    };
-    "/export/services/paperless/consume" = {
-      device = "/mnt/zdata1/services/paperless/consume";
-      options = ["bind"];
-    };
-    "/export/services/paperless/media" = {
-      device = "/mnt/zdata1/services/paperless/media";
-      options = ["bind"];
-    };
-    "/export/services/paperless/export" = {
-      device = "/mnt/zdata1/services/paperless/export";
-      options = ["bind"];
-    };
-    "/export/services/vikunja/files" = {
-      device = "/mnt/zdata1/services/vikunja/files";
-      options = ["bind"];
-    };
-  };
-
   programs.msmtp = {
     enable = true;
     setSendmail = true;
@@ -93,7 +46,7 @@
     nfs.server = {
       enable = true;
       exports = ''
-        /export            10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash) 10.0.100.0/24(ro,fsid=0,no_subtree_check,all_squash)
+        /export            10.0.102.0/24(ro,nohide,fsid=0,no_subtree_check,all_squash) 10.0.100.0/24(ro,fsid=0,no_subtree_check,all_squash)
         /export/media      10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.4(ro,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
         /export/downloads  10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
         /export/services/immich   10.0.102.3(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check)
