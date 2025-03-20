@@ -46,20 +46,36 @@
     nfs.server = {
       enable = true;
       exports = ''
-        /export            10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash) 10.0.100.0/24(ro,fsid=0,no_subtree_check,all_squash)
-        /export/media      10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.4(ro,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/downloads  10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/immich   10.0.102.3(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/jellyfin   10.0.102.3(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/jellyseerr   10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/radarr   10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/bazarr   10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/sonarr   10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/prowlarr   10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/vikunja   10.0.102.6(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/paperless   10.0.102.7(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/services/qbittorrent   10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
-        /export/backups    10.0.100.0/24(rw,nohide,insecure,no_subtree_check) 10.0.102.2(rw,nohide,insecure,no_subtree_check)
+        /export                                10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash)
+
+        /export/media                          10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.4(ro,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/media/personal                 10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.4(ro,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/downloads                      10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/backups                        10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/services                       10.0.102.0/24(ro,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,insecure,no_subtree_check,all_squash)
+
+        /export/services/immich                10.0.102.4(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/immich/media/upload   10.0.102.4(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/immich/media/backups  10.0.102.4(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/jellyfin              10.0.102.4(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/services/jellyseerr            10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/radarr                10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/bazarr                10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/sonarr                10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/prowlarr              10.0.102.16(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/services/vikunja               10.0.102.6(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/vikunja/files         10.0.102.6(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/services/paperless             10.0.102.7(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/paperless/consume     10.0.102.7(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/paperless/media       10.0.102.7(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+        /export/services/paperless/export      10.0.102.7(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
+
+        /export/services/qbittorrent           10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
       '';
       lockdPort = 4001;
       mountdPort = 4002;
@@ -110,25 +126,8 @@
     config.virtualisation.oci-containers.containers
     // {
       nfs-server = rec {
-        bindsTo = [
-          "mnt-zdata1.mount"
-          "export-media.mount"
-          "export-media-personal.mount"
-          "export-downloads.mount"
-          "export-backups.mount"
-          "export-services.mount"
-          "export-services-immich-media-upload.mount"
-          "export-services-immich-media-backups.mount"
-          "export-services-paperless-consume.mount"
-          "export-services-paperless-media.mount"
-          "export-services-paperless-export.mount"
-          "export-services-vikunja-files.mount"
-        ];
+        bindsTo = ["zfs-import-zdata1.service"];
         after = bindsTo;
-        serviceConfig = {
-          Restart = lib.mkForce "on-failure";
-          RestartSec = 60;
-        };
       };
     };
 

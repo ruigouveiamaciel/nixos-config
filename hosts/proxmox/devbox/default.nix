@@ -36,7 +36,13 @@
       {
         type = "nfs";
         mountConfig = {
-          Options = ["nfsvers=4.2" "noatime"];
+          Options = [
+            "nfsvers=4.2"
+            "noatime"
+            "timeo=50"
+            "retrans=3"
+            "soft"
+          ];
         };
         what = "10.0.102.3:/";
         where = "/mnt/nas";

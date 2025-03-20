@@ -81,7 +81,7 @@
           atime = "off";
           "com.sun:auto-snapshot" = "true";
         };
-        mountpoint = "/mnt/zdata1";
+        mountpoint = ROOT_MOUNTPOINT;
         datasets = {
           media = {
             type = "zfs_fs";
