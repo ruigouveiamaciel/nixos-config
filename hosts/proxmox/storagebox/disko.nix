@@ -69,6 +69,10 @@ in {
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
+        postCreateHook = ''
+          chmod -R 755 ${ROOT_MOUNTPOINT}
+          chown -R nobody:nogroup ${ROOT_MOUNTPOINT}
+        '';
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {
           downloads = {
@@ -112,6 +116,12 @@ in {
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.sonarr.ip}"
+                "ro=${services.jellyfin.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
             };
           };
 
@@ -122,6 +132,60 @@ in {
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.sonarr.ip}"
+                "ro=${services.jellyfin.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_immich = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/immich";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.immich.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_jellyfin = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/jellyfin";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.jellyfin.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_jellyseerr = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/jellyseerr";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.jellyseerr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_radarr = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/radarr";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.radarr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
             };
           };
         };

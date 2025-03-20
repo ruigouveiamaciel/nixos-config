@@ -4,18 +4,18 @@
       type = lib.types.attrsOf (lib.types.submodule {
         options = {
           ip = lib.mkOption {
-            type = lib.types.nullOr lib.types.string;
+            type = lib.types.nullOr lib.types.str;
             default = null;
             description = "IP address of the service";
           };
           http = lib.mkOption {
-            type = lib.types.nullOr lib.types.string;
+            type = lib.types.nullOr lib.types.str;
             default = null;
             description = "HTTP address of the service";
           };
         };
       });
-      default = {
+      default = rec {
         devbox = {
           ip = "10.0.102.2";
         };
@@ -31,36 +31,42 @@
           ip = "10.0.102.7";
           http = "http://${ip}:8000";
         };
-        jellyfin = rec {
+        media-server = {
           ip = "10.0.102.4";
+        };
+        jellyfin = rec {
+          inherit (media-server) ip;
           http = "http://${ip}:8096";
         };
         immich = rec {
-          ip = "10.0.102.4";
+          inherit (media-server) ip;
           http = "http://${ip}:2283";
         };
         qbittorrent = rec {
           ip = "10.0.102.5";
           http = "http://${ip}:8080";
         };
-        jellyseerr = rec {
+        media-management = {
           ip = "10.0.102.16";
+        };
+        jellyseerr = rec {
+          inherit (media-management) ip;
           http = "http://${ip}:5055";
         };
         radarr = rec {
-          ip = "10.0.102.16";
+          inherit (media-management) ip;
           http = "http://${ip}:7878";
         };
         sonarr = rec {
-          ip = "10.0.102.16";
+          inherit (media-management) ip;
           http = "http://${ip}:8989";
         };
         bazarr = rec {
-          ip = "10.0.102.16";
+          inherit (media-management) ip;
           http = "http://${ip}:6767";
         };
         prowlarr = rec {
-          ip = "10.0.102.16";
+          inherit (media-management) ip;
           http = "http://${ip}:9696";
         };
       };
