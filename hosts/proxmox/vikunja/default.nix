@@ -39,15 +39,13 @@
     inherit (config.virtualisation.oci-containers) backend;
   in
     lib.attrsets.mapAttrs' (serviceName: _:
-      lib.attrsets.nameValuePair "${backend}-${serviceName}" {
+      lib.attrsets.nameValuePair "${backend}-${serviceName}" rec {
         bindsTo = ["mnt-config.mount"];
-        after = ["mnt-config.mount"];
+        after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;
         };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
       })
     config.virtualisation.oci-containers.containers;
 }
