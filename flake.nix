@@ -60,10 +60,6 @@
         darwin-work = mkDarwinSystem ./hosts/darwin/work;
       };
 
-      diskoConfigurations = {
-        proxmox-storagebox.cfg.disko = self.nixosConfigurations.proxmox-storagebox.config.disko;
-      };
-
       deploy = {
         user = "root";
         sshUser = "root";
