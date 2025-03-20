@@ -96,6 +96,6 @@
 
   programs.bash.shellAliases = {
     "update-config" = "cd ~/nixos-config && nix run nixpkgs#git -- pull";
-    "update-fs" = "update-config && nix run nixpkgs#disko -- --mode format --flake ~/nixos-config#proxmox-storagebox --root-mountpoint /";
+    "update-fs" = "update-config && nix run nixpkgs#disko -- --root-mountpoint / --mode format --flake ~/nixos-config#proxmox-storagebox";
   };
 }
