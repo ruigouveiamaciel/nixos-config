@@ -69,6 +69,7 @@ in {
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
+        # Make sure right permissions are set after pool & datasets creation
         postCreateHook = ''
           chmod -R 755 ${ROOT_MOUNTPOINT}
           chown -R nobody:nogroup ${ROOT_MOUNTPOINT}
@@ -183,6 +184,86 @@ in {
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.radarr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_sonarr = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/sonarr";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.sonarr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_bazarr = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/bazarr";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.bazarr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_prowlarr = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/prowlarr";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.prowlarr.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_qbittorrent = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.qbittorrent.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_filebrowser = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
+          };
+
+          service_vikunja = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.qbittorrent.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          service_paperless = rec {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
+            postCreateHook = ''
+              mkdir ${mountpoint}/{data,export,consume,media}
+            '';
+            options = {
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.qbittorrent.ip}"
                 "rw=${services.devbox.ip}"
                 DEFAULT_NFS_SETTINGS
               ];
