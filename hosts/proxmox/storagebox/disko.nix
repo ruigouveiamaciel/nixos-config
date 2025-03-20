@@ -1,4 +1,6 @@
-{
+{config, ...}: let
+  services = config.myNixOS.services.discovery;
+in {
   imports = [../minimal-vm/disko.nix];
 
   disko.devices = {
@@ -40,6 +42,7 @@
     zpool = {
       zdata1 = let
         ROOT_MOUNTPOINT = "/export";
+        DEFAULT_NFS_SETTINGS = "nohide,insecure,no_subtree_check,all_squash";
       in {
         type = "zpool";
         mode = {
@@ -64,7 +67,7 @@
           aclinherit = "passthrough";
           aclmode = "restricted";
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
-          sharenfs = "ro=*,fsid=0,no_subtree_check,all_squash";
+          sharenfs = "off"; # By default, do not share on nfs
         };
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {
@@ -76,6 +79,10 @@
               recordsize = "16k"; # Torrenting is not sequential
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.qbittorrent}"
+                DEFAULT_NFS_SETTINGS
+              ];
             };
           };
 

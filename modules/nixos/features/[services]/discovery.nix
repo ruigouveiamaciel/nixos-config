@@ -16,6 +16,9 @@
         };
       });
       default = {
+        devbox = {
+          ip = "10.0.102.2";
+        };
         nfs = rec {
           ip = "10.0.102.3";
           http = "http://${ip}:8080";
