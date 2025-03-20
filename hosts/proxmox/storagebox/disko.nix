@@ -86,8 +86,6 @@ in {
           xattr = "sa";
           canmount = "noauto";
           atime = "off";
-          aclinherit = "passthrough";
-          aclmode = "restricted";
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
           sharenfs = "off"; # By default, do not share on nfs
         };
