@@ -35,24 +35,6 @@
           };
         };
       };
-      mediadrive = {
-        device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
-        type = "disk";
-        content = {
-          type = "gpt";
-          partitions = {
-            mediapart = {
-              label = "mediapart";
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/mnt/das";
-              };
-            };
-          };
-        };
-      };
     };
 
     zpool = {
@@ -79,103 +61,47 @@
           xattr = "sa";
           canmount = "noauto";
           atime = "off";
-          "com.sun:auto-snapshot" = "true";
+          aclinherit = "passthrough";
+          aclmode = "restricted";
+          "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
         };
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {
-          media = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/media";
-            options = {
-              recordsize = "1M";
-              logbias = "throughput";
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-          personal_media = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/media/personal";
-            options = {
-              recordsize = "1M";
-              logbias = "throughput";
-              "com.sun:auto-snapshot" = "true";
-            };
-          };
           downloads = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/downloads";
             options = {
               compression = "off";
-              recordsize = "16k";
+              recordsize = "16k"; # Torrenting is not sequential
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
             };
           };
-          services = {
+
+          media_movies = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services";
+            mountpoint = "${ROOT_MOUNTPOINT}/media/movies";
             options = {
-              logbias = "latency";
-              recordsize = "16k";
-            };
-          };
-          services_immich_media_upload = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/media/upload";
-            options = {
-              logbias = "latency";
               recordsize = "1M";
-            };
-          };
-          services_immich_backups = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/immich/media/backups";
-            options = {
               logbias = "throughput";
-              recordsize = "1M";
               "com.sun:auto-snapshot" = "false";
             };
           };
-          services_paperless_consume = {
+
+          media_tvshows = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/consume";
+            mountpoint = "${ROOT_MOUNTPOINT}/media/tvshows";
             options = {
-              compression = "off";
+              recordsize = "1M";
               logbias = "throughput";
-              recordsize = "128K";
               "com.sun:auto-snapshot" = "false";
             };
           };
-          services_paperless_media = {
+
+          media_anime = {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/media";
+            mountpoint = "${ROOT_MOUNTPOINT}/media/anime";
             options = {
-              logbias = "latency";
-              recordsize = "1M";
-            };
-          };
-          services_paperless_export = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless/export";
-            options = {
-              logbias = "throughput";
-              recordsize = "1M";
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-          services_vikunja_files = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja/files";
-            options = {
-              logbias = "latency";
-              recordsize = "128K";
-            };
-          };
-          backups = {
-            type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/backups";
-            options = {
-              compression = "zstd-15";
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";

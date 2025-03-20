@@ -38,6 +38,7 @@
 
   outputs = inputs: let
     myLib = import ./lib.nix {inherit inputs;};
+    inherit (inputs) self;
   in
     with myLib; {
       nixosConfigurations = {
@@ -57,6 +58,10 @@
 
       darwinConfigurations = {
         darwin-work = mkDarwinSystem ./hosts/darwin/work;
+      };
+
+      diskoConfigurations = {
+        proxmox-storagebox = self.nixosConfigurations.proxmox-storagebox.config.disko;
       };
 
       deploy = {
