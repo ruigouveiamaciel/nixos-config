@@ -1,5 +1,5 @@
 {config, ...}: let
-  services = config.myNixOS.services.discovery;
+  services = config.myNixOS.services.discovery.default;
 in {
   imports = [../minimal-vm/disko.nix];
 
@@ -80,7 +80,7 @@ in {
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
               sharenfs = builtins.concatStringsSep "," [
-                "rw=${services.qbittorrent}"
+                "rw=${services.qbittorrent.ip}"
                 DEFAULT_NFS_SETTINGS
               ];
             };
