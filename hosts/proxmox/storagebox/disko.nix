@@ -64,6 +64,7 @@
           aclinherit = "passthrough";
           aclmode = "restricted";
           "com.sun:auto-snapshot" = "true"; # By default, snapshot everything
+          sharenfs = "ro=*,fsid=0,no_subtree_check,all_squash";
         };
         mountpoint = ROOT_MOUNTPOINT;
         datasets = {

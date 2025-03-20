@@ -45,6 +45,7 @@
     };
     nfs.server = {
       enable = true;
+      /*
       exports = ''
         /export                                10.0.102.0/24(ro,fsid=0,no_subtree_check,all_squash)
 
@@ -77,6 +78,7 @@
 
         /export/services/qbittorrent           10.0.102.5(rw,nohide,insecure,no_subtree_check,all_squash) 10.0.102.2(rw,nohide,insecure,no_subtree_check,all_squash)
       '';
+      */
       lockdPort = 4001;
       mountdPort = 4002;
       statdPort = 4000;
