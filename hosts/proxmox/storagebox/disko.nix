@@ -64,7 +64,7 @@ in {
     zpool = {
       zdata1 = let
         ROOT_MOUNTPOINT = "/export";
-        DEFAULT_NFS_SETTINGS = "nohide,insecure,no_subtree_check,all_squash,noatime";
+        DEFAULT_NFS_SETTINGS = "nohide,insecure,no_subtree_check,all_squash";
       in {
         type = "zpool";
         mode = {

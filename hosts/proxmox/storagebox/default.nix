@@ -32,7 +32,7 @@
     };
     nfs.server = {
       enable = true;
-      exports = "/export *(ro,fsid=0,insecure,no_subtree_check,all_squash,noatime)";
+      exports = "/export *(ro,fsid=0,insecure,no_subtree_check,all_squash)";
       lockdPort = 4001;
       mountdPort = 4002;
       statdPort = 4000;
