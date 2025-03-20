@@ -81,6 +81,9 @@ in {
               "com.sun:auto-snapshot" = "false";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.qbittorrent.ip}"
+                "rw=${services.radarr.ip}"
+                "rw=${services.sonarr.ip}"
+                "rw=${services.devbox.ip}"
                 DEFAULT_NFS_SETTINGS
               ];
             };
@@ -93,6 +96,12 @@ in {
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
+              sharenfs = builtins.concatStringsSep "," [
+                "rw=${services.radarr.ip}"
+                "ro=${services.jellyfin.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
             };
           };
 
