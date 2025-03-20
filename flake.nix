@@ -61,7 +61,7 @@
       };
 
       diskoConfigurations = {
-        proxmox-storagebox = self.nixosConfigurations.proxmox-storagebox.config.disko;
+        proxmox-storagebox.cfg.disko = self.nixosConfigurations.proxmox-storagebox.config.disko;
       };
 
       deploy = {
@@ -69,7 +69,7 @@
         sshUser = "root";
         sshOpts = [];
         fastConnection = true;
-        autoRollback = true;
+        autoRollback = false;
         magicRollback = false;
         interactiveSudo = false;
         remoteBuild = false;
@@ -79,7 +79,6 @@
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
           storagebox = {
-            autoRollback = false;
             hostname = "10.0.102.3";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
