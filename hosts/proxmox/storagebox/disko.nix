@@ -164,7 +164,7 @@ in {
           service_immich = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/immich";
-            postCreateHook = "mkdir ${mountpoint}/{files,database,cache}";
+            #postCreateHook = "mkdir ${mountpoint}/{files,database,cache}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.immich.ip}"
@@ -261,13 +261,13 @@ in {
           service_filebrowser = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
-            postCreateHook = "mkdir ${mountpoint}/database";
+            #postCreateHook = "mkdir ${mountpoint}/database";
           };
 
           service_vikunja = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja";
-            postCreateHook = "mkdir ${mountpoint}/{files,database}";
+            #postCreateHook = "mkdir ${mountpoint}/{files,database}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.vikunja.ip}"
@@ -280,7 +280,7 @@ in {
           service_paperless = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/paperless";
-            postCreateHook = "mkdir ${mountpoint}/{database,export,import,files}";
+            #postCreateHook = "mkdir ${mountpoint}/{database,export,import,files}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.paperless.ip}"
