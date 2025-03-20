@@ -6,14 +6,6 @@
 }: {
   imports = [../minimal-vm ./disko.nix];
 
-  boot = {
-    supportedFilesystems = ["zfs"];
-    kernelModules = ["zfs"];
-    extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
-    zfs.devNodes = "/dev/disk/by-partlabel";
-  };
-  environment.systemPackages = with pkgs; [zfs];
-
   programs.msmtp = {
     enable = true;
     setSendmail = true;
@@ -31,23 +23,16 @@
   services = {
     zfs = {
       zed.settings = {
-        ZED_DEBUG_LOG = "/tmp/zed.debug.log";
         ZED_EMAIL_ADDR = "ruigouveiamaciel@proton.me";
         ZED_EMAIL_PROG = "${pkgs.msmtp}/bin/msmtp";
         ZED_EMAIL_OPTS = "@ADDRESS@";
-
         ZED_NOTIFY_INTERVAL_SECS = 3600;
         ZED_NOTIFY_VERBOSE = true;
-
-        ZED_USE_ENCLOSURE_LEDS = true;
-        ZED_SCRUB_AFTER_RESILVER = true;
       };
     };
     nfs.server = {
       enable = true;
-      exports = ''
-        /export *(ro,fsid=0,insecure,no_subtree_check,all_squash)
-      '';
+      exports = "/export *(ro,fsid=0,insecure,no_subtree_check,all_squash)";
       lockdPort = 4001;
       mountdPort = 4002;
       statdPort = 4000;
@@ -71,13 +56,13 @@
             "address": "",
             "log": "stdout",
             "database": "/database/filebrowser.db",
-            "root": "/srv"
+            "root": "/nfs"
           }
         '';
       in [
         "${filebrowserConfig}:/.filebrowser.json:ro"
-        "/export:/srv"
-        "/export/services/filebrowser:/database"
+        "/export:/nfs"
+        "/export/services/filebrowser/database:/database"
       ];
     };
   };
@@ -85,20 +70,17 @@
   systemd.services =
     lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
-        bindsTo = ["nfs-server.service"];
+        bindsTo = ["export-services-filebrowser.service"];
         after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;
         };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
       })
     config.virtualisation.oci-containers.containers
     // {
-      nfs-server = rec {
-        bindsTo = ["zfs-import-zdata1.service"];
-        after = bindsTo;
+      nfs-server = {
+        after = ["zfs-import-zdata1.service"];
       };
     };
 
@@ -110,5 +92,10 @@
     };
     hostId = "63ded08f";
     hostName = "storagebox";
+  };
+
+  programs.bash.shellAliases = {
+    "update-config" = "cd ~/nixos-config && nix run nixpkgs#git -- pull";
+    "update-fs" = "update-config && nix run nixpkgs#disko -- --mode format --flake ~/nixos-config#proxmox-storagebox --root-mountpoint /";
   };
 }

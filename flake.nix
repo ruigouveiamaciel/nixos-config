@@ -38,7 +38,6 @@
 
   outputs = inputs: let
     myLib = import ./lib.nix {inherit inputs;};
-    inherit (inputs) self;
   in
     with myLib; {
       nixosConfigurations = {
@@ -75,7 +74,7 @@
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
           storagebox = {
-            hostname = "10.0.102.3";
+            hostname = inputs.self.nixosConfigurations.proxmox-storagebox.config.myNixOS.services.discovery.default.nfs.ip;
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
           media-server = {

@@ -1,7 +1,26 @@
-{config, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   services = config.myNixOS.services.discovery.default;
 in {
   imports = [../minimal-vm/disko.nix];
+
+  boot = {
+    supportedFilesystems = ["zfs"];
+    kernelModules = ["zfs"];
+    extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
+    zfs.devNodes = "/dev/disk/by-partlabel";
+  };
+  environment.systemPackages = with pkgs; [zfs];
+
+  services.zfs = {
+    zed.settings = {
+      ZED_USE_ENCLOSURE_LEDS = true;
+      ZED_SCRUB_AFTER_RESILVER = true;
+    };
+  };
 
   disko.devices = {
     disk = {
@@ -142,9 +161,10 @@ in {
             };
           };
 
-          service_immich = {
+          service_immich = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/immich";
+            postCreateHook = "mkdir ${mountpoint}/{files,database,cache}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.immich.ip}"
@@ -238,17 +258,19 @@ in {
             };
           };
 
-          service_filebrowser = {
+          service_filebrowser = rec {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
+            postCreateHook = "mkdir ${mountpoint}/database";
           };
 
-          service_vikunja = {
+          service_vikunja = rec {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
+            mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja";
+            postCreateHook = "mkdir ${mountpoint}/{files,database}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
-                "rw=${services.qbittorrent.ip}"
+                "rw=${services.vikunja.ip}"
                 "rw=${services.devbox.ip}"
                 DEFAULT_NFS_SETTINGS
               ];
@@ -257,13 +279,11 @@ in {
 
           service_paperless = rec {
             type = "zfs_fs";
-            mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
-            postCreateHook = ''
-              mkdir ${mountpoint}/{data,export,consume,media}
-            '';
+            mountpoint = "${ROOT_MOUNTPOINT}/services/paperless";
+            postCreateHook = "mkdir ${mountpoint}/{database,export,import,files}";
             options = {
               sharenfs = builtins.concatStringsSep "," [
-                "rw=${services.qbittorrent.ip}"
+                "rw=${services.paperless.ip}"
                 "rw=${services.devbox.ip}"
                 DEFAULT_NFS_SETTINGS
               ];
