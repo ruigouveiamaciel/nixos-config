@@ -3,17 +3,18 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  services = config.myNixOS.services.discovery.default;
+in {
   imports = [../minimal-vm];
 
   networking.hostName = "paperless";
 
-  services.rpcbind.enable = true;
   fileSystems = {
     "/mnt/config" = {
-      device = "10.0.102.3:/services/paperless";
+      device = "${services.nfs.ip}:/services/paperless";
       fsType = "nfs";
-      options = ["nfsvers=4.2"];
+      options = ["nfsvers=4.2" "bg"];
     };
     "/var/www/anonymous" = {
       device = "tmpfs";
@@ -21,9 +22,9 @@
       options = ["defaults" "size=16M" "mode=755" "uid=65534" "gid=65534"];
     };
     "/var/www/anonymous/consume" = {
-      device = "10.0.102.3:/services/paperless/consume";
+      device = "${services.nfs.ip}:/services/paperless/import";
       fsType = "nfs";
-      options = ["nfsvers=4.2"];
+      options = ["nfsvers=4.2" "bg"];
       depends = ["/var/www/anonymous"];
     };
   };
@@ -40,14 +41,14 @@
         PAPERLESS_CONSUMER_POLLING = "5";
         PAPERLESS_CONSUMER_POLLING_RETRY_COUNT = "60";
         PAPERLESS_CONSUMER_POLLING_DELAY = "120";
-        USERMAP_UID = "65534"; # nobody
-        USERMAP_GID = "65534"; # nogroup
+        USERMAP_UID = "${builtins.toString config.users.users.nobody.uid}";
+        USERMAP_GID = "${builtins.toString config.users.groups.nogroup.gid}";
       };
       volumes = [
-        "/mnt/config/data:/usr/src/paperless/data"
+        "/mnt/config/database:/usr/src/paperless/data"
         "/mnt/config/export:/usr/src/paperless/export"
-        "/mnt/config/consume:/usr/src/paperless/consume"
-        "/mnt/config/media:/usr/src/paperless/media"
+        "/mnt/config/import:/usr/src/paperless/consume"
+        "/mnt/config/files:/usr/src/paperless/media"
       ];
       dependsOn = ["paperless-broker"];
     };
@@ -88,19 +89,15 @@
     ];
   };
 
-  systemd.services = let
-    inherit (config.virtualisation.oci-containers) backend;
-  in
-    lib.attrsets.mapAttrs' (serviceName: _:
-      lib.attrsets.nameValuePair "${backend}-${serviceName}" rec {
-        bindsTo = ["mnt-config.mount" "create-paperless-network.service"];
+  systemd.services =
+    lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+      lib.attrsets.nameValuePair serviceName rec {
+        bindsTo = ["mnt-config.mount" "var-www-anonymous-consume.mount" "create-paperless-network.service"];
         after = bindsTo;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;
         };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
       })
     config.virtualisation.oci-containers.containers
     // {
@@ -122,8 +119,6 @@
           Restart = lib.mkForce "always";
           RestartSec = 60;
         };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
       };
     };
 }

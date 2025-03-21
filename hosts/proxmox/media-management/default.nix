@@ -2,22 +2,58 @@
   config,
   lib,
   ...
-}: {
+}: let
+  services = config.myNixOS.services.discovery.default;
+in {
   imports = [../minimal-vm];
 
   networking.hostName = "media-management";
 
-  services.rpcbind.enable = true;
   fileSystems = {
-    "/mnt/media" = {
-      device = "10.0.102.3:/media";
+    "/mnt/downloads" = {
+      device = "${services.nfs.ip}:/downloads";
       fsType = "nfs";
-      options = ["nfsvers=4.2"];
+      options = ["nfsvers=4.2" "bg"];
     };
-    "/mnt/torrenting" = {
-      device = "10.0.102.3:/torrenting";
+    "/mnt/movies" = {
+      device = "${services.nfs.ip}:/media/movies";
       fsType = "nfs";
-      options = ["nfsvers=4.2"];
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/tvshows" = {
+      device = "${services.nfs.ip}:/media/tvshows";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/anime" = {
+      device = "${services.nfs.ip}:/media/anime";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/radarr" = {
+      device = "${services.nfs.ip}:/services/radarr";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/sonarr" = {
+      device = "${services.nfs.ip}:/services/sonarr";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/bazarr" = {
+      device = "${services.nfs.ip}:/services/bazarr";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/prowlarr" = {
+      device = "${services.nfs.ip}:/services/prowlarr";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/jellyseerr" = {
+      device = "${services.nfs.ip}:/services/jellyseerr";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
     };
   };
 
@@ -29,9 +65,9 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/mnt/torrenting/.radarr:/config"
-        "/mnt/torrenting/downloads:/downloads"
-        "/mnt/media/movies:/movies"
+        "/mnt/radarr:/config"
+        "/mnt/downloads:/downloads"
+        "/mnt/movies:/data/movies"
       ];
     };
     bazarr = {
@@ -41,9 +77,10 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/mnt/torrenting/.bazarr:/config"
-        "/mnt/media/shows:/shows"
-        "/mnt/media/movies:/movies"
+        "/mnt/bazarr:/config"
+        "/mnt/tvshows:/data/tvshows"
+        "/mnt/anime:/data/anime"
+        "/mnt/movies:/data/movies"
       ];
     };
     prowlarr = {
@@ -53,7 +90,7 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/mnt/torrenting/.prowlarr:/config"
+        "/mnt/prowlarr:/config"
       ];
     };
     sonarr = {
@@ -63,9 +100,10 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/mnt/torrenting/.sonarr:/config"
-        "/mnt/torrenting/downloads:/downloads"
-        "/mnt/media/shows:/shows"
+        "/mnt/sonarr:/config"
+        "/mnt/downloads:/downloads"
+        "/mnt/tvshows:/data/tvshows"
+        "/mnt/anime:/data/anime"
       ];
     };
     jellyseerr = {
@@ -75,7 +113,7 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/mnt/torrenting/.jellyseerr:/app/config"
+        "/mnt/jellyseerr:/app/config"
       ];
     };
   };
@@ -91,19 +129,24 @@
     ];
   };
 
-  systemd.services = let
-    inherit (config.virtualisation.oci-containers) backend;
-  in
-    lib.attrsets.mapAttrs' (serviceName: _:
-      lib.attrsets.nameValuePair "${backend}-${serviceName}" {
-        bindsTo = ["mnt-torrenting.mount" "mnt-media.mount"];
-        after = ["mnt-torrenting.mount" "mnt-media.mount"];
-        serviceConfig = {
-          Restart = lib.mkForce "always";
-          RestartSec = 60;
-        };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
-      })
-    config.virtualisation.oci-containers.containers;
+  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+    lib.attrsets.nameValuePair serviceName rec {
+      bindsTo = [
+        "mnt-downloads.mount"
+        "mnt-movies.mount"
+        "mnt-tvshows.mount"
+        "mnt-anime.mount"
+        "mnt-radarr.mount"
+        "mnt-sonarr.mount"
+        "mnt-bazarr.mount"
+        "mnt-prowlarr.mount"
+        "mnt-jellyseerr.mount"
+      ];
+      after = bindsTo;
+      serviceConfig = {
+        Restart = lib.mkForce "always";
+        RestartSec = 60;
+      };
+    })
+  config.virtualisation.oci-containers.containers;
 }

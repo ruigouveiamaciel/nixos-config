@@ -6,6 +6,7 @@
   ...
 }: let
   IMMICH_VERSION = "v1.129.0";
+  services = config.myNixOS.services.discovery.default;
 in {
   imports = [
     ../minimal-vm
@@ -16,6 +17,10 @@ in {
   networking.hostName = "media-server";
 
   hardware = {
+    intelgpu = {
+      driver = "xe";
+      vaapiDriver = "intel-media-driver";
+    };
     enableRedistributableFirmware = true;
     graphics = {
       enable = true;
@@ -32,11 +37,32 @@ in {
     kernelPackages = pkgs.unstable.linuxPackages_latest;
   };
 
-  services.rpcbind.enable = true;
-  fileSystems."/mnt/media" = {
-    device = "10.0.102.3:/media";
-    fsType = "nfs";
-    options = ["nfsvers=4.2"];
+  fileSystems = {
+    "/mnt/tvshows" = {
+      device = "${services.nfs.ip}:/media/tvshows";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/anime" = {
+      device = "${services.nfs.ip}:/media/anime";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/movies" = {
+      device = "${services.nfs.ip}:/media/movies";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/jellyfin" = {
+      device = "${services.nfs.ip}:/services/jellyfin";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
+    "/mnt/immich" = {
+      device = "${services.nfs.ip}:/services/immich";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg"];
+    };
   };
 
   virtualisation.oci-containers.containers = {
@@ -48,9 +74,10 @@ in {
       };
       ports = ["8096:8096"];
       volumes = [
-        "/mnt/media/.jellyfin:/config"
-        "/mnt/media/movies:/data/movies"
-        "/mnt/media/shows:/data/shows"
+        "/mnt/jellyfin:/config"
+        "/mnt/movies:/data/movies"
+        "/mnt/tvshows:/data/tvshows"
+        "/mnt/anime:/data/anime"
       ];
     };
     immich-server = {
@@ -64,7 +91,7 @@ in {
       environmentFiles = [config.sops.templates."immich.env".path];
       ports = ["2283:2283"];
       volumes = [
-        "/mnt/media/personal:/usr/src/app/upload"
+        "/mnt/immich/files:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
       dependsOn = [
@@ -94,6 +121,7 @@ in {
     immich-database = {
       hostname = "database";
       image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52";
+      user = "nobody:nogroup";
       extraOptions = [
         "--network=immich"
         "--health-cmd"
@@ -107,9 +135,8 @@ in {
       ];
       environmentFiles = [config.sops.templates."immich.env".path];
       volumes = [
-        "/mnt/media/.immich/database:/var/lib/postgresql/data"
+        "/mnt/immich/database:/var/lib/postgresql/data"
       ];
-      user = "nobody:nogroup";
       cmd = [
         "postgres"
         "-c"
@@ -135,7 +162,11 @@ in {
     (lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
         bindsTo = [
-          "mnt-media.mount"
+          "mnt-movies.mount"
+          "mnt-anime.mount"
+          "mnt-tvshows.mount"
+          "mnt-jellyfin.mount"
+          "mnt-immich.mount"
           "run-secrets.d.mount"
           "create-immich-network.service"
         ];
@@ -144,8 +175,6 @@ in {
           Restart = lib.mkForce "always";
           RestartSec = 60;
         };
-        startLimitBurst = 60;
-        startLimitIntervalSec = 3600;
       })
     config.virtualisation.oci-containers.containers)
     // {
@@ -186,6 +215,7 @@ in {
         POSTGRES_USER=postgres
         POSTGRES_DB=immich
         POSTGRES_INITDB_ARGS="--data-checksums"
+        PGDATA=/var/lib/postgresql/data/pgdata
       '';
     };
   };

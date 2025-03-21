@@ -35,6 +35,7 @@
     "capslocknodelay"
     "alt-tab"
     "keymapp"
+    "wireguard-tools"
   ];
 
   # TODO: Setup tmux

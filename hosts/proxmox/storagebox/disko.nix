@@ -10,7 +10,7 @@ in {
   boot = {
     supportedFilesystems = ["zfs"];
     kernelModules = ["zfs"];
-    extraModprobeConfig = "options zfs zfs_arc_max=8589934592";
+    extraModprobeConfig = "options zfs zfs_arc_max=2147483648";
     zfs = {
       devNodes = "/dev/disk/by-partlabel";
       forceImportRoot = false;

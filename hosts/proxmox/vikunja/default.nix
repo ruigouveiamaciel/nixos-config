@@ -9,12 +9,11 @@ in {
 
   networking.hostName = "vikunja";
 
-  services.rpcbind.enable = true;
   fileSystems = {
     "/mnt/config" = {
       device = "${services.nfs.ip}:/services/vikunja";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg" "_netdev"];
+      options = ["nfsvers=4.2" "bg"];
     };
   };
 
@@ -37,17 +36,14 @@ in {
     allowedTCPPorts = [3456];
   };
 
-  systemd.services = let
-    inherit (config.virtualisation.oci-containers) backend;
-  in
-    lib.attrsets.mapAttrs' (serviceName: _:
-      lib.attrsets.nameValuePair "${backend}-${serviceName}" rec {
-        bindsTo = ["mnt-config.mount"];
-        after = bindsTo;
-        serviceConfig = {
-          Restart = lib.mkForce "always";
-          RestartSec = 60;
-        };
-      })
-    config.virtualisation.oci-containers.containers;
+  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+    lib.attrsets.nameValuePair serviceName rec {
+      bindsTo = ["mnt-config.mount"];
+      after = bindsTo;
+      serviceConfig = {
+        Restart = lib.mkForce "always";
+        RestartSec = 60;
+      };
+    })
+  config.virtualisation.oci-containers.containers;
 }

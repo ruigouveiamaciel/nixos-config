@@ -81,24 +81,27 @@
     // {
       nfs-server = rec {
         bindsTo = [
-          "export.mount"
-          "export-downloads.mount"
-          "export-media-movies.mount"
-          "export-media-tvshows.mount"
-          "export-media-anime.mount"
-          "export-services-bazarr.mount"
-          "export-services-filebrowser.mount"
-          "export-services-immich.mount"
-          "export-services-jellyfin.mount"
-          "export-services-jellyseerr.mount"
-          "export-services-paperless.mount"
-          "export-services-prowlarr.mount"
-          "export-services-qbittorrent.mount"
-          "export-services-radarr.mount"
-          "export-services-sonarr.mount"
-          "export-services-vikunja.mount"
+          "zfs-mount.service"
+          "zfs-import.target"
         ];
-        after = bindsTo;
+        after =
+          bindsTo
+          ++ [
+            "export-services-paperless.mount"
+            "export-services-jellyfin.mount"
+            "export-services-immich.mount"
+            "export-services-jellyseerr.mount"
+            "export-services-radarr.mount"
+            "export-services-sonarr.mount"
+            "export-services-bazarr.mount"
+            "export-services-prowlarr.mount"
+            "export-services-vikunja.mount"
+            "export-services-qbittorrent.mount"
+            "export-services-qbittorrent.mount"
+            "export-media-movies.mount"
+            "export-media-anime.mount"
+            "export-media-tvshows.mount"
+          ];
       };
     };
 
