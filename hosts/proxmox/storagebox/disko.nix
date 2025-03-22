@@ -96,7 +96,7 @@ in {
             mountpoint = "${ROOT_MOUNTPOINT}/downloads";
             options = {
               compression = "off";
-              recordsize = "16k"; # Torrenting is not sequential
+              recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
               sharenfs = builtins.concatStringsSep "," [
@@ -113,6 +113,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/media/movies";
             options = {
+              compression = "lz4";
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
@@ -129,6 +130,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/media/tvshows";
             options = {
+              compression = "lz4";
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
@@ -145,11 +147,27 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/media/anime";
             options = {
+              compression = "lz4";
               recordsize = "1M";
               logbias = "throughput";
               "com.sun:auto-snapshot" = "false";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.sonarr.ip}"
+                "ro=${services.jellyfin.ip}"
+                "rw=${services.devbox.ip}"
+                DEFAULT_NFS_SETTINGS
+              ];
+            };
+          };
+
+          media_personal = {
+            type = "zfs_fs";
+            mountpoint = "${ROOT_MOUNTPOINT}/media/personal";
+            options = {
+              compression = "lz4";
+              recordsize = "1M";
+              logbias = "throughput";
+              sharenfs = builtins.concatStringsSep "," [
                 "ro=${services.jellyfin.ip}"
                 "rw=${services.devbox.ip}"
                 DEFAULT_NFS_SETTINGS
@@ -197,6 +215,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/radarr";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.radarr.ip}"
                 "rw=${services.devbox.ip}"
@@ -209,6 +228,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/sonarr";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.sonarr.ip}"
                 "rw=${services.devbox.ip}"
@@ -221,6 +241,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/bazarr";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.bazarr.ip}"
                 "rw=${services.devbox.ip}"
@@ -233,6 +254,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/prowlarr";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.prowlarr.ip}"
                 "rw=${services.devbox.ip}"
@@ -245,6 +267,7 @@ in {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/qbittorrent";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.qbittorrent.ip}"
                 "rw=${services.devbox.ip}"
