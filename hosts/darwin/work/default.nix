@@ -22,21 +22,33 @@
 
   environment.systemPackages = with pkgs; [nodejs_20 pnpm_10];
 
-  homebrew.casks = [
-    "raycast"
-    "spotify"
-    "slack"
-    "notunes"
-    "scroll-reverser"
-    "waterfox"
-    "ghostty"
-    "microsoft-teams"
-    "microsoft-outlook"
-    "capslocknodelay"
-    "alt-tab"
-    "keymapp"
-    "wireguard-tools"
-  ];
+  homebrew = {
+    casks = [
+      "raycast"
+      "spotify"
+      "slack"
+      "notunes"
+      "scroll-reverser"
+      "waterfox"
+      "ghostty"
+      "microsoft-teams"
+      "microsoft-outlook"
+      "capslocknodelay"
+      "alt-tab"
+      "keymapp"
+      "vlc"
+    ];
+    brews = [
+      "czkawka"
+      "gtk4"
+      "adwaita-icon-theme"
+      "ffmpeg"
+      "librsvg"
+      "libheif"
+      "libraw"
+    ];
+  };
+  environment.pathsToLink = ["/opt/homebrew/bin" "/opt/homebrew/sbin"];
 
   # TODO: Setup tmux
 
