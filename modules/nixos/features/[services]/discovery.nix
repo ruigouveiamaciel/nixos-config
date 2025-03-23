@@ -69,6 +69,22 @@
           inherit (media-management) ip;
           http = "http://${ip}:9696";
         };
+        homepage = rec {
+          ip = "10.0.102.254";
+          http = "http://${ip}:8080";
+        };
+        unifi = rec {
+          ip = "10.0.0.30";
+          http = "https://${ip}:8443";
+        };
+        pfSense = rec {
+          ip = "10.0.0.1";
+          http = "https://${ip}";
+        };
+        proxmox = rec {
+          ip = "10.0.0.2";
+          http = "https://${ip}:8006";
+        };
       };
     };
   };

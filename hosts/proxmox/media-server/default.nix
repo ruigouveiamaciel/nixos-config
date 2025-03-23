@@ -41,27 +41,32 @@ in {
     "/mnt/tvshows" = {
       device = "${services.nfs.ip}:/media/tvshows";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/anime" = {
       device = "${services.nfs.ip}:/media/anime";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/movies" = {
       device = "${services.nfs.ip}:/media/movies";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
+    };
+    "/mnt/personal" = {
+      device = "${services.nfs.ip}:/media/personal";
+      fsType = "nfs";
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/jellyfin" = {
       device = "${services.nfs.ip}:/services/jellyfin";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/immich" = {
       device = "${services.nfs.ip}:/services/immich";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
   };
 
@@ -71,13 +76,17 @@ in {
       extraOptions = ["--device=/dev/dri:/dev/dri"];
       environment = {
         TZ = "Etc/UTC";
+        JELLYFIN_PublishedServerUrl = services.jellyfin.http;
+        JELLYFIN_CACHE_DIR = "/cache";
       };
       ports = ["8096:8096"];
       volumes = [
         "/mnt/jellyfin:/config"
+        "/mnt/jellyfin-cache:/cache"
         "/mnt/movies:/data/movies"
         "/mnt/tvshows:/data/tvshows"
         "/mnt/anime:/data/anime"
+        "/mnt/personal:/data/personal"
       ];
     };
     immich-server = {
@@ -165,6 +174,7 @@ in {
           "mnt-movies.mount"
           "mnt-anime.mount"
           "mnt-tvshows.mount"
+          "mnt-personal.mount"
           "mnt-jellyfin.mount"
           "mnt-immich.mount"
           "run-secrets.d.mount"
@@ -208,8 +218,6 @@ in {
         DB_USERNAME=postgres
         DB_DATABASE_NAME=immich
         DB_PASSWORD=${config.sops.placeholder.immich-database-password}
-
-        #IMMICH_MACHINE_LEARNING_URL=http://immich-machine-learning:3003
 
         POSTGRES_PASSWORD=${config.sops.placeholder.immich-database-password}
         POSTGRES_USER=postgres

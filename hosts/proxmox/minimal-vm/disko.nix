@@ -1,4 +1,15 @@
 {
+  inputs,
+  lib,
+  ...
+}: {
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
+
+  boot.growPartition = lib.mkDefault true;
+  fileSystems."/".autoResize = true;
+
   disko.devices = {
     disk = {
       nvme0n1 = {

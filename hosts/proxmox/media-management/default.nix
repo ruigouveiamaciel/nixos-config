@@ -13,47 +13,47 @@ in {
     "/mnt/downloads" = {
       device = "${services.nfs.ip}:/downloads";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/movies" = {
       device = "${services.nfs.ip}:/media/movies";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/tvshows" = {
       device = "${services.nfs.ip}:/media/tvshows";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/anime" = {
       device = "${services.nfs.ip}:/media/anime";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/radarr" = {
       device = "${services.nfs.ip}:/services/radarr";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/sonarr" = {
       device = "${services.nfs.ip}:/services/sonarr";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/bazarr" = {
       device = "${services.nfs.ip}:/services/bazarr";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/prowlarr" = {
       device = "${services.nfs.ip}:/services/prowlarr";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/jellyseerr" = {
       device = "${services.nfs.ip}:/services/jellyseerr";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
   };
 

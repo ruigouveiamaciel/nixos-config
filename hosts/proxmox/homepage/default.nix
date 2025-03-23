@@ -2,7 +2,9 @@
   pkgs,
   config,
   ...
-}: {
+}: let
+  services = config.myNixOS.services.discovery.default;
+in {
   imports = [../minimal-lxc];
 
   networking.hostName = "homepage";
@@ -26,7 +28,7 @@
             "Vikunja" = rec {
               icon = "vikunja";
               description = "Tasks and project management";
-              href = "http://10.0.102.6:3456";
+              href = services.vikunja.http;
               widget = {
                 type = "vikunja";
                 url = href;
@@ -40,7 +42,7 @@
             "Paperless" = rec {
               icon = "paperless-ngx";
               description = "Smart document management";
-              href = "http://10.0.102.7:8000";
+              href = services.paperless.http;
               widget = {
                 type = "paperlessngx";
                 url = href;
@@ -54,19 +56,19 @@
                 "Filebrowser" = {
                   icon = "filebrowser";
                   description = "Web-based file explorer";
-                  href = "http://10.0.102.3:8080";
+                  href = services.nfs.http;
                 };
               }
               {
-                "qBittorrent" = rec {
-                  icon = "qbittorrent";
-                  description = "BitTorrent client";
-                  href = "http://10.0.102.5:8080";
+                "Flood" = rec {
+                  icon = "flood";
+                  description = "Torrent client";
+                  href = services.flood.http;
                   widget = {
-                    type = "qbittorrent";
+                    type = "flood";
                     url = href;
-                    username = "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}";
-                    password = "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}";
+                    username = "{{HOMEPAGE_VAR_FLOOD_USERNAME}}";
+                    password = "{{HOMEPAGE_VAR_FLOOD_PASSWORD}}";
                     enableLeechProgress = true;
                   };
                 };
@@ -81,7 +83,7 @@
             "Jellyfin" = rec {
               icon = "jellyfin";
               description = "Media streaming server for movies and TV shows";
-              href = "http://10.0.102.4:8096";
+              href = services.jellyfin.http;
               widget = {
                 type = "jellyfin";
                 url = href;
@@ -89,7 +91,7 @@
                 enableBlocks = true;
                 fields = ["movies" "episodes"];
                 enableNowPlaying = true;
-                enableUser = false;
+                enableUser = true;
                 showEpisodeNumber = true;
                 expandOneStreamToTwoRows = false;
               };
@@ -99,7 +101,7 @@
             "Immich" = rec {
               icon = "immich";
               description = "Personal photos and videos";
-              href = "http://10.0.102.4:2283";
+              href = services.immich.http;
               widget = {
                 type = "immich";
                 url = href;
@@ -117,7 +119,7 @@
             "Jellyseerr" = rec {
               icon = "jellyseerr";
               description = "Discover and request movies and TV shows";
-              href = "http://10.0.102.16:5055";
+              href = services.jellyseerr.http;
               widget = {
                 type = "jellyseerr";
                 url = href;
@@ -130,7 +132,7 @@
             "Radarr" = rec {
               icon = "radarr";
               description = "Automated movie management";
-              href = "http://10.0.102.16:7878";
+              href = services.radarr.http;
               widget = {
                 type = "radarr";
                 url = href;
@@ -144,7 +146,7 @@
             "Sonarr" = rec {
               icon = "sonarr";
               description = "Automated TV show management";
-              href = "http://10.0.102.16:8989";
+              href = services.sonarr.http;
               widget = {
                 type = "sonarr";
                 url = href;
@@ -158,7 +160,7 @@
             "Bazarr" = rec {
               icon = "bazarr";
               description = "Subtitles downloader and manager";
-              href = "http://10.0.102.16:6767";
+              href = services.bazarr.http;
               widget = {
                 type = "bazarr";
                 url = href;
@@ -171,7 +173,7 @@
             "Prowlarr" = rec {
               icon = "prowlarr";
               description = "Indexer manager";
-              href = "http://10.0.102.16:9696";
+              href = services.prowlarr.http;
               widget = {
                 type = "prowlarr";
                 url = href;
@@ -188,14 +190,14 @@
             "pfSense" = {
               icon = "pfsense";
               description = "Firewall and router";
-              href = "https://10.0.0.1";
+              href = services.pfSense.http;
             };
           }
           {
             "Proxmox" = rec {
               icon = "proxmox-light";
               description = "Virtualization and container management";
-              href = "https://10.0.0.2:8006";
+              href = services.proxmox.http;
               widget = {
                 type = "proxmox";
                 url = href;
@@ -209,7 +211,7 @@
             "Unifi" = rec {
               icon = "unifi";
               description = "Network management and monitoring";
-              href = "https://10.0.0.30:8443";
+              href = services.unifi.http;
               widget = {
                 type = "unifi";
                 url = href;
@@ -230,8 +232,8 @@
       proxmox-password.sopsFile = ./secrets.yaml;
       unifi-username.sopsFile = ./secrets.yaml;
       unifi-password.sopsFile = ./secrets.yaml;
-      qbittorrent-username.sopsFile = ./secrets.yaml;
-      qbittorrent-password.sopsFile = ./secrets.yaml;
+      flood-username.sopsFile = ./secrets.yaml;
+      flood-password.sopsFile = ./secrets.yaml;
       jellyfin-key.sopsFile = ./secrets.yaml;
       radarr-key.sopsFile = ./secrets.yaml;
       sonarr-key.sopsFile = ./secrets.yaml;
@@ -250,8 +252,8 @@
         HOMEPAGE_VAR_PROXMOX_PASSWORD=${config.sops.placeholder.proxmox-password}
         HOMEPAGE_VAR_UNIFI_USERNAME=${config.sops.placeholder.unifi-username}
         HOMEPAGE_VAR_UNIFI_PASSWORD=${config.sops.placeholder.unifi-password}
-        HOMEPAGE_VAR_QBITTORRENT_USERNAME=${config.sops.placeholder.qbittorrent-username}
-        HOMEPAGE_VAR_QBITTORRENT_PASSWORD=${config.sops.placeholder.qbittorrent-password}
+        HOMEPAGE_VAR_FLOOD_USERNAME=${config.sops.placeholder.flood-username}
+        HOMEPAGE_VAR_FLOOD_PASSWORD=${config.sops.placeholder.flood-password}
         HOMEPAGE_VAR_JELLYFIN_KEY=${config.sops.placeholder.jellyfin-key}
         HOMEPAGE_VAR_RADARR_KEY=${config.sops.placeholder.radarr-key}
         HOMEPAGE_VAR_SONARR_KEY=${config.sops.placeholder.sonarr-key}

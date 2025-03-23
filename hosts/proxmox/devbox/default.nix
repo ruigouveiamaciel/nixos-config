@@ -2,7 +2,9 @@
   lib,
   config,
   ...
-}: {
+}: let
+  services = config.myNixOS.services.discovery.default;
+in {
   imports = [
     ../minimal-vm
 
@@ -44,7 +46,7 @@
             "soft"
           ];
         };
-        what = "10.0.102.3:/";
+        what = "${services.nfs.ip}:/";
         where = "/mnt/nas";
       }
     ];

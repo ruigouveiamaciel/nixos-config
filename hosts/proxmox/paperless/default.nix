@@ -14,7 +14,7 @@ in {
     "/mnt/config" = {
       device = "${services.nfs.ip}:/services/paperless";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/var/www/anonymous" = {
       device = "tmpfs";
@@ -24,7 +24,7 @@ in {
     "/var/www/anonymous/consume" = {
       device = "${services.nfs.ip}:/services/paperless/import";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
       depends = ["/var/www/anonymous"];
     };
   };

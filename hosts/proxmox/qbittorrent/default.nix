@@ -15,12 +15,12 @@ in {
     "/mnt/config" = {
       device = "${services.nfs.ip}:/services/qbittorrent";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
     "/mnt/downloads" = {
       device = "${services.nfs.ip}:/downloads";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
   };
 

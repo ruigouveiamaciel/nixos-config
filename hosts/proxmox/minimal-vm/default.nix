@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   modulesPath,
   config,
@@ -10,7 +9,6 @@
     (modulesPath + "/profiles/minimal.nix")
     (modulesPath + "/profiles/headless.nix")
 
-    inputs.disko.nixosModules.disko
     ./disko.nix
   ];
 
@@ -44,12 +42,9 @@
       enable = true;
       configurationLimit = 3;
     };
-    growPartition = lib.mkDefault true;
   };
-  fileSystems."/".autoResize = true;
 
   services.qemuGuest.enable = true;
-  zramSwap.enable = false;
   systemd = {
     oomd.enable = false;
     services.clear-cache = {

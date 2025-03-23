@@ -70,8 +70,8 @@
   systemd.services =
     lib.attrsets.mapAttrs' (_: {serviceName, ...}:
       lib.attrsets.nameValuePair serviceName rec {
-        bindsTo = ["export-services-filebrowser.mount"];
-        after = bindsTo;
+        requires = ["export-services-filebrowser.mount"];
+        after = requires;
         serviceConfig = {
           Restart = lib.mkForce "always";
           RestartSec = 60;
@@ -101,6 +101,7 @@
             "export-media-movies.mount"
             "export-media-anime.mount"
             "export-media-tvshows.mount"
+            "export-media-personal.mount"
           ];
       };
     };

@@ -279,12 +279,16 @@ in {
           service_filebrowser = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/filebrowser";
+            options = {
+              recordsize = "16K";
+            };
           };
 
           service_vikunja = {
             type = "zfs_fs";
             mountpoint = "${ROOT_MOUNTPOINT}/services/vikunja";
             options = {
+              recordsize = "16K";
               sharenfs = builtins.concatStringsSep "," [
                 "rw=${services.vikunja.ip}"
                 "rw=${services.devbox.ip}"

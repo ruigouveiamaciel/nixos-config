@@ -13,7 +13,7 @@ in {
     "/mnt/config" = {
       device = "${services.nfs.ip}:/services/vikunja";
       fsType = "nfs";
-      options = ["nfsvers=4.2" "bg"];
+      options = ["nfsvers=4.2" "bg" "noatime"];
     };
   };
 
