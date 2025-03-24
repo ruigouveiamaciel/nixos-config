@@ -19,6 +19,14 @@ in {
   environment.systemPackages = with pkgs; [zfs];
 
   services.zfs = {
+    autoScrub.enable = true;
+    autoSnapshot = {
+      enable = true;
+      frequent = false;
+    };
+  };
+
+  services.zfs = {
     zed.settings = {
       ZED_USE_ENCLOSURE_LEDS = true;
       ZED_SCRUB_AFTER_RESILVER = true;
