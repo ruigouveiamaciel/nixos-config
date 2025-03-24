@@ -46,6 +46,10 @@
           ip = "10.0.102.5";
           http = "http://${ip}:8080";
         };
+        flood = rec {
+          inherit (qbittorrent) ip;
+          http = "http://${ip}:3000";
+        };
         media-management = {
           ip = "10.0.102.16";
         };

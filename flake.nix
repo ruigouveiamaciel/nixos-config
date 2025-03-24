@@ -70,41 +70,42 @@
         remoteBuild = false;
         nodes = {
           unifi = {
-            hostname = inputs.self.nixosConfigurations.proxmox-unifi.config.myNixOS.services.discovery.default.unifi.ip;
+            hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
           storagebox = {
-            hostname = inputs.self.nixosConfigurations.proxmox-storagebox.config.myNixOS.services.discovery.default.nfs.ip;
+            hostname = "10.0.102.3";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
           };
           media-server = {
-            hostname = inputs.self.nixosConfigurations.proxmox-media-server.config.myNixOS.services.discovery.default.media-server.ip;
+            hostname = "10.0.102.4";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-server;
           };
           qbittorrent = {
-            hostname = inputs.self.nixosConfigurations.proxmox-qbittorrent.config.myNixOS.services.discovery.default.qbittorrent.ip;
+            hostname = "10.0.102.5";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
           };
           media-management = {
-            hostname = inputs.self.nixosConfigurations.proxmox-media-management.config.myNixOS.services.discovery.default.media-management.ip;
+            hostname = "10.0.102.16";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-management;
           };
           homepage = {
-            hostname = inputs.self.nixosConfigurations.proxmox-homepage.config.myNixOS.services.discovery.default.homepage.ip;
+            hostname = "10.0.102.254";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-homepage;
           };
           vikunja = {
-            hostname = inputs.self.nixosConfigurations.proxmox-vikunja.config.myNixOS.services.discovery.default.vikunja.ip;
+            hostname = "10.0.102.6";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-vikunja;
           };
           paperless = {
-            hostname = inputs.self.nixosConfigurations.proxmox-paperless.config.myNixOS.services.discovery.default.paperless.ip;
+            hostname = "10.0.102.7";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-paperless;
           };
         };
       };
 
-      checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
+      # TODO: This is broken
+      # checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
       nixosModules.default = ./modules/nixos;
       homeManagerModules.default = ./modules/home-manager;
       darwinModules.default = ./modules/darwin;

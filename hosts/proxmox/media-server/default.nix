@@ -209,6 +209,8 @@ in {
     templates."immich.env" = {
       restartUnits = [
         "${config.virtualisation.oci-containers.containers.immich-database.serviceName}.service"
+        "${config.virtualisation.oci-containers.containers.immich-server.serviceName}.service"
+        "${config.virtualisation.oci-containers.containers.immich-machine-learning.serviceName}.service"
       ];
       content = ''
         TZ=Etc/UTC

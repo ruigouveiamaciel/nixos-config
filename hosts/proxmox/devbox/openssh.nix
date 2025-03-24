@@ -15,9 +15,14 @@ in {
   sops = {
     secrets.ssh-cloudflared-tunnel-token.sopsFile = ./secrets.yaml;
 
-    templates."ssh-cloudflared-tunnel.env".content = ''
-      TUNNEL_TOKEN=${config.sops.placeholder.ssh-cloudflared-tunnel-token}
-    '';
+    templates."ssh-cloudflared-tunnel.env" = {
+      restartUnits = [
+        "${config.virtualisation.oci-containers.containers.ssh-cloudflared-tunnel.serviceName}"
+      ];
+      content = ''
+        TUNNEL_TOKEN=${config.sops.placeholder.ssh-cloudflared-tunnel-token}
+      '';
+    };
   };
 
   systemd.services."${backend}-ssh-cloudflared-tunnel".after = ["sops-nix.service"];
