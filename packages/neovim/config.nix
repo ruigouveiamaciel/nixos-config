@@ -307,8 +307,8 @@
       mappings = {
         complete = "<C-Space>";
         confirm = "<CR>";
-        next = "<Down>";
-        previous = "<Up>";
+        next = "<C-n>";
+        previous = "<C-p>";
       };
     };
 
