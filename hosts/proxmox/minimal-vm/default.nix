@@ -9,7 +9,7 @@
     (modulesPath + "/profiles/minimal.nix")
     (modulesPath + "/profiles/headless.nix")
 
-    ./disko.nix
+    ./filesystems.nix
   ];
 
   myNixOS = {

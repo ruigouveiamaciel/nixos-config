@@ -1,6 +1,6 @@
-{config, ...}: let
-  inherit (config.virtualisation.oci-containers) backend;
-in {
+{config, ...}: {
+  myNixOS.networking.cloudflared.enable = true;
+
   virtualisation.oci-containers.containers = {
     ssh-cloudflared-tunnel = {
       inherit (config.myNixOS.networking.cloudflared) image;
@@ -17,7 +17,7 @@ in {
 
     templates."ssh-cloudflared-tunnel.env" = {
       restartUnits = [
-        "${config.virtualisation.oci-containers.containers.ssh-cloudflared-tunnel.serviceName}"
+        "${config.virtualisation.oci-containers.containers.ssh-cloudflared-tunnel.serviceName}.service"
       ];
       content = ''
         TUNNEL_TOKEN=${config.sops.placeholder.ssh-cloudflared-tunnel-token}
@@ -25,5 +25,7 @@ in {
     };
   };
 
-  systemd.services."${backend}-ssh-cloudflared-tunnel".after = ["sops-nix.service"];
+  systemd.services."${config.virtualisation.oci-containers.containers.ssh-cloudflared-tunnel.serviceName}".after = [
+    "sops-nix.service"
+  ];
 }

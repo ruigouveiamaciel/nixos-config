@@ -8,6 +8,4 @@
   };
 
   networking.firewall.allowedTCPPorts = [8443];
-
-  networking.hostName = "unifi";
 }

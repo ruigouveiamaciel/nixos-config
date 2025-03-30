@@ -12,12 +12,4 @@
       inherit (final) system config;
     };
   };
-
-  apple-silicon = final: prev:
-    inputs.nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-      pkgs-x86_64 = import inputs.nixpkgs-unstable {
-        system = "x86_64-darwin";
-        inherit (final) config;
-      };
-    };
 }

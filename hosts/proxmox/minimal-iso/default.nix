@@ -52,7 +52,6 @@
   };
 
   services.qemuGuest.enable = true;
-  zramSwap.enable = false;
   systemd.oomd.enable = false;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

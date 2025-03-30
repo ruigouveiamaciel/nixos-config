@@ -7,8 +7,6 @@
 in {
   imports = [../minimal-lxc];
 
-  networking.hostName = "homepage";
-
   services.homepage-dashboard = {
     enable = true;
     package = pkgs.unstable.homepage-dashboard;

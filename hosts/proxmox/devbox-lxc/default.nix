@@ -1,12 +1,10 @@
 {config, ...}: {
   imports = [
-    ../minimal-vm
+    ../minimal-lxc
 
     ./cloudflared-tunnel.nix
     ./ttyd.nix
   ];
-
-  networking.hostName = "devbox";
 
   myNixOS = {
     bundles.core.enable = true;

@@ -41,15 +41,18 @@
   in
     with myLib; {
       nixosConfigurations = {
-        proxmox-devbox = mkSystem ./hosts/proxmox/devbox;
-        proxmox-unifi = mkSystem ./hosts/proxmox/unifi;
-        proxmox-storagebox = mkSystem ./hosts/proxmox/storagebox;
-        proxmox-media-server = mkSystem ./hosts/proxmox/media-server;
-        proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent;
-        proxmox-media-management = mkSystem ./hosts/proxmox/media-management;
-        proxmox-vikunja = mkSystem ./hosts/proxmox/vikunja;
-        proxmox-paperless = mkSystem ./hosts/proxmox/paperless;
-        proxmox-homepage = mkSystem ./hosts/proxmox/homepage;
+        proxmox-devbox = mkSystem ./hosts/proxmox/devbox-lxc;
+        proxmox-unifi = mkSystem ./hosts/proxmox/unifi-lxc;
+        proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent-lxc;
+        proxmox-flood = mkSystem ./hosts/proxmox/flood-lxc;
+        proxmox-vikunja = mkSystem ./hosts/proxmox/vikunja-lxc;
+        proxmox-paperless = mkSystem ./hosts/proxmox/paperless-lxc;
+        proxmox-homepage = mkSystem ./hosts/proxmox/homepage-lxc;
+        proxmox-radarr = mkSystem ./hosts/proxmox/radarr-lxc;
+        proxmox-sonarr = mkSystem ./hosts/proxmox/sonarr-lxc;
+        proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr-lxc;
+        proxmox-prowlarr = mkSystem ./hosts/proxmox/prowlarr-lxc;
+        proxmox-jellyseerr = mkSystem ./hosts/proxmox/jellyseerr-lxc;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -73,21 +76,13 @@
             hostname = "10.0.0.30";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
-          storagebox = {
-            hostname = "10.0.102.3";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-storagebox;
-          };
-          media-server = {
-            hostname = "10.0.102.4";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-server;
-          };
           qbittorrent = {
             hostname = "10.0.102.5";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
           };
-          media-management = {
-            hostname = "10.0.102.16";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-media-management;
+          flood = {
+            hostname = "10.0.102.5";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
           };
           homepage = {
             hostname = "10.0.102.254";
@@ -98,14 +93,33 @@
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-vikunja;
           };
           paperless = {
-            hostname = "10.0.102.7";
+            hostname = "10.0.102.70";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-paperless;
+          };
+          radarr = {
+            hostname = "10.0.102.70";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-radarr;
+          };
+          sonarr = {
+            hostname = "10.0.102.70";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-sonarr;
+          };
+          bazarr = {
+            hostname = "10.0.102.70";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-bazarr;
+          };
+          prowlarr = {
+            hostname = "10.0.102.70";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-prowlarr;
+          };
+          jellyseerr = {
+            hostname = "10.0.102.70";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyseerr;
           };
         };
       };
 
-      # TODO: This is broken
-      # checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
+      checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
       nixosModules.default = ./modules/nixos;
       homeManagerModules.default = ./modules/home-manager;
       darwinModules.default = ./modules/darwin;
