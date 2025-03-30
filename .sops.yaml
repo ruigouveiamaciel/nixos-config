@@ -8,7 +8,7 @@ keys:
     - &storagebox age1zdcyc7xcdmrxy42vluclmlql09jl9zexjeqrkc5t0wzq7ppgwsjsussdkx
 
 creation_rules:
-  - path_regex: hosts/proxmox/devbox/secrets.ya?ml$
+  - path_regex: hosts/proxmox/devbox-lxc/secrets.ya?ml$
     key_groups:
       - age:
           - *devbox
