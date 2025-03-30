@@ -2,7 +2,7 @@ keys:
   - &users
     - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
   - &hosts
-    - &devbox age19atlktxfg70wnp92av7ghgevghvxwy2hkd6yfdu2ufc5wns6svmst4jh59
+    - &devbox age1hvqgv4x7g7al92x3yru8jcfunllr2w0v7wwppn8w6d0vrwnnfvwsm949vg
     - &homepage age19qad6e8wnfgadgdvas9xmm06590dav3ym6msrgvfjjxw3y78laxs7nmyqh
     - &media-server age1eh0fg60ykzx9es5pn0t6pnsm2th2vuhuyjf33km2dxr8fkf8gpyqyz0923
     - &storagebox age1zdcyc7xcdmrxy42vluclmlql09jl9zexjeqrkc5t0wzq7ppgwsjsussdkx
