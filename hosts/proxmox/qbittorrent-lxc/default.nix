@@ -3,10 +3,12 @@
 
   virtualisation.oci-containers.containers = {
     qbittorrent = {
-      image = "linuxserver/qbittorrent@sha256:50f490770308d0351e12618422e74e0613721b080f5db0bf840cf66a7281eea8";
-      port = ["8080:8080"];
+      image = "linuxserver/qbittorrent@sha256:dc9e13d2edab18cc7c42367526182b2798f9f0f4c590559337f954fb4e3bdc35";
+      ports = ["8080:8080"];
       environment = {
         TZ = config.time.timeZone;
+        PUID = builtins.toString config.users.users.nobody.uid;
+        PGID = builtins.toString config.users.groups.nogroup.gid;
         WEBUI_PORT = "8080";
         HOME = "/config";
       };

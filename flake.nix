@@ -53,6 +53,9 @@
         proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr-lxc;
         proxmox-prowlarr = mkSystem ./hosts/proxmox/prowlarr-lxc;
         proxmox-jellyseerr = mkSystem ./hosts/proxmox/jellyseerr-lxc;
+        proxmox-jellyfin = mkSystem ./hosts/proxmox/jellyfin-lxc;
+        proxmox-immich = mkSystem ./hosts/proxmox/immich-lxc;
+        proxmox-home-assistant = mkSystem ./hosts/proxmox/home-assistant-lxc;
         proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
         proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
         proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
@@ -73,48 +76,60 @@
         remoteBuild = false;
         nodes = {
           unifi = {
-            hostname = "10.0.0.30";
+            hostname = "10.0.102.253";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-unifi;
           };
           qbittorrent = {
-            hostname = "10.0.102.5";
+            hostname = "10.0.102.3";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
           };
           flood = {
-            hostname = "10.0.102.5";
-            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-qbittorrent;
+            hostname = "10.0.102.4";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-flood;
           };
           homepage = {
             hostname = "10.0.102.254";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-homepage;
           };
           vikunja = {
-            hostname = "10.0.102.6";
+            hostname = "10.0.102.11";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-vikunja;
           };
           paperless = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.10";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-paperless;
           };
           radarr = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.5";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-radarr;
           };
           sonarr = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.6";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-sonarr;
           };
           bazarr = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.7";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-bazarr;
           };
           prowlarr = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.8";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-prowlarr;
           };
           jellyseerr = {
-            hostname = "10.0.102.70";
+            hostname = "10.0.102.9";
             profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyseerr;
+          };
+          jellyfin = {
+            hostname = "10.0.102.12";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-jellyfin;
+          };
+          immich = {
+            hostname = "10.0.102.13";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-immich;
+          };
+          home-assistant = {
+            hostname = "10.0.102.14";
+            profiles.system.path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.proxmox-home-assistant;
           };
         };
       };

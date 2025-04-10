@@ -45,6 +45,7 @@
       pasv_enable=YES
       pasv_min_port=49152
       pasv_max_port=65535
+      nopriv_user=nobody
     '';
   };
 

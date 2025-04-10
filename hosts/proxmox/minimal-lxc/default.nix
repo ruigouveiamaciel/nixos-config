@@ -35,16 +35,22 @@
 
   # Allow ssh into root
   users.users.root.openssh.authorizedKeys.keys = config.myNixOS.users.authorized-keys.users.rui;
-  services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
+  services.openssh = {
+    startWhenNeeded = true;
+    settings.PermitRootLogin = lib.mkForce "yes";
+  };
 
   networking = {
     # These services are usually behind VPNs that don't support IPv6 anyways
     enableIPv6 = lib.mkDefault false;
 
     # Default firewall rules prevents DNS from working in podman networks
-    firewall.interfaces."podman+" = {
-      allowedUDPPorts = [53];
-      allowedTCPPorts = [53];
+    firewall = {
+      enable = true;
+      interfaces."podman+" = {
+        allowedUDPPorts = [53];
+        allowedTCPPorts = [53];
+      };
     };
   };
 

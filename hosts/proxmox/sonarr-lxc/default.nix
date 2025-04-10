@@ -3,10 +3,12 @@
 
   virtualisation.oci-containers.containers = {
     sonarr = {
-      image = "linuxserver/sonarr@sha256:49a8e636fd4514b23d37c84660101fecbb632174ba0569e0f09bbd2659a2a925";
+      image = "linuxserver/sonarr@sha256:aa566541ea012f41dd0eedc8bbc67910456713b750d1ace663950ce934269036";
       ports = ["8080:8989"];
       environment = {
         TZ = config.time.timeZone;
+        PUID = builtins.toString config.users.users.nobody.uid;
+        PGID = builtins.toString config.users.groups.nogroup.gid;
       };
       volumes = [
         "config:/config"

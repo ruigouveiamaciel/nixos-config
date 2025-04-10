@@ -15,70 +15,61 @@
           };
         };
       });
-      default = rec {
-        devbox = {
+      default = {
+        devbox = rec {
           ip = "10.0.102.2";
-        };
-        nfs = rec {
-          ip = "10.0.102.3";
           http = "http://${ip}:8080";
         };
         vikunja = rec {
-          ip = "10.0.102.6";
-          http = "http://${ip}:3456";
+          ip = "10.0.102.11";
+          http = "http://${ip}:8080";
         };
         paperless = rec {
-          ip = "10.0.102.7";
-          http = "http://${ip}:8000";
-        };
-        media-server = {
-          ip = "10.0.102.4";
+          ip = "10.0.102.10";
+          http = "http://${ip}:8080";
         };
         jellyfin = rec {
-          inherit (media-server) ip;
-          http = "http://${ip}:8096";
+          ip = "10.0.102.12";
+          http = "http://${ip}:8080";
         };
         immich = rec {
-          inherit (media-server) ip;
-          http = "http://${ip}:2283";
+          ip = "10.0.102.13";
+          http = "http://${ip}:8080";
         };
         qbittorrent = rec {
-          ip = "10.0.102.5";
+          ip = "10.0.102.3";
           http = "http://${ip}:8080";
         };
         flood = rec {
-          inherit (qbittorrent) ip;
-          http = "http://${ip}:3000";
-        };
-        media-management = {
-          ip = "10.0.102.16";
+          ip = "10.0.102.4";
+          http = "http://${ip}:8080";
         };
         jellyseerr = rec {
-          inherit (media-management) ip;
-          http = "http://${ip}:5055";
+          ip = "10.0.102.9";
+          http = "http://${ip}:8080";
         };
         radarr = rec {
-          inherit (media-management) ip;
-          http = "http://${ip}:7878";
+          ip = "10.0.102.5";
+          http = "http://${ip}:8080";
         };
         sonarr = rec {
-          inherit (media-management) ip;
-          http = "http://${ip}:8989";
+          ip = "10.0.102.6";
+          http = "http://${ip}:8080";
         };
         bazarr = rec {
-          inherit (media-management) ip;
-          http = "http://${ip}:6767";
+          ip = "10.0.102.7";
+          http = "http://${ip}:8080";
         };
         prowlarr = rec {
-          inherit (media-management) ip;
-          http = "http://${ip}:9696";
+          ip = "10.0.102.8";
+          http = "http://${ip}:8080";
         };
         homepage = rec {
           ip = "10.0.102.254";
           http = "http://${ip}:8080";
         };
         unifi = rec {
-          ip = "10.0.0.30";
+          ip = "10.0.102.253";
           http = "https://${ip}:8443";
         };
         pfSense = rec {

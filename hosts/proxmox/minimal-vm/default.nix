@@ -24,7 +24,10 @@
   };
 
   users.users.root.openssh.authorizedKeys.keys = config.myNixOS.users.authorized-keys.users.rui;
-  services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
+  services.openssh = {
+    startWhenNeeded = true;
+    settings.PermitRootLogin = lib.mkForce "yes";
+  };
 
   networking = {
     hostName = lib.mkDefault "minimal";

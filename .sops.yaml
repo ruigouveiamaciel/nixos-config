@@ -3,9 +3,9 @@ keys:
     - &rui 308155094625A2F5BA83D78EC1FEBB4FA9C3AC52
   - &hosts
     - &devbox age1hvqgv4x7g7al92x3yru8jcfunllr2w0v7wwppn8w6d0vrwnnfvwsm949vg
-    - &homepage age19qad6e8wnfgadgdvas9xmm06590dav3ym6msrgvfjjxw3y78laxs7nmyqh
-    - &media-server age1eh0fg60ykzx9es5pn0t6pnsm2th2vuhuyjf33km2dxr8fkf8gpyqyz0923
-    - &storagebox age1zdcyc7xcdmrxy42vluclmlql09jl9zexjeqrkc5t0wzq7ppgwsjsussdkx
+    - &homepage age1y3ru23pw6hky2uxdrz4ksyl42t2rzmm03llzz4w4xmwrgj6r5f2sneme6v
+    - &vikunja age1pyq5zwu9uet6nvx3zn55v88mrx83twx5e90l5vltfvnf4rdch3gq8d5ccv
+    - &immich age1h7a9n78lw56gl93h0xr8u75q9azrj9ccc3lz5j4wydpdlg0nt9kqtzthcw
 
 creation_rules:
   - path_regex: hosts/proxmox/devbox-lxc/secrets.ya?ml$
@@ -13,18 +13,18 @@ creation_rules:
       - age:
           - *devbox
         pgp: *users
-  - path_regex: hosts/proxmox/homepage/secrets.ya?ml$
+  - path_regex: hosts/proxmox/homepage-lxc/secrets.ya?ml$
     key_groups:
       - age:
           - *homepage
         pgp: *users
-  - path_regex: hosts/proxmox/media-server/secrets.ya?ml$
+  - path_regex: hosts/proxmox/vikunja-lxc/secrets.ya?ml$
     key_groups:
       - age:
-          - *media-server
+          - *vikunja
         pgp: *users
-  - path_regex: hosts/proxmox/storagebox/secrets.ya?ml$
+  - path_regex: hosts/proxmox/immich-lxc/secrets.ya?ml$
     key_groups:
       - age:
-          - *storagebox
+          - *immich
         pgp: *users

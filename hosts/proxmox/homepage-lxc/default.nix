@@ -50,13 +50,13 @@ in {
           }
           {
             "Downloads & Storage" = [
-              {
-                "Filebrowser" = {
-                  icon = "filebrowser";
-                  description = "Web-based file explorer";
-                  href = services.nfs.http;
-                };
-              }
+              #{
+              #"Filebrowser" = {
+              #icon = "filebrowser";
+              #description = "Web-based file explorer";
+              #href = services.nfs.http;
+              #};
+              #}
               {
                 "Flood" = rec {
                   icon = "flood";
@@ -185,6 +185,13 @@ in {
       {
         "Infrastructure & Networking" = [
           {
+            "Terminal" = {
+              icon = "terminal";
+              description = "Browser-rendered terminal on a development container";
+              href = services.devbox.http;
+            };
+          }
+          {
             "pfSense" = {
               icon = "pfsense";
               description = "Firewall and router";
@@ -199,7 +206,7 @@ in {
               widget = {
                 type = "proxmox";
                 url = href;
-                node = "discovery";
+                node = "alpha";
                 username = "{{HOMEPAGE_VAR_PROXMOX_USERNAME}}";
                 password = "{{HOMEPAGE_VAR_PROXMOX_PASSWORD}}";
               };

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sops updatekeys -y ./hosts/proxmox/devbox/secrets.yaml
-sops updatekeys -y ./hosts/proxmox/homepage/secrets.yaml
-sops updatekeys -y ./hosts/proxmox/media-server/secrets.yaml
-sops updatekeys -y ./hosts/proxmox/storagebox/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/devbox-lxc/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/homepage-lxc/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/vikunja-lxc/secrets.yaml
+sops updatekeys -y ./hosts/proxmox/immich-lxc/secrets.yaml
