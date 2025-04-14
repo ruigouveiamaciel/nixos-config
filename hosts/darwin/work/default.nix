@@ -34,18 +34,8 @@
       "microsoft-teams"
       "microsoft-outlook"
       "capslocknodelay"
-      "alt-tab"
       "keymapp"
-      "vlc"
-    ];
-    brews = [
-      "czkawka"
-      "gtk4"
-      "adwaita-icon-theme"
-      "ffmpeg"
-      "librsvg"
-      "libheif"
-      "libraw"
+      "google-chrome"
     ];
   };
   environment.pathsToLink = ["/opt/homebrew/bin" "/opt/homebrew/sbin"];

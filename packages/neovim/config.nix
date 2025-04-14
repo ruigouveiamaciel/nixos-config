@@ -1,5 +1,10 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   config.vim = {
+    package = pkgs.unstable.neovim-unwrapped;
     viAlias = true;
     vimAlias = true;
     debugMode = {
@@ -7,6 +12,8 @@
       level = 16;
       logFile = "/tmp/nvim.log";
     };
+
+    extraPackages = with pkgs; [eslint_d];
 
     globals = {
       mapleader = " ";
@@ -52,7 +59,8 @@
         vim.opt.colorcolumn = '80'
 
         -- Toggle LSP Lines
-        vim.keymap.set('n', '<leader>tl', require('lsp_lines').toggle, { desc = 'Toggle LSP Lines' })
+        -- TODO: Fix this toggle for nvim 0.11
+        -- vim.keymap.set('n', '<leader>tl', require('lsp_lines').toggle, { desc = 'Toggle LSP Lines' })
 
         -- Keymaps
         local builtin = require 'telescope.builtin'
@@ -65,12 +73,11 @@
         vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
         vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
 
-        local lspconfig = require('lspconfig')
-
-        lspconfig.eslint.setup({
-            cmd = { "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server", "--stdio" };
-            filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-        })
+        --local lspconfig = require('lspconfig')
+        --lspconfig.eslint.setup({
+        --    cmd = { "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server", "--stdio" };
+        --    filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        --})
       '';
 
     keymaps = [
@@ -233,6 +240,17 @@
       };
     };
 
+    autocmds = [
+      {
+        event = ["BufEnter" "InsertLeave" "TextChanged"];
+        callback = lib.mkLuaInline ''
+          function()
+            require("lint").try_lint()
+          end
+        '';
+      }
+    ];
+
     binds = {
       whichKey.enable = true;
     };
@@ -295,20 +313,37 @@
 
     lsp = {
       formatOnSave = true;
-      #trouble.enable = true;
-      #lspSignature.enable = true;
-      #lspsaga.enable = true;
       otter-nvim.enable = true;
-      lsplines.enable = true;
+      null-ls = {
+        enable = true;
+        setupOpts = {
+          sources = {
+            eslint_d = lib.mkLuaInline ''
+              require("none-ls.diagnostics.eslint_d"),
+              require("none-ls.code_actions.eslint_d"),
+            '';
+          };
+        };
+      };
     };
 
     autocomplete.nvim-cmp = {
       enable = true;
       mappings = {
         complete = "<C-Space>";
+        close = "<Esc>";
         confirm = "<CR>";
         next = "<C-n>";
         previous = "<C-p>";
+      };
+    };
+
+    diagnostics = {
+      enable = true;
+      config = {
+        underline = true;
+        virtual_lines = true;
+        virtual_text = false;
       };
     };
 
@@ -321,33 +356,30 @@
       nix.enable = true;
       markdown.enable = true;
       bash.enable = true;
-      clang.enable = true;
       css.enable = true;
       html.enable = true;
-      sql.enable = true;
-      ts = {
-        enable = true;
-        extraDiagnostics = {
-          enable = true;
-        };
-      };
+      ts.enable = true;
       go.enable = true;
-      lua.enable = true;
-      python.enable = true;
-      rust = {
-        enable = true;
-        crates.enable = true;
-      };
-
-      tailwind.enable = true;
-      svelte.enable = true;
     };
 
     extraPlugins = with pkgs.vimPlugins; {
+      none-ls-extras = {
+        package = pkgs.vimUtils.buildVimPlugin {
+          name = "none-ls-extras";
+          src = pkgs.fetchFromGitHub {
+            owner = "nvimtools";
+            repo = "none-ls-extras.nvim";
+            rev = "1214d729e3408470a7b7a428415a395e5389c13c";
+            hash = "sha256-5wQHdV2lmxMegN/BPg+qfGTNGv/T9u+hy4Yaj41PchI=";
+          };
+        };
+      };
+
       vim-sleuth = {
         package = vim-sleuth;
       };
 
+      # TODO: Use vim.utility.oil-nvim instead
       oil-nvim = {
         package = oil-nvim;
         setup =
