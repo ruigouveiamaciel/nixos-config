@@ -14,9 +14,9 @@
   };
 
   programs.fish.shellAliases = {
-    "rebuild" = "cd ~/nixos-config && darwin-rebuild switch --flake .#darwin-work";
-    "as" = "cd ~/frontend && pnpm exec nx run ace:serve:staging";
-    "ao" = "cd ~/frontend && nvim .";
+    "rebuild" = "cd ~/repos/nixos-config && darwin-rebuild switch --flake .#darwin-work";
+    "as" = "cd ~/repos/frontend && pnpm exec nx run ace:serve:staging";
+    "ao" = "cd ~/repos/frontend && nvim .";
     "apps" = "aerospace list-apps";
   };
 
@@ -38,7 +38,7 @@
       "google-chrome"
     ];
   };
-  environment.pathsToLink = ["/opt/homebrew/bin" "/opt/homebrew/sbin"];
+  environment.pathsToLink = ["/opt/homebrew/bin" "/opt/homebrew/sbin" "/Users/ruimaciel/repos/ax/out"];
 
   # TODO: Setup tmux
 

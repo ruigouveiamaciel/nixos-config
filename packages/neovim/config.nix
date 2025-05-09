@@ -4,7 +4,7 @@
   ...
 }: {
   config.vim = {
-    package = pkgs.unstable.neovim-unwrapped;
+    package = pkgs.neovim-unwrapped;
     viAlias = true;
     vimAlias = true;
     debugMode = {
@@ -45,7 +45,7 @@
 
         -- Decrease mapped sequence wait time
         -- Displays which-key popup sooner
-        vim.opt.timeoutlen = 300
+        vim.opt.timeoutlen = 400
 
         vim.api.nvim_create_autocmd("TextYankPost", {
           desc = "Highlight when yanking (copying) text",
@@ -64,23 +64,49 @@
 
         -- Keymaps
         local builtin = require 'telescope.builtin'
-        vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Keymaps [Telescope]' })
-        vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = 'Recent files [Telescope]' })
-
         vim.keymap.set('n', 'gd', builtin.lsp_definitions, { desc = 'Goto definition' })
         vim.keymap.set('n', 'gr', builtin.lsp_references, { desc = 'Goto references' })
         vim.keymap.set('n', 'gi', builtin.lsp_implementations, { desc = 'Goto implementation' })
         vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
         vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
 
-        --local lspconfig = require('lspconfig')
-        --lspconfig.eslint.setup({
-        --    cmd = { "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server", "--stdio" };
-        --    filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-        --})
+
+        -- Snippets
+        local ls = require("luasnip")
+        local s = ls.snippet
+        local sn = ls.snippet_node
+        local t = ls.text_node
+        local i = ls.insert_node
+        local f = ls.function_node
+        local c = ls.choice_node
+        local d = ls.dynamic_node
+        local r = ls.restore_node
+        local l = require("luasnip.extras").lambda
+        local rep = require("luasnip.extras").rep
+        local p = require("luasnip.extras").partial
+        local m = require("luasnip.extras").match
+        local n = require("luasnip.extras").nonempty
+        local dl = require("luasnip.extras").dynamic_lambda
+        local fmt = require("luasnip.extras.fmt").fmt
+        local fmta = require("luasnip.extras.fmt").fmta
+        local types = require("luasnip.util.types")
+        local conds = require("luasnip.extras.conditions")
+        local conds_expand = require("luasnip.extras.conditions.expand")
       '';
 
     keymaps = [
+      {
+        key = "<leader>fk";
+        mode = "n";
+        desc = "Keymaps [Telescope]";
+        action = "<cmd>Telescope keymaps<CR>";
+      }
+      {
+        key = "<leader>f.";
+        mode = "n";
+        desc = "Recent files [Telescope]";
+        action = "<cmd>Telescope oldfiles<CR>";
+      }
       # Disable moving with arrow keys and scroll
       {
         key = "<left>";
@@ -327,16 +353,18 @@
       };
     };
 
-    autocomplete.nvim-cmp = {
+    autocomplete.blink-cmp = {
       enable = true;
       mappings = {
-        complete = "<C-Space>";
-        close = "<Esc>";
+        complete = "<C-.>";
+        close = "<C-e>";
         confirm = "<CR>";
         next = "<C-n>";
         previous = "<C-p>";
       };
     };
+
+    snippets.luasnip.enable = true;
 
     diagnostics = {
       enable = true;
@@ -372,6 +400,7 @@
             rev = "1214d729e3408470a7b7a428415a395e5389c13c";
             hash = "sha256-5wQHdV2lmxMegN/BPg+qfGTNGv/T9u+hy4Yaj41PchI=";
           };
+          doCheck = false;
         };
       };
 

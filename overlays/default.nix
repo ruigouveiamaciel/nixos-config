@@ -7,8 +7,14 @@
     };
 
   # Make nixos-unstable accessible through 'pkgs.unstable'
-  unstable-packages = final: _prev: {
-    unstable = import inputs.nixpkgs-unstable {
+  nixos-unstable-packages = final: _prev: {
+    unstable = import inputs.nixos-unstable {
+      inherit (final) system config;
+    };
+  };
+
+  nixpkgs-unstable-packages = final: _prev: {
+    nixpkgs-unstable = import inputs.nixpkgs-unstable {
       inherit (final) system config;
     };
   };

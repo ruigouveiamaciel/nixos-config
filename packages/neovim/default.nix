@@ -4,7 +4,7 @@
   ...
 }:
 (inputs.nvf.lib.neovimConfiguration {
-  inherit pkgs;
+  pkgs = pkgs.nixpkgs-unstable;
   modules = [
     ./config.nix
   ];
