@@ -6,8 +6,8 @@
       lua
       stylua
       go
-      jq
-      jless
+      nodejs_20
+      pnpm_10
     ];
   };
 }

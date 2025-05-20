@@ -12,7 +12,7 @@
 in {
   config = {
     services.gpg-agent = {
-      inherit pinentryPackage;
+      pinentry.package = pinentryPackage;
       enable = true;
       enableSshSupport = true;
       enableFishIntegration = true;

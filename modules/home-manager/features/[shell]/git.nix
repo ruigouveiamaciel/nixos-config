@@ -3,7 +3,7 @@
     programs.git = {
       enable = true;
       package = pkgs.gitFull;
-      userEmail = "ruigouveiamaciel@proton.me";
+      userEmail = "rui@maciel.sh";
       userName = "Rui Maciel";
       lfs.enable = true;
     };

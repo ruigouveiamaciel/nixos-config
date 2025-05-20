@@ -5,6 +5,14 @@
 }: {
   config.vim = {
     package = pkgs.neovim-unwrapped;
+    extraPackages = with pkgs; [
+      ripgrep
+      fd
+      fzf
+      imagemagick
+      lazygit
+    ];
+
     viAlias = true;
     vimAlias = true;
     debugMode = {
@@ -13,183 +21,71 @@
       logFile = "/tmp/nvim.log";
     };
 
-    extraPackages = with pkgs; [eslint_d];
-
     globals = {
       mapleader = " ";
       maplocalleader = " ";
       editorconfig = true;
     };
 
-    useSystemClipboard = true;
+    clipboard = {
+      enable = true;
+      registers = "unnamedplus";
+    };
+
     undoFile.enable = true;
     searchCase = "smart";
 
-    luaConfigPost =
-      /*
-      lua
-      */
-      ''
-        -- Minimal number of screen lines to keep above and below the cursor.
-        vim.opt.scrolloff = 15
-
-        -- Set highlight on search, but clear on pressing <Esc> in normal mode
-        vim.opt.hlsearch = true
-        vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
-        -- Disable line wrap
-        vim.opt.wrap = false
-
-        -- Decrease update time
-        vim.opt.updatetime = 250
-
-        -- Decrease mapped sequence wait time
-        -- Displays which-key popup sooner
-        vim.opt.timeoutlen = 400
-
-        vim.api.nvim_create_autocmd("TextYankPost", {
-          desc = "Highlight when yanking (copying) text",
-          group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-          callback = function()
-            vim.highlight.on_yank()
-          end,
-        })
-
-        -- Enable ruler
-        vim.opt.colorcolumn = '80'
-
-        -- Toggle LSP Lines
-        -- TODO: Fix this toggle for nvim 0.11
-        -- vim.keymap.set('n', '<leader>tl', require('lsp_lines').toggle, { desc = 'Toggle LSP Lines' })
-
-        -- Keymaps
-        local builtin = require 'telescope.builtin'
-        vim.keymap.set('n', 'gd', builtin.lsp_definitions, { desc = 'Goto definition' })
-        vim.keymap.set('n', 'gr', builtin.lsp_references, { desc = 'Goto references' })
-        vim.keymap.set('n', 'gi', builtin.lsp_implementations, { desc = 'Goto implementation' })
-        vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
-        vim.keymap.set('n', 'gt', builtin.lsp_type_definitions, { desc = 'Goto type definition' })
-
-
-        -- Snippets
-        local ls = require("luasnip")
-        local s = ls.snippet
-        local sn = ls.snippet_node
-        local t = ls.text_node
-        local i = ls.insert_node
-        local f = ls.function_node
-        local c = ls.choice_node
-        local d = ls.dynamic_node
-        local r = ls.restore_node
-        local l = require("luasnip.extras").lambda
-        local rep = require("luasnip.extras").rep
-        local p = require("luasnip.extras").partial
-        local m = require("luasnip.extras").match
-        local n = require("luasnip.extras").nonempty
-        local dl = require("luasnip.extras").dynamic_lambda
-        local fmt = require("luasnip.extras.fmt").fmt
-        local fmta = require("luasnip.extras.fmt").fmta
-        local types = require("luasnip.util.types")
-        local conds = require("luasnip.extras.conditions")
-        local conds_expand = require("luasnip.extras.conditions.expand")
-      '';
+    options = {
+      wrap = false; # Disabled line wrapping
+      mouse = ""; # Disable mouse support
+      mousescroll = "ver:0,hor:0"; # Disable mouse scroll
+      updatetime = 250; # Number of milliseconds before "Cursor hold" event is fired
+      scrolloff = 15;
+      colorcolumn = "80";
+      timeoutlen = 400;
+      hlsearch = true;
+      foldcolumn = "0";
+      foldlevel = 99;
+      foldlevelstart = 99;
+      foldenable = true;
+    };
 
     keymaps = [
       {
+        key = "<Esc>";
+        mode = "n";
+        desc = "Clear highlight on search";
+        action = "<cmd>nohlsearch<CR>";
+      }
+      {
         key = "<leader>fk";
         mode = "n";
-        desc = "Keymaps [Telescope]";
-        action = "<cmd>Telescope keymaps<CR>";
+        action = "<cmd>lua Snacks.picker.keymaps()<CR>";
       }
       {
-        key = "<leader>f.";
+        key = "gd";
         mode = "n";
-        desc = "Recent files [Telescope]";
-        action = "<cmd>Telescope oldfiles<CR>";
-      }
-      # Disable moving with arrow keys and scroll
-      {
-        key = "<left>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use h to move left!'<CR>";
+        desc = "Goto definition";
+        action = "<cmd>lua Snacks.picker.lsp_definitions()<CR>";
       }
       {
-        key = "<right>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use l to move right!'<CR>";
+        key = "gr";
+        mode = "n";
+        desc = "Goto references";
+        action = "<cmd>lua Snacks.picker.lsp_references()<CR>";
       }
       {
-        key = "<up>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use k to move up!'<CR>";
+        key = "gi";
+        mode = "n";
+        desc = "Goto implementations";
+        action = "<cmd>lua Snacks.picker.lsp_implementations()<CR>";
       }
       {
-        key = "<down>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use j to move down!'<CR>";
+        key = "gt";
+        mode = "n";
+        desc = "Goto type definitions";
+        action = "<cmd>lua Snacks.picker.lsp_type_definitions()<CR>";
       }
-      {
-        key = "<ScrollWheelLeft>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use h to move left!'<CR>";
-      }
-      {
-        key = "<ScrollWheelRight>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use l to move right!'<CR>";
-      }
-      {
-        key = "<ScrollWheelUp>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use k to move up!'<CR>";
-      }
-      {
-        key = "<ScrollWheelDown>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use j to move down!'<CR>";
-      }
-      {
-        key = "<S-ScrollWheelLeft>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use h to move left!'<CR>";
-      }
-      {
-        key = "<S-ScrollWheelRight>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use l to move right!'<CR>";
-      }
-      {
-        key = "<S-ScrollWheelUp>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use k to move up!'<CR>";
-      }
-      {
-        key = "<S-ScrollWheelDown>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use j to move down!'<CR>";
-      }
-      {
-        key = "<C-ScrollWheelLeft>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use h to move left!'<CR>";
-      }
-      {
-        key = "<C-ScrollWheelRight>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use l to move right!'<CR>";
-      }
-      {
-        key = "<C-ScrollWheelUp>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use k to move up!'<CR>";
-      }
-      {
-        key = "<C-ScrollWheelDown>";
-        mode = ["n" "v"];
-        action = "<cmd>echo 'Use j to move down!'<CR>";
-      }
-
-      # Keybinds to make split navigation easier
       {
         key = "<C-h>";
         mode = "n";
@@ -219,26 +115,70 @@
         mode = "n";
         action = "<nop>";
       }
+      {
+        key = "<leader>tt";
+        mode = "n";
+        action = "<cmd>lua Snacks.terminal.toggle()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>ft";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.todo_comments()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>ff";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.files()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>fg";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.grep()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>f.";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.recent()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>fr";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.resume()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>fc";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.git_log()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>fb";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.git_branches()<CR>";
+        unique = true;
+      }
+      {
+        key = "<leader>fs";
+        mode = "n";
+        action = "<cmd>lua Snacks.picker.git_stash()<CR>";
+        unique = true;
+      }
     ];
 
     theme = {
       enable = true;
       name = "catppuccin";
-      style = "macchiato";
-      transparent = false;
-    };
-
-    spellcheck = {
-      enable = false;
-      languages = ["en"];
-      programmingWordlist.enable = true;
+      style = "frappe";
+      transparent = true;
     };
 
     visuals = {
-      fidget-nvim = {
-        enable = true;
-        setupOpts.notification.view.stack_upwards = false;
-      };
       nvim-web-devicons.enable = true;
       highlight-undo.enable = true;
       indent-blankline.enable = true;
@@ -266,13 +206,31 @@
       };
     };
 
+    augroups = [
+      {
+        name = "highlight-yank";
+        clear = true;
+      }
+      {
+        name = "nvf_nvim_lint";
+      }
+    ];
+
     autocmds = [
       {
-        event = ["BufEnter" "InsertLeave" "TextChanged"];
+        event = ["TextYankPost"];
         callback = lib.mkLuaInline ''
-          function()
-            require("lint").try_lint()
-          end
+          function(args)
+            vim.hl.on_yank()
+           end
+        '';
+      }
+      {
+        event = ["BufWritePost" "BufEnter" "InsertLeave" "TextChanged" "LspAttach"];
+        callback = lib.mkLuaInline ''
+          function(args)
+             nvf_lint(args.buf)
+           end
         '';
       }
     ];
@@ -283,12 +241,8 @@
 
     git = {
       enable = true;
-      gitsigns = {
-        enable = true;
-      };
-      git-conflict = {
-        enable = true;
-      };
+      gitsigns.enable = true;
+      git-conflict.enable = true;
       vim-fugitive.enable = true;
     };
 
@@ -300,34 +254,29 @@
       noice.enable = true;
       colorizer.enable = true;
       breadcrumbs.enable = true;
+      nvim-ufo.enable = true;
     };
 
     utility = {
-      surround.enable = true;
-    };
-
-    terminal = {
-      toggleterm = {
-        enable = false;
-        mappings.open = "<leader>tt";
+      sleuth.enable = true;
+      snacks-nvim = {
+        enable = true;
+        setupOpts = {
+          bigfile.enable = true;
+          scope.enable = true;
+          quickfile.enable = true;
+          image.enable = true;
+          terminal.enable = true;
+          picker = {
+            enable = true;
+          };
+          explorer.enable = true;
+          git.enable = true;
+          gitbrowse.enable = true;
+          notify.enable = true;
+          notifier.enable = true;
+        };
       };
-    };
-
-    telescope = {
-      enable = true;
-      setupOpts.defaults.vimgrep_arguments = [
-        "${pkgs.ripgrep}/bin/rg"
-        "--color=never"
-        "--with-filename"
-        "--line-number"
-        "--column"
-        "--hidden"
-        "--smart-case"
-        "--glob"
-        "!**/.git/*"
-        "--glob"
-        "!**/node_modules/*"
-      ];
     };
 
     statusline = {
@@ -338,19 +287,9 @@
     };
 
     lsp = {
+      enable = true;
       formatOnSave = true;
       otter-nvim.enable = true;
-      null-ls = {
-        enable = true;
-        setupOpts = {
-          sources = {
-            eslint_d = lib.mkLuaInline ''
-              require("none-ls.diagnostics.eslint_d"),
-              require("none-ls.code_actions.eslint_d"),
-            '';
-          };
-        };
-      };
     };
 
     autocomplete.blink-cmp = {
@@ -364,8 +303,6 @@
       };
     };
 
-    snippets.luasnip.enable = true;
-
     diagnostics = {
       enable = true;
       config = {
@@ -373,10 +310,74 @@
         virtual_lines = true;
         virtual_text = false;
       };
+      nvim-lint = {
+        enable = true;
+        lint_after_save = false; # We do this in our custom autocmd
+        lint_function =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function(buf)
+              local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
+              local linters = require("lint").linters
+              local linters_from_ft = require("lint").linters_by_ft[ft]
+
+              -- if no linter is configured for this filetype, stops linting
+              if linters_from_ft == nil then return end
+
+              local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+              local client = get_clients({ buf = buf })[1] or { root_dir = vim.fn.getcwd() }
+              local client_root = client.root_dir
+
+              for _, name in ipairs(linters_from_ft) do
+                local linter = linters[name]
+                assert(linter, 'Linter with name `' .. name .. '` not available')
+
+                if type(linter) == "function" then
+                  linter = linter()
+                end
+                -- for require("lint").lint() to work, linter.name must be set
+                linter.name = linter.name or name
+                local cwd = linter.required_files
+
+                if (name == "eslint_d") then
+                  require("lint").lint(linter, { cwd = client_root })
+                else
+                  -- if no configuration files are configured, lint
+                  if cwd == nil then
+                    require("lint").lint(linter)
+                  else
+                    -- if configuration files are configured and present in the project, lint
+                    for _, fn in ipairs(cwd) do
+                      local path = vim.fs.joinpath(linter.cwd or vim.fn.getcwd(), fn);
+                      if vim.uv.fs_stat(path) then
+                        require("lint").lint(linter)
+                        break
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          '';
+      };
+    };
+
+    formatter = {
+      conform-nvim = {
+        enable = true;
+        setupOpts = {
+          format_on_save = {
+            lsp_format = "fallback";
+            timeout_ms = 500;
+          };
+        };
+      };
     };
 
     languages = {
-      enableLSP = true;
       enableFormat = true;
       enableTreesitter = true;
       enableExtraDiagnostics = true;
@@ -391,23 +392,6 @@
     };
 
     extraPlugins = with pkgs.vimPlugins; {
-      none-ls-extras = {
-        package = pkgs.vimUtils.buildVimPlugin {
-          name = "none-ls-extras";
-          src = pkgs.fetchFromGitHub {
-            owner = "nvimtools";
-            repo = "none-ls-extras.nvim";
-            rev = "1214d729e3408470a7b7a428415a395e5389c13c";
-            hash = "sha256-5wQHdV2lmxMegN/BPg+qfGTNGv/T9u+hy4Yaj41PchI=";
-          };
-          doCheck = false;
-        };
-      };
-
-      vim-sleuth = {
-        package = vim-sleuth;
-      };
-
       # TODO: Use vim.utility.oil-nvim instead
       oil-nvim = {
         package = oil-nvim;
@@ -446,40 +430,6 @@
           */
           ''
             vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = "Undo tree" })
-          '';
-      };
-
-      telescope-ui-select = {
-        package = telescope-ui-select-nvim;
-        setup =
-          /*
-          lua
-          */
-          ''
-            local telescope = require("telescope")
-            telescope.load_extension("ui-select")
-          '';
-      };
-
-      git-blame = {
-        package = pkgs.vimUtils.buildVimPlugin {
-          name = "git-blame";
-          src = pkgs.fetchFromGitHub {
-            owner = "f-person";
-            repo = "git-blame.nvim";
-            rev = "2883a7460f611c2705b23f12d58d398d5ce6ec00";
-            hash = "sha256-mFzm0hkO0iei3yekOXrQpeCJimwzBLgXLZtK1DjjoE4=";
-          };
-        };
-        setup =
-          /*
-          lua
-          */
-          ''
-            -- I only want the commands provided by the plugin
-            require('gitblame').setup {
-              enabled = false,
-            }
           '';
       };
     };

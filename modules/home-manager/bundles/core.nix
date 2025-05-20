@@ -3,7 +3,6 @@ _: {
     myHomeManager = {
       shell = {
         gpg.enable = true;
-        bash.enable = true;
         fish.enable = true;
         git.enable = true;
         ssh.enable = true;

@@ -5,20 +5,18 @@
 }: let
   inherit (lib) mkIf;
   hasPackage = pname: lib.any (p: p ? pname && p.pname == pname) config.home.packages;
-  hasEza = hasPackage "eza";
-  hasXClip = hasPackage "xclip";
 in {
   config = {
     programs.fish = {
       enable = true;
       shellAbbrs = {
-        ls = mkIf hasEza "eza";
-        ll = mkIf hasEza "eza -lh";
-        clip = mkIf hasXClip "xclip -selection clipboard";
+        ls = mkIf (hasPackage "eza") "eza";
+        ll = mkIf (hasPackage "eza") "eza -lh";
       };
       functions = {
         fish_greeting = "";
       };
+      # TODO: Figure out if terminal colors are really needed anymore
       interactiveShellInit = ''
         # Use vim bindings and cursors
         fish_vi_key_bindings
