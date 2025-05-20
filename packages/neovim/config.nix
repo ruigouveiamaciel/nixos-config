@@ -169,6 +169,11 @@
         action = "<cmd>lua Snacks.picker.git_stash()<CR>";
         unique = true;
       }
+      {
+        key = "<C-e>";
+        mode = "n";
+        action = "<cmd>lua Snacks.explorer.open()<CR>";
+      }
     ];
 
     theme = {
@@ -191,6 +196,18 @@
             cursor = false;
             gitsigns = true;
           };
+          excluded_filetypes = [
+            "dropbar_menu"
+            "dropbar_menu_fzf"
+            "DressingInput"
+            "cmp_docs"
+            "cmp_menu"
+            "noice"
+            "prompt"
+            "TelescopePrompt"
+            "snacks_picker_list"
+            "snacks_picker_input"
+          ];
         };
       };
 
@@ -254,7 +271,6 @@
       noice.enable = true;
       colorizer.enable = true;
       breadcrumbs.enable = true;
-      nvim-ufo.enable = true;
     };
 
     utility = {
