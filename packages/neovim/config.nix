@@ -174,12 +174,18 @@
         mode = "n";
         action = "<cmd>lua Snacks.explorer.open()<CR>";
       }
+      {
+        key = "-";
+        mode = "n";
+        action = "<CMD>Oil<CR>";
+        desc = "Open parent directiory";
+      }
     ];
 
     theme = {
       enable = true;
       name = "catppuccin";
-      style = "frappe";
+      style = "macchiato";
       transparent = true;
     };
 
@@ -236,19 +242,37 @@
     autocmds = [
       {
         event = ["TextYankPost"];
-        callback = lib.mkLuaInline ''
-          function(args)
-            vim.hl.on_yank()
-           end
-        '';
+        group = "highlight-yank";
+        callback =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function(args)
+              vim.hl.on_yank()
+             end
+          '';
       }
       {
-        event = ["BufWritePost" "BufEnter" "InsertLeave" "TextChanged" "LspAttach"];
-        callback = lib.mkLuaInline ''
-          function(args)
-             nvf_lint(args.buf)
-           end
-        '';
+        event = ["BufWritePost" "BufEnter" "TextChanged" "InsertLeave"];
+        group = "nvf_nvim_lint";
+        callback =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function(args)
+               nvf_lint(args.buf)
+             end
+          '';
+      }
+      {
+        # Resize splits when window size changes. Super useful with aerospace
+        event = ["VimResized"];
+        pattern = ["*"];
+        command = "wincmd =";
       }
     ];
 
@@ -271,6 +295,7 @@
       noice.enable = true;
       colorizer.enable = true;
       breadcrumbs.enable = true;
+      nvim-ufo.enable = true;
     };
 
     utility = {
@@ -283,14 +308,32 @@
           quickfile.enable = true;
           image.enable = true;
           terminal.enable = true;
-          picker = {
-            enable = true;
-          };
+          picker.enable = true;
           explorer.enable = true;
           git.enable = true;
           gitbrowse.enable = true;
           notify.enable = true;
           notifier.enable = true;
+        };
+      };
+      oil-nvim = {
+        enable = true;
+        setupOpts = {
+          default_file_explorer = true;
+          use_default_keymaps = false;
+          keymaps = {
+            "gh" = "actions.show_help";
+            "<CR>" = "actions.select";
+            "<C-p>" = "actions.preview";
+            "<Esc>" = "actions.close";
+            "-" = "actions.parent";
+            "_" = "actions.open_cwd";
+            "gs" = "actions.change_sort";
+            "g." = "actions.toggle_hidden";
+          };
+          view_options = {
+            show_hidden = false;
+          };
         };
       };
     };
@@ -359,7 +402,9 @@
                 local cwd = linter.required_files
 
                 if (name == "eslint_d") then
-                  require("lint").lint(linter, { cwd = client_root })
+                  if (client_root) then
+                    require("lint").lint(linter, { cwd = client_root })
+                  end
                 else
                   -- if no configuration files are configured, lint
                   if cwd == nil then
@@ -408,33 +453,20 @@
     };
 
     extraPlugins = with pkgs.vimPlugins; {
-      # TODO: Use vim.utility.oil-nvim instead
-      oil-nvim = {
-        package = oil-nvim;
+      zen-mode = {
+        package = zen-mode-nvim;
         setup =
           /*
           lua
           */
           ''
-            require('oil').setup {
-              default_file_explorer = true,
-              use_default_keymaps = false,
-              keymaps = {
-                ["gh"] = "actions.show_help",
-                ["<CR>"] = "actions.select",
-                ["<C-p>"] = "actions.preview",
-                ["<Esc>"] = "actions.close",
-                ["-"] = "actions.parent",
-                ["_"] = "actions.open_cwd",
-                ["gs"] = "actions.change_sort",
-                ["g."] = "actions.toggle_hidden",
-              },
-              view_options = {
-                show_hidden = false;
+            require("zen-mode").setup {
+                window = {
+                  backdrop = 0.8,
+                  width = 140,
+                  height = 1,
+                },
               }
-            }
-
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
           '';
       };
 
