@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   config = {
     home.packages = with pkgs; [
-      ranger
       eza
       ripgrep
       zip

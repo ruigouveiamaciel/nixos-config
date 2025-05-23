@@ -1,0 +1,15 @@
+{pkgs, ...}: {
+  config = {
+    programs.mpv = {
+      enable = true;
+      package = pkgs.mpv-unwrapped.wrapper {
+        mpv = pkgs.mpv-unwrapped.override {
+          vapoursynthSupport = true;
+        };
+        youtubeSupport = true;
+      };
+      # bindings = {};
+      # config = {};
+    };
+  };
+}

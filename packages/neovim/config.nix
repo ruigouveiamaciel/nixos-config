@@ -180,6 +180,31 @@
         action = "<CMD>Oil<CR>";
         desc = "Open parent directiory";
       }
+      {
+        key = "<leader>gb";
+        mode = "n";
+        action = "<CMD>lua Snacks.gitbrowse()<CR>";
+        desc = "Open this file in github/gitlab";
+      }
+      {
+        key = "<leader>tl";
+        mode = "n";
+        lua = true;
+        action =
+          /*
+          lua
+          */
+          ''
+            function()
+              if (vim.diagnostic.config().virtual_lines) then
+                vim.diagnostic.config({ virtual_lines = false })
+              else
+                vim.diagnostic.config({ virtual_lines = true })
+              end
+            end
+          '';
+        desc = "Toggle diagnostic virtual lines";
+      }
     ];
 
     theme = {
@@ -444,7 +469,10 @@
       enableExtraDiagnostics = true;
 
       nix.enable = true;
-      markdown.enable = true;
+      markdown = {
+        enable = true;
+        extensions.render-markdown-nvim.enable = true;
+      };
       bash.enable = true;
       css.enable = true;
       html.enable = true;

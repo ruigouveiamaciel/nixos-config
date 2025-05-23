@@ -3,6 +3,12 @@
   pkgs,
   ...
 }: {
+  myHomeManager = {
+    shell = {
+      mpv.enable = true;
+    };
+  };
+
   programs.git = {
     userEmail = lib.mkForce "rum@axogroup.com";
     userName = lib.mkForce "Rui Maciel";
@@ -29,6 +35,7 @@
         "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
         "fo" = "cd ~/repos/frontend && nvim .";
         "no" = "cd ~/repos/nixos-config && nvim .";
+        "rr" = " mpv --vo=tct https://www.youtube.com/watch?v=dQw4w9WgXcQ";
       };
     };
   };

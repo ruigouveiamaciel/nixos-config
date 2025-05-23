@@ -29,7 +29,7 @@
       "capslocknodelay"
       "keymapp"
       "google-chrome"
-      "obsidian"
+      "kitty"
     ];
   };
 
