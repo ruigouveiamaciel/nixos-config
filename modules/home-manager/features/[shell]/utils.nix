@@ -12,7 +12,7 @@
       jless
       fzf
       fd
-      gavin-bc # Calculator in terminal
+      bc # Calculator in terminal
     ];
   };
 }

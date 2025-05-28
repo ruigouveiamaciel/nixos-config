@@ -46,28 +46,29 @@
   in
     with myLib; {
       nixosConfigurations = {
-        proxmox-devbox = mkSystem ./hosts/proxmox/devbox-lxc;
-        proxmox-unifi = mkSystem ./hosts/proxmox/unifi-lxc;
-        proxmox-qbittorrent = mkSystem ./hosts/proxmox/qbittorrent-lxc;
-        proxmox-flood = mkSystem ./hosts/proxmox/flood-lxc;
-        proxmox-vikunja = mkSystem ./hosts/proxmox/vikunja-lxc;
-        proxmox-paperless = mkSystem ./hosts/proxmox/paperless-lxc;
-        proxmox-homepage = mkSystem ./hosts/proxmox/homepage-lxc;
-        proxmox-radarr = mkSystem ./hosts/proxmox/radarr-lxc;
-        proxmox-sonarr = mkSystem ./hosts/proxmox/sonarr-lxc;
-        proxmox-bazarr = mkSystem ./hosts/proxmox/bazarr-lxc;
-        proxmox-prowlarr = mkSystem ./hosts/proxmox/prowlarr-lxc;
-        proxmox-jellyseerr = mkSystem ./hosts/proxmox/jellyseerr-lxc;
-        proxmox-jellyfin = mkSystem ./hosts/proxmox/jellyfin-lxc;
-        proxmox-immich = mkSystem ./hosts/proxmox/immich-lxc;
-        proxmox-home-assistant = mkSystem ./hosts/proxmox/home-assistant-lxc;
-        proxmox-minimal-vm = mkSystem ./hosts/proxmox/minimal-vm;
-        proxmox-minimal-iso = mkSystem ./hosts/proxmox/minimal-iso;
-        proxmox-minimal-lxc = mkSystem ./hosts/proxmox/minimal-lxc;
+        personal-gaming-desktop = mkSystem ./hosts/homelab/devbox-lxc;
+        proxmox-devbox = mkSystem ./hosts/homelab/devbox-lxc;
+        proxmox-unifi = mkSystem ./hosts/homelab/unifi-lxc;
+        proxmox-qbittorrent = mkSystem ./hosts/homelab/qbittorrent-lxc;
+        proxmox-flood = mkSystem ./hosts/homelab/flood-lxc;
+        proxmox-vikunja = mkSystem ./hosts/homelab/vikunja-lxc;
+        proxmox-paperless = mkSystem ./hosts/homelab/paperless-lxc;
+        proxmox-homepage = mkSystem ./hosts/homelab/homepage-lxc;
+        proxmox-radarr = mkSystem ./hosts/homelab/radarr-lxc;
+        proxmox-sonarr = mkSystem ./hosts/homelab/sonarr-lxc;
+        proxmox-bazarr = mkSystem ./hosts/homelab/bazarr-lxc;
+        proxmox-prowlarr = mkSystem ./hosts/homelab/prowlarr-lxc;
+        proxmox-jellyseerr = mkSystem ./hosts/homelab/jellyseerr-lxc;
+        proxmox-jellyfin = mkSystem ./hosts/homelab/jellyfin-lxc;
+        proxmox-immich = mkSystem ./hosts/homelab/immich-lxc;
+        proxmox-home-assistant = mkSystem ./hosts/homelab/home-assistant-lxc;
+        proxmox-minimal-vm = mkSystem ./hosts/homelab/minimal-vm;
+        proxmox-minimal-iso = mkSystem ./hosts/homelab/minimal-iso;
+        proxmox-minimal-lxc = mkSystem ./hosts/homelab/minimal-lxc;
       };
 
       darwinConfigurations = {
-        darwin-work = mkDarwinSystem ./hosts/darwin/work;
+        work-macbook = mkDarwinSystem ./hosts/work/macbook;
       };
 
       deploy = {
@@ -154,7 +155,14 @@
         constants = ./modules/constants;
       };
 
-      packages = pkgsForAllSystems ({pkgs, ...}: import ./packages {inherit pkgs inputs;});
+      packages = pkgsForAllSystems ({pkgs, ...}:
+        import ./packages {
+          inherit inputs;
+
+          pkgs = import inputs.nixpkgs-unstable {
+            inherit (pkgs) system config;
+          };
+        });
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);
 
       overlays = import ./overlays {inherit inputs;};
