@@ -12,6 +12,7 @@
       jless
       fzf
       fd
+      gavin-bc # Calculator in terminal
     ];
   };
 }

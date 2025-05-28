@@ -23,6 +23,7 @@ in rec {
       modules = [
         config
         outputs.nixosModules.default
+        outputs.nixosModules.constants
       ];
     };
 
@@ -35,6 +36,7 @@ in rec {
       modules = [
         config
         outputs.darwinModules.default
+        outputs.darwinModules.constants
       ];
     };
 
@@ -47,6 +49,7 @@ in rec {
       modules = [
         config
         outputs.homeManagerModules.default
+        outputs.homeManagerModules.constants
       ];
     };
 

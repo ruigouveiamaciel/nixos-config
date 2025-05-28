@@ -140,11 +140,23 @@
       };
 
       checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
-      nixosModules.default = ./modules/nixos;
-      homeManagerModules.default = ./modules/home-manager;
-      darwinModules.default = ./modules/darwin;
+
+      nixosModules = {
+        default = ./modules/nixos;
+        constants = ./modules/constants;
+      };
+      homeManagerModules = {
+        default = ./modules/home-manager;
+        constants = ./modules/constants;
+      };
+      darwinModules = {
+        default = ./modules/nix-darwin;
+        constants = ./modules/constants;
+      };
+
       packages = pkgsForAllSystems ({pkgs, ...}: import ./packages {inherit pkgs inputs;});
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);
+
       overlays = import ./overlays {inherit inputs;};
     };
 }
