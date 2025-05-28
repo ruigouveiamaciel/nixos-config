@@ -1,10 +1,20 @@
-{outputs, ...}: {
-  imports = [outputs.homeManagerModules.default];
+{
+  outputs,
+  pkgs,
+  ...
+}: {
+  imports = [
+    outputs.homeManagerModules.default
+    outputs.homeManagerModules.constants
+  ];
 
   myHomeManager = {
-    bundles = {
-      core.enable = true;
+    profiles = {
+      essentials.enable = true;
       development.enable = true;
+    };
+    shell = {
+      mpv.enable = true;
     };
   };
 
@@ -17,6 +27,7 @@
       "/opt/homebrew/sbin"
     ];
     sessionVariables = {
+      SHELL = "${pkgs.fish}/bin/fish";
       XDG_DATA_DIRS = "/opt/homebrew/share:$XDG_DATA_DIRS";
     };
 

@@ -9,7 +9,6 @@
 
     (modulesPath + "/profiles/qemu-guest.nix")
     (modulesPath + "/profiles/minimal.nix")
-    (modulesPath + "/profiles/headless.nix")
   ];
 
   isoImage = {
@@ -28,10 +27,9 @@
       nix-settings.enable = true;
       sops.enable = true;
     };
-    users.authorized-keys.enable = true;
   };
 
-  users.users.root.openssh.authorizedKeys.keys = config.myNixOS.users.authorized-keys.users.rui;
+  users.users.root.openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
   services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
 
   # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/installation-device.nix

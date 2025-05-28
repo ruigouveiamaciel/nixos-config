@@ -1,4 +1,5 @@
 {lib, ...}: {
+  # TODO: Move this into myConstants
   options = {
     default = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {

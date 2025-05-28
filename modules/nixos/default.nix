@@ -6,7 +6,6 @@
 }: let
   cfg = config.myNixOS;
 
-  # Taking all modules in ./features and adding enables to them
   features =
     myLib.extendModules
     ({
@@ -28,8 +27,7 @@
     })
     (myLib.resolveDir ./features);
 
-  # Taking all modules in ./bundles and adding enables to them
-  bundles =
+  profiles =
     myLib.extendModules
     ({
       name,
@@ -39,16 +37,16 @@
     in {
       inherit path;
       optionsExtension = options: {
-        myNixOS.bundles = lib.setAttrByPath configPath (
+        myNixOS.profiles = lib.setAttrByPath configPath (
           options
           // {
             enable = lib.mkEnableOption "enable ${name} bundle";
           }
         );
       };
-      configExtension = config: (lib.mkIf (lib.getAttrFromPath (configPath ++ ["enable"]) cfg.bundles) config);
+      configExtension = config: (lib.mkIf (lib.getAttrFromPath (configPath ++ ["enable"]) cfg.profiles) config);
     })
-    (myLib.resolveDir ./bundles);
+    (myLib.resolveDir ./profiles);
 in {
-  imports = features ++ bundles;
+  imports = features ++ profiles;
 }

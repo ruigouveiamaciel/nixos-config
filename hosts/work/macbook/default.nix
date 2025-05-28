@@ -2,15 +2,12 @@
   myDarwin = {
     nix = {
       nix-settings.enable = true;
-      home-manager.enable = true;
       homebrew.enable = true;
-      nix-index.enable = true;
     };
     users.rui = {
       enable = true;
       extraHomeManagerConfigFile = ./extraHome.nix;
     };
-    shell.fish.enable = true;
   };
 
   system.primaryUser = "ruimaciel";

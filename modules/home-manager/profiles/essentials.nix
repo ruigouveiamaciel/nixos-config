@@ -7,11 +7,12 @@ _: {
         git.enable = true;
         ssh.enable = true;
         starship.enable = true;
-        utils.enable = true;
+        utilities.enable = true;
       };
 
       nix = {
         nix-settings.enable = true;
+        nix-index.enable = true;
       };
     };
   };

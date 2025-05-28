@@ -6,12 +6,12 @@
   config = {
     myNixOS = {
       nix.home-manager.enable = true;
+      shell.fish.enable = true;
       users = {
         enable = true;
-        authorized-keys.enable = true;
         users = {
           rui = {
-            authorizedKeys = config.myNixOS.users.authorized-keys.users.rui;
+            authorizedKeys = config.myConstants.users.rui.authorized-keys;
             homeManagerConfigFile = ./home.nix;
             extraGroups = [
               "wheel"
@@ -20,8 +20,8 @@
               "network"
               "networkmanager"
               "net"
-              #"docker"
-              #"podman"
+              "docker"
+              "podman"
               "git"
               "dialout"
               "plugdev"

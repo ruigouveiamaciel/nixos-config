@@ -1,9 +1,12 @@
 {outputs, ...}: {
-  imports = [outputs.homeManagerModules.default];
+  imports = [
+    outputs.homeManagerModules.default
+    outputs.homeManagerModules.constants
+  ];
 
   myHomeManager = {
-    bundles = {
-      core.enable = true;
+    profiles = {
+      essentials.enable = true;
       development.enable = true;
     };
   };

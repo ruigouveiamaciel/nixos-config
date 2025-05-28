@@ -17,12 +17,12 @@ in {
   config = {
     myDarwin = {
       nix.home-manager.enable = true;
+      shell.fish.enable = true;
       users = {
         enable = true;
-        authorized-keys.enable = true;
         users = {
           ruimaciel = {
-            authorizedKeys = config.myDarwin.users.authorized-keys.users.rui;
+            authorizedKeys = config.myConstants.users.rui.authorized-keys;
             homeManagerConfigFile = ./home.nix;
             inherit (cfg) extraHomeManagerConfigFile;
             extraSettings = {

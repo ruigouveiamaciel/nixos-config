@@ -15,13 +15,7 @@ _: {
       };
 
       shell = {
-        fish.enable = true;
         git.enable = true;
-        ssh.enable = true;
-      };
-
-      users = {
-        authorized-keys.enable = true;
       };
     };
   };

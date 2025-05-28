@@ -46,7 +46,8 @@
   in
     with myLib; {
       nixosConfigurations = {
-        personal-gaming-desktop = mkSystem ./hosts/homelab/devbox-lxc;
+        personal-gaming-desktop = mkSystem ./hosts/personal/gaming-desktop;
+        personal-install-iso = mkSystem ./hosts/personal/install-iso;
         proxmox-devbox = mkSystem ./hosts/homelab/devbox-lxc;
         proxmox-unifi = mkSystem ./hosts/homelab/unifi-lxc;
         proxmox-qbittorrent = mkSystem ./hosts/homelab/qbittorrent-lxc;

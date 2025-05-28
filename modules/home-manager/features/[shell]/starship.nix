@@ -1,6 +1,7 @@
 _: {
   config = {
     programs.starship = {
+      # TODO: Configure a nicer starship config
       enable = true;
       settings = {
         format = ''
@@ -12,9 +13,8 @@ _: {
           symbol = " ";
         };
 
-        container = {
-          disabled = true;
-        };
+        container.disabled = true;
+        time.disabled = true;
 
         character = {
           error_symbol = "[↪](bold red)";
@@ -24,8 +24,6 @@ _: {
           vimcmd_replace_symbol = "[:](bold purple)";
           vimcmd_replace_one_symbol = "[:](bold purple)";
         };
-
-        time.disabled = true;
       };
     };
   };
