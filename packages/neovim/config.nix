@@ -303,6 +303,7 @@
 
     binds = {
       whichKey.enable = true;
+      hardtime-nvim.enable = true;
     };
 
     git = {

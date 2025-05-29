@@ -24,9 +24,6 @@
 
   services.displayManager.autoLogin.user = lib.mkForce "rui";
 
-  users.users.root.openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
-  services.openssh.settings.PermitRootLogin = lib.mkForce "yes";
-
   networking = {
     hostName = lib.mkForce "install-iso";
     useDHCP = lib.mkForce true;

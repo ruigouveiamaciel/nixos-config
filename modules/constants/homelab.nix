@@ -1,7 +1,6 @@
 {lib, ...}: {
-  # TODO: Move this into myConstants
   options = {
-    default = lib.mkOption {
+    myConstants.homelab = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options = {
           ip = lib.mkOption {

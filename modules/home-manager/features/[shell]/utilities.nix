@@ -12,6 +12,7 @@
       jless # JSON viewer
       fzf # Fuzzy find files
       bc # Calculator
+      zoxide # Smarter cd
     ];
   };
 }

@@ -5,13 +5,15 @@ _: {
 
       nix = {
         nix-settings.enable = true;
-        sops.enable = true;
-        home-manager.enable = true;
+      };
+
+      networking = {
+        homelab-hosts.enable = true;
       };
 
       security = {
         disable-lecture.enable = true;
-        sudo-using-ssh-agent.enable = true;
+        ssh-agent-auth.enable = true;
       };
 
       shell = {

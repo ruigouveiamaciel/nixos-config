@@ -1,3 +1,6 @@
 _: {
-  imports = [./users];
+  imports = [
+    ./users
+    ./homelab.nix
+  ];
 }
