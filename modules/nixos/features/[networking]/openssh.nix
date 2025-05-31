@@ -4,7 +4,7 @@
       enable = true;
       settings = {
         PasswordAuthentication = lib.mkForce false;
-        PermitRootLogin = lib.mkDefault "no";
+        PermitRootLogin = lib.mkForce "no";
         GatewayPorts = "clientspecified";
         StreamLocalBindUnlink = "yes";
         AllowTcpForwarding = "yes";

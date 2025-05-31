@@ -49,7 +49,7 @@ in {
         };
         publicKeys = [
           {
-            text = config.myConstants.users.rui.pgp;
+            source = config.myConstants.users.rui.pgp;
             trust = 5;
           }
         ];

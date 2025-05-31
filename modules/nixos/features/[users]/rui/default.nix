@@ -11,7 +11,7 @@
         enable = true;
         users = {
           rui = {
-            hashedPasswordFile = ./initial-password;
+            # hashedPasswordFile = ./initial-password;
             authorizedKeys = config.myConstants.users.rui.authorized-keys;
             homeManagerConfigFile = ./home.nix;
             extraGroups = [
@@ -29,6 +29,7 @@
             ];
             extraSettings = {
               shell = pkgs.fish;
+              password = "123456"; # TODO: Load password from sops
             };
           };
         };
