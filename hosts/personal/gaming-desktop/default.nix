@@ -1,14 +1,23 @@
-{lib, ...}: {
+_: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
   ];
+
+  security.sudo = {
+    execWheelOnly = true;
+    wheelNeedsPassword = false;
+  };
 
   myNixOS = {
     profiles = {
       essentials.enable = true;
     };
     users.rui.enable = true;
+    desktop = {
+      hyprland.enable = true;
+      gaming.enable = true;
+    };
   };
 
   networking = {
@@ -24,30 +33,8 @@
     };
   };
 
-  # TODO: Move this to a generic desktop setting
   boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;
-
-  # TODO: This should be part of impermancence config
-  programs.fuse.userAllowOther = true;
-
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-  };
-
-  services.pipewire = {
-    enable = true;
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  services.playerctld.enable = true;
 
   system.stateVersion = "25.05";
 }

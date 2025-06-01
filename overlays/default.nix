@@ -14,4 +14,7 @@
       inherit (final) system config;
     };
   };
+
+  # HyprPanel overlay
+  hyprpanel = inputs.hyprpanel.overlay;
 }

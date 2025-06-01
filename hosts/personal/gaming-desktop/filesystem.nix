@@ -5,6 +5,7 @@
 }: {
   imports = [
     inputs.disko.nixosModules.default
+    inputs.impermanence.nixosModules.impermanence
   ];
 
   boot = {
@@ -98,10 +99,7 @@
     };
   };
 
-  fileSystems = {
-    "/persist".neededForBoot = true;
-    "/nix".neededForBoot = true;
-  };
+  fileSystems."/persist".neededForBoot = true;
 
   boot.initrd.systemd = {
     enable = true;
@@ -117,8 +115,19 @@
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
       script = ''
-        zfs roolback -r zroot/encrypted/root@blank
+        zfs rollback -r zroot/encrypted/root@blank
       '';
     };
+  };
+
+  environment.persistence."/persist" = {
+    hideMounts = true;
+    directories = [
+      "/var/log"
+      "/var/lib/bluetooth"
+      "/var/lib/nixos"
+      "/var/lib/systemd/coredump"
+      "/etc/NetworkManager/system-connections"
+    ];
   };
 }

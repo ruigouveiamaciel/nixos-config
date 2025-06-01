@@ -1,6 +1,4 @@
 {
-  description = "Rui's NixOS configuration";
-
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
@@ -13,11 +11,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence/home-manager-v2"; # Branch with fixes for the latest issues
     };
 
     sops-nix = {
@@ -37,8 +37,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix = {
+      url = "github:nix-community/stylix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprpanel = {
+      url = "github:Jas-SinghFSU/HyprPanel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -147,10 +159,12 @@
         default = ./modules/nixos;
         constants = ./modules/constants;
       };
+
       homeManagerModules = {
         default = ./modules/home-manager;
         constants = ./modules/constants;
       };
+
       darwinModules = {
         default = ./modules/nix-darwin;
         constants = ./modules/constants;
@@ -164,6 +178,7 @@
             inherit (pkgs) system config;
           };
         });
+
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);
 
       overlays = import ./overlays {inherit inputs;};
