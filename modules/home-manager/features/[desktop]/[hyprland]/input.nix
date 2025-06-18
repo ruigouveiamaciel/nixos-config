@@ -21,7 +21,9 @@ _: {
             tap-to-click = true;
           };
         };
-        gestures.workspace_swipe = false;
+        gestures = {
+          workspace_swipe = false;
+        };
         misc = {
           middle_click_paste = false;
         };

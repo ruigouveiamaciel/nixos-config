@@ -5,6 +5,8 @@
   ...
 }: {
   config = {
+    programs.command-not-found.enable = false;
+
     nix = {
       enable = true;
       settings = {

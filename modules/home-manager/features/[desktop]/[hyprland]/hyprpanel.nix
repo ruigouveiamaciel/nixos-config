@@ -28,6 +28,11 @@
             inherit (config.stylix.fonts.sansSerif) name;
           };
         };
+        menus = {
+          clock = {
+            weather.enabled = false;
+          };
+        };
         layout = {
           "bar.layouts" = let
             layout = {

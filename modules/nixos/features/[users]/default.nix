@@ -16,12 +16,6 @@ in {
     users = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options = {
-          hashedPasswordFile = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            description = "The path for hashed password of the user";
-          };
-
           authorizedKeys = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [];
@@ -32,6 +26,12 @@ in {
             type = lib.types.nullOr lib.types.path;
             default = null;
             description = "The path for this user's home manager config";
+          };
+
+          extraHomeManagerConfigFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
+            description = "The path for this user's extra home manager config";
           };
 
           extraGroups = lib.mkOption {
@@ -59,7 +59,6 @@ in {
         builtins.mapAttrs (
           name: user:
             {
-              inherit (user) hashedPasswordFile;
               description = name;
               openssh.authorizedKeys.keys = lib.mkIf (user.authorizedKeys != null) user.authorizedKeys;
               isNormalUser = true;
@@ -72,8 +71,12 @@ in {
     };
     home-manager = lib.mkIf config.myNixOS.nix.home-manager.enable {
       users = builtins.mapAttrs (
-        _: user:
-          import user.homeManagerConfigFile
+        _: user: {
+          imports = [
+            user.homeManagerConfigFile
+            user.extraHomeManagerConfigFile
+          ];
+        }
       ) (inputs.nixpkgs.lib.filterAttrs (_: user: user.homeManagerConfigFile != null) cfg.users);
     };
   };

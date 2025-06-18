@@ -1,4 +1,4 @@
-_: {
+{pkgs, ...}: {
   config = {
     myHomeManager.desktop = {
       stylix.enable = true;
@@ -8,11 +8,14 @@ _: {
         app-launcher.enable = true;
         polkit-agent.enable = true;
         appearance.enable = true;
-        gaming.enable = true;
         input.enable = true;
         hyprpanel.enable = true;
       };
     };
+
+    home.packages = with pkgs; [
+      hyprland-qt-support
+    ];
 
     wayland.windowManager.hyprland = {
       enable = true;

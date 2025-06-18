@@ -12,7 +12,7 @@ _: {
 
       nix = {
         nix-settings.enable = true;
-        nix-index.enable = true;
+        impermanence.enable = true;
       };
     };
   };

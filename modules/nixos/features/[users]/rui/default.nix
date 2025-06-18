@@ -1,8 +1,19 @@
 {
   config,
   pkgs,
+  lib,
   ...
-}: {
+}: let
+  cfg = config.myNixOS.users.rui;
+in {
+  options = {
+    extraHomeManagerConfigFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "The path for this user's extra home manager config";
+    };
+  };
+
   config = {
     myNixOS = {
       nix.home-manager.enable = true;
@@ -11,9 +22,9 @@
         enable = true;
         users = {
           rui = {
-            # hashedPasswordFile = ./initial-password;
             authorizedKeys = config.myConstants.users.rui.authorized-keys;
             homeManagerConfigFile = ./home.nix;
+            inherit (cfg) extraHomeManagerConfigFile;
             extraGroups = [
               "wheel"
               "video"

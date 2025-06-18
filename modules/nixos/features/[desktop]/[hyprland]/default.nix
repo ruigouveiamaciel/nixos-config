@@ -1,7 +1,13 @@
 _: {
   config = {
     myNixOS = {
-      desktop.pipewire.enable = true;
+      desktop = {
+        pipewire.enable = true;
+
+        hyprland = {
+          hyprlock.enable = true;
+        };
+      };
     };
 
     programs.hyprland = {

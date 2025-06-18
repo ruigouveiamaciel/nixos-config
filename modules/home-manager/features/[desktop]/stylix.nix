@@ -1,29 +1,39 @@
 {
   inputs,
   pkgs,
+  config,
   ...
-}: let
-  greek_islands = pkgs.fetchurl {
-    url = "https://images-assets.nasa.gov/image/iss070e035893/iss070e035893~orig.jpg";
-    hash = "sha256-rw6zPH2EJg3qCZ7mKUCPad6CkNkcXTMjD2OL0qMmkW8=";
-  };
-  pico_island = pkgs.fetchurl {
-    url = "https://images-assets.nasa.gov/image/iss036e009390/iss036e009390~orig.jpg";
-    hash = "";
-  };
-in {
+}: {
   imports = [
     inputs.stylix.homeModules.stylix
   ];
 
   config = {
+    # home.pointerCursor.gtk.enable = true;
+    #
+    # wayland.windowManager.hyprland.settings.exec-once = [
+    #   "hyprctl setcursor ${config.stylix.cursor.name} ${builtins.toString config.stylix.cursor.size}"
+    # ];
+
     stylix = {
       enable = true;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
-      #image = greek_islands;
       polarity = "dark";
 
+      cursor = {
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Classic";
+        size = 24;
+      };
+
       fonts = {
+        sizes = {
+          applications = 12;
+          desktop = 12;
+          popups = 12;
+          terminal = 12;
+        };
+
         serif = {
           package = pkgs.dejavu_fonts;
           name = "DejaVu Serif";

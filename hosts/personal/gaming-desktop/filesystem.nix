@@ -129,5 +129,8 @@
       "/var/lib/systemd/coredump"
       "/etc/NetworkManager/system-connections"
     ];
+    files = [
+      "/etc/machine-id"
+    ];
   };
 }

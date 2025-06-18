@@ -6,6 +6,7 @@ _: {
         neovim.enable = true;
         sdks.enable = true;
         nix.enable = true;
+        sops.enable = true;
       };
     };
   };
