@@ -1,5 +1,16 @@
-args: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   # example = pkgs.callPackage ./example { };
 
-  myNeovim = import ./neovim args;
+  myNeovim =
+    (inputs.nvf.lib.neovimConfiguration
+      {
+        inherit pkgs;
+        modules = [
+          ./neovim.nix
+        ];
+      }).neovim;
 }

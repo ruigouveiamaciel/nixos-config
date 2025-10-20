@@ -1,20 +1,22 @@
-{config, ...}: {
+{
+  config,
+  myModulesPath,
+  ...
+}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
+
+    "${myModulesPath}/profiles/essentials.nix"
+
+    "${myModulesPath}/users/rui"
+    "${myModulesPath}/security/no-sudo-passwd.nix"
+    "${myModulesPath}/desktop/hyprland"
+    "${myModulesPath}/desktop/gaming"
   ];
 
-  myNixOS = {
-    profiles.essentials.enable = true;
-    security.no-sudo-passwd.enable = true;
-    users.rui = {
-      enable = true;
-      extraHomeManagerConfigFile = ./home.nix;
-    };
-    desktop = {
-      hyprland.enable = true;
-      gaming.enable = true;
-    };
+  home-manager.users.rui = {
+    imports = [./home.nix];
   };
 
   networking = {

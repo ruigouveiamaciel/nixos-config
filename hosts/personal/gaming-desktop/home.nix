@@ -1,13 +1,9 @@
-{pkgs, ...}: {
-  myHomeManager = {
-    desktop = {
-      hyprland.enable = true;
-      essentials.enable = true;
-      gaming.enable = true;
-    };
-  };
-
-  home.packages = with pkgs; [bemenu];
+{myModulesPath, ...}: {
+  imports = [
+    "${myModulesPath}/desktop/hyprland"
+    "${myModulesPath}/desktop/applications"
+    "${myModulesPath}/desktop/gaming"
+  ];
 
   programs.fish.shellAbbrs = {
     "rebuild" = "cd /persist/nixos-config && sudo nixos-rebuild switch --flake .#personal-gaming-desktop";

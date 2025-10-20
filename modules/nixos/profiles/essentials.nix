@@ -1,24 +1,14 @@
-_: {
-  config = {
-    myNixOS = {
-      locales.pt-pt.enable = true;
+{myModulesPath, ...}: {
+  imports = [
+    "${myModulesPath}/locales/pt-pt.nix"
 
-      nix = {
-        nix-settings.enable = true;
-      };
+    "${myModulesPath}/security/disable-lecture.nix"
+    "${myModulesPath}/security/pam-ssh-agent-auth.nix"
 
-      networking = {
-        homelab-hosts.enable = true;
-      };
+    "${myModulesPath}/shell/git.nix"
 
-      security = {
-        disable-lecture.enable = true;
-        ssh-agent-auth.enable = true;
-      };
-
-      shell = {
-        git.enable = true;
-      };
-    };
-  };
+    "${myModulesPath}/system/nix-ld.nix"
+    "${myModulesPath}/system/nix-settings.nix"
+    "${myModulesPath}/system/sops.nix"
+  ];
 }

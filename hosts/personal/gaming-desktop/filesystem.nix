@@ -1,11 +1,13 @@
 {
   inputs,
   pkgs,
+  myModulesPath,
   ...
 }: {
   imports = [
     inputs.disko.nixosModules.default
-    inputs.impermanence.nixosModules.impermanence
+
+    "${myModulesPath}/profiles/impermanence.nix"
   ];
 
   boot = {

@@ -1,13 +1,9 @@
-_: {
-  config = {
-    myHomeManager = {
-      development = {
-        direnv.enable = true;
-        neovim.enable = true;
-        sdks.enable = true;
-        nix.enable = true;
-        sops.enable = true;
-      };
-    };
-  };
+{myModulesPath, ...}: {
+  imports = [
+    "${myModulesPath}/development/direnv.nix"
+    "${myModulesPath}/development/neovim.nix"
+    "${myModulesPath}/development/nix.nix"
+    "${myModulesPath}/development/sdks.nix"
+    "${myModulesPath}/development/sops.nix"
+  ];
 }
