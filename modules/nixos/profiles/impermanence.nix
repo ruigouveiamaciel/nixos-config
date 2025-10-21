@@ -11,7 +11,7 @@
   config = lib.mkIf (builtins.hasAttr "home-manager" config) {
     home-manager.sharedModules = [
       {
-        imputs = [
+        imports = [
           inputs.impermanence.homeManagerModules.impermanence
         ];
       }
