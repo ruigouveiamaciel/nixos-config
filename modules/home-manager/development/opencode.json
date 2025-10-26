@@ -17,6 +17,6 @@
     "webfetch": "ask"
   },
   "keybinds": {
-    "input_submit": "ctrl+enter"
+    "input_submit": "alt+enter"
   }
 }
