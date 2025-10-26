@@ -7,12 +7,16 @@
     "bash": {
       "*": "ask",
       "pwd": "allow",
+      "git status *": "allow", 
       "git status": "allow", 
+      "git fetch *": "allow",
       "git fetch": "allow",
+      "git log *": "allow",
       "git log": "allow",
+      "git diff *": "allow",
       "git diff": "allow",
-      "git add": "allow",
-      "git commit": "allow"
+      "git add *": "allow",
+      "git commit *": "allow"
     },
     "webfetch": "ask"
   },
