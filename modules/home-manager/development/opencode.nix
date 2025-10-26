@@ -7,7 +7,7 @@
   config = lib.mkMerge [
     {
       home.packages = with pkgs; [
-        vesktop
+        unstable.opencode
       ];
 
       wayland.windowManager.hyprland.settings = {
@@ -21,7 +21,7 @@
       home.persistence = {
         "/persist" = {
           directories = [
-            ".config/vesktop"
+            ".local/share/opencode"
           ];
         };
       };

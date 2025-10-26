@@ -13,5 +13,7 @@
     fzf # Fuzzy find files
     bc # Calculator
     zoxide # Smarter cd
+    fd
+    imagemagick
   ];
 }

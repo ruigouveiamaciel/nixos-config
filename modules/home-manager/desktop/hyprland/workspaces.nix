@@ -21,7 +21,7 @@
       bind = [
         "$modifier,W,hy3:killactive"
         "$modifier,code:47,hy3:makegroup,v,toggle,ephemeral"
-        "$modifier,D,togglefloating"
+        "$modifier,F,togglefloating"
         "$modifier,M,fullscreen"
 
         "$modifier,H,hy3:movefocus,left"
@@ -77,24 +77,19 @@
         "$modifier SHIFT,F10,hy3:movetoworkspace,10,follow"
       ];
       windowrule = [
-        "workspace 1, content:game"
-
-        "workspace 1, class:factorio"
+        "workspace 6, class:steam"
+        "workspace 7, content:game"
+        "workspace 7, class:factorio"
         "fullscreen, class:factorio"
-        "workspace 1, class:steam_app_548430"
+        "workspace 7, class:steam_app_548430"
         "fullscreen, class:steam_app_548430"
-        "workspace 1, class:steam_app_1943950"
+        "workspace 7, class:steam_app_1943950"
         "fullscreen, class:steam_app_1943950"
 
-        "workspace 2, class:kitty"
-
-        "workspace 3, class:steam"
-
+        "workspace 1, class:kitty"
         "workspace 4, class:librewolf"
-
-        "workspace 6, class:vesktop"
-
-        "workspace 7, class:Spotify"
+        "workspace 5, class:Spotify"
+        "workspace 10, class:vesktop"
       ];
       workspace = [
         "1, monitor:$display1, persistent:true, default:true"
@@ -102,11 +97,11 @@
         "3, monitor:$display1, persistent:true"
         "4, monitor:$display1, persistent:true"
         "5, monitor:$display1, persistent:true"
-        "6, monitor:$display2, persistent:true"
-        "7, monitor:$display2, persistent:true"
-        "8, monitor:$display2, persistent:true"
-        "9, monitor:$display2, persistent:true"
-        "10, monitor:$display2, persistent:true"
+        "6, monitor:$display1, persistent:true"
+        "7, monitor:$display1, persistent:true"
+        "8, monitor:$display1, persistent:true"
+        "9, monitor:$display1, persistent:true"
+        "10, monitor:$display1, persistent:true"
       ];
     };
   };

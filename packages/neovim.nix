@@ -10,6 +10,7 @@
       fd
       fzf
       imagemagick
+      lsof
     ];
 
     viAlias = true;
@@ -43,10 +44,6 @@
       colorcolumn = "80";
       timeoutlen = 400;
       hlsearch = true;
-      foldcolumn = "0";
-      foldlevel = 99;
-      foldlevelstart = 99;
-      foldenable = true;
     };
 
     keymaps = [
@@ -59,30 +56,35 @@
       {
         key = "<leader>fk";
         mode = "n";
+        unique = true;
         action = "<cmd>lua Snacks.picker.keymaps()<CR>";
         desc = "Search keymaps";
       }
       {
         key = "gd";
         mode = "n";
+        unique = true;
         action = "<cmd>lua Snacks.picker.lsp_definitions()<CR>";
         desc = "Goto definition";
       }
       {
         key = "gr";
         mode = "n";
+        unique = true;
         action = "<cmd>lua Snacks.picker.lsp_references()<CR>";
         desc = "Goto references";
       }
       {
         key = "gi";
         mode = "n";
+        unique = true;
         action = "<cmd>lua Snacks.picker.lsp_implementations()<CR>";
         desc = "Goto implementations";
       }
       {
         key = "gt";
         mode = "n";
+        unique = true;
         action = "<cmd>lua Snacks.picker.lsp_type_definitions()<CR>";
         desc = "Goto type definitions";
       }
@@ -170,12 +172,6 @@
         unique = true;
         action = "<cmd>lua Snacks.picker.git_stash()<CR>";
         desc = "Find git stashes";
-      }
-      {
-        key = "<C-e>";
-        mode = "n";
-        action = "<cmd>lua Snacks.explorer.open()<CR>";
-        desc = "Open file explorer";
       }
       {
         key = "-";
@@ -341,7 +337,7 @@
           '';
       }
       {
-        event = ["BufWritePost" "BufEnter" "TextChanged" "InsertLeave"];
+        event = ["BufWritePost" "BufEnter" "TextChanged"];
         group = "nvf_nvim_lint";
         callback =
           lib.mkLuaInline
@@ -363,25 +359,14 @@
       }
     ];
 
-    binds = {
-      whichKey.enable = true;
-    };
-
-    git = {
-      enable = true;
-      gitsigns.enable = true;
-      vim-fugitive.enable = true;
-    };
-
-    notes = {
-      todo-comments.enable = true;
-    };
+    binds.whichKey.enable = true;
+    git.enable = true;
+    notes.todo-comments.enable = true;
 
     ui = {
       noice.enable = true;
       colorizer.enable = true;
       breadcrumbs.enable = true;
-      nvim-ufo.enable = true;
     };
 
     utility = {
@@ -395,8 +380,6 @@
           quickfile.enable = true;
           image.enable = true;
           picker.enable = true;
-          explorer.enable = true;
-          git.enable = true;
           gitbrowse.enable = true;
           notify.enable = true;
           notifier.enable = true;
@@ -428,6 +411,24 @@
       lualine = {
         enable = true;
         theme = "auto";
+        extraActiveSection.c = [
+          /*
+          lua
+          */
+          ''
+            {
+              function()
+                local macro_reg = vim.fn.reg_recording()
+                if macro_reg ~= "" then
+                  return "Recording Macro: @" .. macro_reg
+                else
+                  return ""
+                end
+              end,
+              cond = function() return vim.fn.reg_recording() ~= "" end,
+            }
+          ''
+        ];
       };
     };
 
@@ -553,6 +554,44 @@
       html.enable = true;
       ts.enable = true;
       go.enable = true;
+      yaml.enable = true;
+      rust.enable = true;
+      python.enable = true;
+      svelte.enable = true;
+      tailwind.enable = true;
+      sql.enable = true;
+      java.enable = true;
+    };
+
+    extraPlugins = with pkgs.vimPlugins; {
+      opencode-nvim = {
+        package = opencode-nvim;
+        after = ["snacks-nvim"];
+        setup =
+          /*
+          lua
+          */
+          ''
+            vim.g.opencode_opts = {
+              -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition" on `opencode_opts`.
+            }
+
+            -- Required for `vim.g.opencode_opts.auto_reload`.
+            vim.o.autoread = true
+
+            -- Recommended/example keymaps.
+            vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask about this" })
+            vim.keymap.set({"n", "x"}, "<leader>os", function() require("opencode").select() end, { desc = "Select prompt" })
+            vim.keymap.set("n", "<leader>o+", function() require("opencode").prompt("@this") end, { desc = "Add this" })
+            vim.keymap.set("n", "<leader>ot", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
+            vim.keymap.set("n", "<leader>oc", function() require("opencode").command() end, { desc = "Select command" })
+            vim.keymap.set("n", "<leader>on", function() require("opencode").command("session_new") end, { desc = "New session" })
+            vim.keymap.set("n", "<leader>oi", function() require("opencode").command("session_interrupt") end, { desc = "Interrupt session" })
+            vim.keymap.set("n", "<leader>oA", function() require("opencode").command("agent_cycle") end, { desc = "Cycle selected agent" })
+            vim.keymap.set("n", "<S-C-u>",    function() require("opencode").command("messages_half_page_up") end, { desc = "Messages half page up" })
+            vim.keymap.set("n", "<S-C-d>",    function() require("opencode").command("messages_half_page_down") end, { desc = "Messages half page down" })
+          '';
+      };
     };
   };
 }

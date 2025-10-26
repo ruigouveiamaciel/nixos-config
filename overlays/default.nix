@@ -3,15 +3,17 @@
   packages = final: _prev:
     import ../packages {
       inherit inputs;
-      pkgs = import inputs.nixpkgs-unstable {
+      pkgs = import inputs.nixpkgs-packages {
         inherit (final) system config;
       };
     };
 
   # Make inputs.nixos-unstable accessible through 'pkgs.unstable'
   unstable = final: _prev: {
-    unstable = import inputs.nixos-unstable {
+    unstable = import inputs.nixpkgs-unstable {
       inherit (final) system config;
     };
   };
+
+  nur = inputs.nur.overlays.default;
 }

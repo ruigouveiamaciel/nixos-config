@@ -4,16 +4,28 @@
   config,
   ...
 }: {
-  programs.firefox = {
-    enable = true;
-    package = pkgs.librewolf;
-  };
+  config = lib.mkMerge [
+    {
+      programs.firefox = {
+        enable = true;
+        package = pkgs.librewolf;
+        profiles.smokewow = {
+          id = 0;
+          isDefault = true;
+        };
+      };
+    }
 
-  home = lib.mkIf (builtins.hasAttr "persistance" config.home) {
-    persistence."/persist" = {
-      directories = [
-        ".librewolf"
-      ];
-    };
-  };
+    (lib.mkIf (builtins.hasAttr "persistence" config.home) {
+      home.persistence."/persist" = {
+        directories = [
+          ".librewolf"
+        ];
+      };
+    })
+
+    (lib.mkIf (builtins.hasAttr "stylix" config) {
+      stylix.targets.firefox.profileNames = ["smokewow"];
+    })
+  ];
 }

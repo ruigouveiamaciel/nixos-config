@@ -2,17 +2,18 @@
   imports = [
     ../stylix.nix
 
-    ./app-launcher.nix
     ./appearance.nix
-    ./hyprpanel.nix
     ./input.nix
     ./media-control.nix
     ./polkit-agent.nix
     ./workspaces.nix
+
+    ./ags
   ];
 
   home.packages = with pkgs; [
     hyprland-qt-support
+    wl-clipboard
   ];
 
   wayland.windowManager.hyprland = {

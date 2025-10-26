@@ -3,7 +3,7 @@
     windowrule = [
       "noanim, class:^(flameshot)$"
       "float, class:^(flameshot)$"
-      "move -760 0, class:^(flameshot)$"
+      "move 0 0, class:^(flameshot)$"
       "pin, class:^(flameshot)$"
       "monitor 1, class:^(flameshot)$"
     ];

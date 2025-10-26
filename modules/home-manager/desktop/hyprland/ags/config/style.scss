@@ -1,0 +1,40 @@
+$popover-fg-color: #{"@popover_fg_color"};
+$popover-bg-color: #{"@popover_bg_color"};
+
+window.selector {
+  background: transparent;
+  color: $popover-fg-color;
+  font-weight: bold;
+  font-family: monospace;
+
+  button,
+  entry {
+    background: $popover-bg-color;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1.25em;
+    line-height: 1.2;
+    border: 2px $popover-fg-color solid;
+    transition-property: none;
+  }
+
+  button {
+    margin-top: 6px;
+
+    image {
+      margin-right: 12px;
+    }
+  }
+}
+
+window.tray {
+  background: transparent;
+  color: $popover-fg-color;
+
+  button {
+    background: $popover-bg-color;
+    border-radius: 6px;
+    padding: 16px;
+    border: 2px $popover-fg-color solid;
+  }
+}

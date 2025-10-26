@@ -7,14 +7,17 @@
     inputs.stylix.homeModules.stylix
   ];
 
-  # home.pointerCursor.gtk.enable = true;
-  #
-  # wayland.windowManager.hyprland.settings.exec-once = [
-  #   "hyprctl setcursor ${config.stylix.cursor.name} ${builtins.toString config.stylix.cursor.size}"
-  # ];
+  home.packages = with pkgs; [
+    nerd-fonts.iosevka
+    nerd-fonts.iosevka-term
+    nerd-fonts.open-dyslexic
+    iosevka
+    open-dyslexic
+  ];
 
   stylix = {
     enable = true;
+    autoEnable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
     polarity = "dark";
 
@@ -26,25 +29,25 @@
 
     fonts = {
       sizes = {
-        applications = 12;
-        desktop = 12;
-        popups = 12;
-        terminal = 12;
+        applications = 11;
+        desktop = 11;
+        popups = 11;
+        terminal = 15;
       };
 
       serif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
+        package = pkgs.open-dyslexic;
+        name = "OpenDyslexic";
       };
 
       sansSerif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans";
+        package = pkgs.open-dyslexic;
+        name = "OpenDyslexic";
       };
 
       monospace = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans Mono";
+        package = pkgs.iosevka;
+        name = "Iosevka Extended";
       };
 
       emoji = {
