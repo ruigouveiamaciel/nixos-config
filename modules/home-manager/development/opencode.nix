@@ -6,14 +6,14 @@
 }: {
   config = lib.mkMerge [
     {
-      home.packages = with pkgs; [
-        unstable.opencode
-      ];
-
-      wayland.windowManager.hyprland.settings = {
-        exec-once = [
-          "vesktop"
+      home = {
+        packages = with pkgs; [
+          unstable.opencode
         ];
+
+        sessionVariables = {
+          OPENCODE_CONFIG = ./opencode.json;
+        };
       };
     }
 
@@ -21,7 +21,10 @@
       home.persistence = {
         "/persist" = {
           directories = [
+            ".config/opencode"
+            ".cache/opencode"
             ".local/share/opencode"
+            ".local/state/opencode"
           ];
         };
       };

@@ -14,6 +14,7 @@
   home.packages = with pkgs; [
     hyprland-qt-support
     wl-clipboard
+    nautilus
   ];
 
   wayland.windowManager.hyprland = {

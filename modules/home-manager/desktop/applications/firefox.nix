@@ -20,6 +20,7 @@
       home.persistence."/persist" = {
         directories = [
           ".librewolf"
+          ".cache/librewolf"
         ];
       };
     })
