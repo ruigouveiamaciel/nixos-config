@@ -30,6 +30,9 @@
   };
 
   home = {
+    sessionVariables = {
+      GOPRIVATE = "go.axofinance.io";
+    };
     sessionPath = [
       "/Users/ruimaciel/repos/ax/out"
     ];

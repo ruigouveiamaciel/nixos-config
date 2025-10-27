@@ -4,7 +4,7 @@
     alejandra
     lua
     stylua
-    go
+    unstable.go
     nodejs_20
     pnpm_10
   ];
