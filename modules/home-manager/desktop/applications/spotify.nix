@@ -1,22 +1,23 @@
 {
   pkgs,
   lib,
-  config,
+  options,
   ...
 }: {
-  home = lib.mkMerge [
-    {
-      packages = with pkgs; [
-        spotify
-      ];
-    }
-
-    (lib.mkIf (builtins.hasAttr "persistence" config.home) {
+  home = lib.mkMerge (
+    [
+      {
+        packages = with pkgs; [
+          spotify
+        ];
+      }
+    ]
+    ++ (lib.optional (builtins.hasAttr "persistence" options.home) {
       persistence."/persist" = {
         directories = [
           ".config/spotify"
         ];
       };
     })
-  ];
+  );
 }

@@ -17,7 +17,8 @@
         };
       }
     ]
-    ++ (lib.optionals (builtins.hasAttr "persistence" options.home) [
+    ++ (
+      lib.optional (builtins.hasAttr "persistence" options.home)
       {
         home.persistence = {
           "/persist" = {
@@ -30,5 +31,5 @@
           };
         };
       }
-    ]));
+    ));
 }

@@ -1,17 +1,18 @@
 {
   lib,
-  config,
+  options,
   ...
 }: {
-  config = lib.mkMerge [
-    {
-      homebrew = {
-        enable = true;
-        onActivation.cleanup = "uninstall";
-      };
-    }
-
-    (lib.mkIf (builtins.hasAttr "home-manager" config) {
+  config =
+    lib.mkMerge [
+      {
+        homebrew = {
+          enable = true;
+          onActivation.cleanup = "uninstall";
+        };
+      }
+    ]
+    ++ (lib.optional (builtins.hasAttr "home-manager" options) {
       home-manager = {
         sharedModules = [
           {
@@ -27,6 +28,5 @@
           }
         ];
       };
-    })
-  ];
+    });
 }
