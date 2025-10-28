@@ -3,8 +3,7 @@
   options,
   ...
 }: {
-  config =
-    lib.mkMerge [
+  config = lib.mkMerge ([
       {
         homebrew = {
           enable = true;
@@ -28,5 +27,5 @@
           }
         ];
       };
-    });
+    }));
 }

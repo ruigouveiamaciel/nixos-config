@@ -2,6 +2,7 @@
   pkgs,
   lib,
   options,
+  config,
   ...
 }: {
   config = lib.mkMerge ([
@@ -10,6 +11,8 @@
           packages = with pkgs; [
             unstable.opencode
           ];
+
+          file."${config.home.homeDirectory}/.config/opencode/INSTRUCTIONS.md".source = ./OPENCODE_INSTRUCTIONS.md;
 
           sessionVariables = {
             OPENCODE_CONFIG = ./opencode.json;
@@ -23,7 +26,6 @@
         home.persistence = {
           "/persist" = {
             directories = [
-              ".config/opencode"
               ".cache/opencode"
               ".local/share/opencode"
               ".local/state/opencode"

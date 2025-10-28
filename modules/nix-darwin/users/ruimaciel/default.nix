@@ -11,8 +11,7 @@
     "${myModulesPath}/system/home-manager.nix"
   ];
 
-  config =
-    lib.mkMerge [
+  config = lib.mkMerge ([
       {
         users.users.ruimaciel = {
           openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
@@ -29,5 +28,5 @@
           ./home.nix
         ];
       };
-    });
+    }));
 }
