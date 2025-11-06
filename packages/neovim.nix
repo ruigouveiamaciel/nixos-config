@@ -380,6 +380,8 @@
           quickfile.enable = true;
           image.enable = true;
           picker.enable = true;
+          input.enable = true;
+          terminal.enable = true;
           gitbrowse.enable = true;
           notify.enable = true;
           notifier.enable = true;
