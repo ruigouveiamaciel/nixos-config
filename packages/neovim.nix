@@ -113,6 +113,30 @@
         desc = "Move focus to the lower window";
       }
       {
+        key = "<C-h>";
+        mode = "t";
+        action = "<C-\\><C-n><C-w><C-h>";
+        desc = "Move focus to the left window from terminal";
+      }
+      {
+        key = "<C-l>";
+        mode = "t";
+        action = "<C-\\><C-n><C-w><C-l>";
+        desc = "Move focus to the right window from terminal";
+      }
+      {
+        key = "<C-k>";
+        mode = "t";
+        action = "<C-\\><C-n><C-w><C-k>";
+        desc = "Move focus to the upper window from terminal";
+      }
+      {
+        key = "<C-j>";
+        mode = "t";
+        action = "<C-\\><C-n><C-w><C-j>";
+        desc = "Move focus to the lower window from terminal";
+      }
+      {
         key = "<F1>";
         mode = "n";
         action = "<nop>";
@@ -395,8 +419,8 @@
           keymaps = {
             "gh" = "actions.show_help";
             "<CR>" = "actions.select";
-            "<C-p>" = "actions.preview";
-            "<Esc>" = "actions.close";
+            "gp" = "actions.preview";
+            # "<Esc>" = "actions.close";
             "-" = "actions.parent";
             "_" = "actions.open_cwd";
             "gs" = "actions.change_sort";
@@ -565,9 +589,20 @@
       java.enable = true;
     };
 
-    extraPlugins = with pkgs.vimPlugins; {
+    extraPlugins = {
       opencode-nvim = {
-        package = opencode-nvim;
+        package = pkgs.vimUtils.buildVimPlugin {
+          pname = "opencode.nvim";
+          version = "2025-11-05";
+          src = pkgs.fetchFromGitHub {
+            owner = "NickvanDyke";
+            repo = "opencode.nvim";
+            rev = "d815c315f8c824aad3597f71421c798ad206f7ea";
+            sha256 = "sha256-e9aL79GfIzaiBS8GhTP68T7OrA2tpo+07Vjas4ebDHo=";
+          };
+          meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
+          meta.hydraPlatforms = [];
+        };
         after = ["snacks-nvim"];
         setup =
           /*
@@ -576,20 +611,29 @@
           ''
             vim.g.opencode_opts = {
               -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition" on `opencode_opts`.
+              auto_reload = true;
             }
 
             -- Required for `vim.g.opencode_opts.auto_reload`.
             vim.o.autoread = true
 
             -- Recommended/example keymaps.
-            vim.keymap.set({"n", "v"}, "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask about this" })
-            vim.keymap.set("n", "<leader>os", function() require("opencode").select() end, { desc = "Select prompt" })
-            vim.keymap.set({"n", "v"}, "<leader>o+", function() require("opencode").prompt("@this") end, { desc = "Add this" })
-            vim.keymap.set("n", "<leader>ot", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
+            vim.keymap.set("n", "<leader>ot", function()
+                require("opencode").toggle()
+                vim.cmd("wincmd =")
+
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                  local buf = vim.api.nvim_win_get_buf(win)
+                  if vim.bo[buf].filetype == "opencode_terminal" then
+                    vim.api.nvim_set_current_win(win)
+                    break
+                  end
+                end
+              end, { desc = "Toggle embedded" })
+            vim.keymap.set({"n", "x"}, "<leader>op", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask about this" })
+            vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
             vim.keymap.set("n", "<leader>oc", function() require("opencode").command() end, { desc = "Select command" })
             vim.keymap.set("n", "<leader>on", function() require("opencode").command("session_new") end, { desc = "New session" })
-            vim.keymap.set("n", "<leader>oi", function() require("opencode").command("session_interrupt") end, { desc = "Interrupt session" })
-            vim.keymap.set("n", "<leader>oA", function() require("opencode").command("agent_cycle") end, { desc = "Cycle selected agent" })
             vim.keymap.set("n", "<A-C-u>",    function() require("opencode").command("messages_half_page_up") end, { desc = "Messages half page up" })
             vim.keymap.set("n", "<A-C-d>",    function() require("opencode").command("messages_half_page_down") end, { desc = "Messages half page down" })
           '';
