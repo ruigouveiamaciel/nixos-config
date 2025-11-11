@@ -386,16 +386,6 @@
           image.enable = true;
           picker = {
             enable = true;
-            formatters.file.min_width = 60;
-            layout.present =
-              /*
-              lua
-              */
-              ''
-                preset = function()
-                  return vim.o.columns >= 140 and "default" or "vertical"
-                end
-              '';
             layouts = {
               default.layout = {
                 width = 0.9;
