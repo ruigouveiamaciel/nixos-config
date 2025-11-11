@@ -89,6 +89,12 @@
         desc = "Goto type definitions";
       }
       {
+        key = "<C-j>";
+        mode = "n";
+        action = "<C-d>";
+        desc = "Alias for Ctrl-d";
+      }
+      {
         key = "<C-h>";
         mode = "n";
         action = "<C-w><C-h>";
@@ -111,30 +117,6 @@
         mode = "n";
         action = "<C-w><C-j>";
         desc = "Move focus to the lower window";
-      }
-      {
-        key = "<C-h>";
-        mode = "t";
-        action = "<C-\\><C-n><C-w><C-h>";
-        desc = "Move focus to the left window from terminal";
-      }
-      {
-        key = "<C-l>";
-        mode = "t";
-        action = "<C-\\><C-n><C-w><C-l>";
-        desc = "Move focus to the right window from terminal";
-      }
-      {
-        key = "<C-k>";
-        mode = "t";
-        action = "<C-\\><C-n><C-w><C-k>";
-        desc = "Move focus to the upper window from terminal";
-      }
-      {
-        key = "<C-j>";
-        mode = "t";
-        action = "<C-\\><C-n><C-w><C-j>";
-        desc = "Move focus to the lower window from terminal";
       }
       {
         key = "<F1>";
@@ -292,7 +274,6 @@
       enable = true;
       name = "catppuccin";
       style = "macchiato";
-      transparent = true;
     };
 
     visuals = {
@@ -403,12 +384,41 @@
           scope.enable = true;
           quickfile.enable = true;
           image.enable = true;
-          picker.enable = true;
+          picker = {
+            enable = true;
+            formatters.file.min_width = 60;
+            layout.present =
+              /*
+              lua
+              */
+              ''
+                preset = function()
+                  return vim.o.columns >= 140 and "default" or "vertical"
+                end
+              '';
+            layouts = {
+              default.layout = {
+                width = 0.9;
+                height = 0.9;
+              };
+              vertical.layout = {
+                width = 0.9;
+                height = 0.9;
+              };
+            };
+          };
           input.enable = true;
           terminal.enable = true;
           gitbrowse.enable = true;
           notify.enable = true;
           notifier.enable = true;
+          styles = {
+            float = {
+              backdrop = 60;
+              height = 0.9;
+              width = 0.9;
+            };
+          };
         };
       };
       oil-nvim = {
@@ -420,7 +430,6 @@
             "gh" = "actions.show_help";
             "<CR>" = "actions.select";
             "gp" = "actions.preview";
-            # "<Esc>" = "actions.close";
             "-" = "actions.parent";
             "_" = "actions.open_cwd";
             "gs" = "actions.change_sort";
@@ -597,8 +606,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "NickvanDyke";
             repo = "opencode.nvim";
-            rev = "d815c315f8c824aad3597f71421c798ad206f7ea";
-            sha256 = "sha256-e9aL79GfIzaiBS8GhTP68T7OrA2tpo+07Vjas4ebDHo=";
+            rev = "217d363bf1263d18ecd00cbb618b74e8553432e2";
+            sha256 = "sha256-axnHVD76ABliyEHD2VD+HOJFn5UA0YrSmk/saerZg8U=";
           };
           meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
           meta.hydraPlatforms = [];
@@ -610,32 +619,32 @@
           */
           ''
             vim.g.opencode_opts = {
-              -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition" on `opencode_opts`.
-              auto_reload = true;
+              auto_reload = true,
+              permissions = {
+                enabled = false,
+              };
+              provider = {
+                enabled = "snacks";
+                snacks = {
+                  win = {
+                    position = "float",
+                    enter = true,
+                    border = true,
+                    bo = {
+                      filetype = "opencode_terminal";
+                    },
+                  },
+                },
+              }
             }
 
             -- Required for `vim.g.opencode_opts.auto_reload`.
             vim.o.autoread = true
 
-            -- Recommended/example keymaps.
-            vim.keymap.set("n", "<leader>ot", function()
-                require("opencode").toggle()
-                vim.cmd("wincmd =")
-
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                  local buf = vim.api.nvim_win_get_buf(win)
-                  if vim.bo[buf].filetype == "opencode_terminal" then
-                    vim.api.nvim_set_current_win(win)
-                    break
-                  end
-                end
-              end, { desc = "Toggle embedded" })
-            vim.keymap.set({"n", "x"}, "<leader>op", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask about this" })
+            vim.keymap.set({"n", "x", "t"}, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
             vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
-            vim.keymap.set("n", "<leader>oc", function() require("opencode").command() end, { desc = "Select command" })
-            vim.keymap.set("n", "<leader>on", function() require("opencode").command("session_new") end, { desc = "New session" })
-            vim.keymap.set("n", "<A-C-u>",    function() require("opencode").command("messages_half_page_up") end, { desc = "Messages half page up" })
-            vim.keymap.set("n", "<A-C-d>",    function() require("opencode").command("messages_half_page_down") end, { desc = "Messages half page down" })
+            vim.keymap.set({"t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
+            vim.keymap.set({"t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
           '';
       };
     };

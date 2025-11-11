@@ -10,16 +10,9 @@
         home = {
           packages = [
             pkgs.myOpencode
-            # (pkgs.writeShellScriptBin "opencode" ''
-            #   exec ${lib.getExe' pkgs.nodejs_24 "npx"} -y opencode-ai "$@"
-            # '')
-            # (pkgs.writeShellScriptBin "claude" ''
-            #   exec ${lib.getExe' pkgs.nodejs_24 "npx"} -y claude "$@"
-            # '')
           ];
           file = {
-            "${config.home.homeDirectory}/.config/opencode/INSTRUCTIONS.md".source = ./OPENCODE_INSTRUCTIONS.md;
-            "${config.home.homeDirectory}/.config/opencode/opencode.json".source = ./opencode.json;
+            "${config.home.homeDirectory}/.config/opencode".source = ./opencode;
           };
         };
       }
