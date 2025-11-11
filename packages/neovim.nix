@@ -38,7 +38,7 @@
     options = {
       wrap = false; # Disabled line wrapping
       mouse = ""; # Disable mouse support
-      mousescroll = "ver:0,hor:0"; # Disable mouse scroll
+      # mousescroll = "ver:0,hor:0"; # Disable mouse scroll
       updatetime = 250; # Number of milliseconds before "Cursor hold" event is fired
       scrolloff = 15;
       colorcolumn = "80";
@@ -643,8 +643,8 @@
 
             vim.keymap.set({"n", "x", "t"}, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
             vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
-            vim.keymap.set({"t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
-            vim.keymap.set({"t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+            vim.keymap.set({"n", "x", "t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
+            vim.keymap.set({"n", "x", "t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
           '';
       };
     };
