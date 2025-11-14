@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    "${myModulesPath}/profiles/minimal.nix"
+    "${myModulesPath}/profiles/base.nix"
     "${myModulesPath}/profiles/shell.nix"
     "${myModulesPath}/profiles/development.nix"
   ];

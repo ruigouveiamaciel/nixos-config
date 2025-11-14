@@ -7,14 +7,11 @@
     ./media-control.nix
     ./polkit-agent.nix
     ./workspaces.nix
-
-    ./ags
   ];
 
   home.packages = with pkgs; [
     hyprland-qt-support
     wl-clipboard
-    nautilus
   ];
 
   wayland.windowManager.hyprland = {

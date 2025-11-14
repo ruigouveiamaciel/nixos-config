@@ -88,17 +88,14 @@
       };
 
       nixosModules = {
-        default = ./modules/nixos;
         constants = ./modules/constants;
       };
 
       homeManagerModules = {
-        default = ./modules/home-manager;
         constants = ./modules/constants;
       };
 
       darwinModules = {
-        default = ./modules/nix-darwin;
         constants = ./modules/constants;
       };
 

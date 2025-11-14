@@ -1,10 +1,11 @@
 {myModulesPath, ...}: {
   imports = [
-    "${myModulesPath}/development/direnv.nix"
-    "${myModulesPath}/development/neovim.nix"
-    "${myModulesPath}/development/nix.nix"
-    "${myModulesPath}/development/sdks.nix"
-    "${myModulesPath}/development/sops.nix"
-    "${myModulesPath}/development/ai-tools"
+    "${myModulesPath}/development/ai"
+    "${myModulesPath}/development/editors/neovim.nix"
+    "${myModulesPath}/development/remote/gpg-agent.nix"
+    "${myModulesPath}/development/remote/ssh.nix"
+    "${myModulesPath}/development/shell/direnv.nix"
+    "${myModulesPath}/development/shell/git.nix"
+    "${myModulesPath}/development/toolchains"
   ];
 }

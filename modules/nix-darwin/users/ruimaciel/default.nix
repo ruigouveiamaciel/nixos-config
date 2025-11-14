@@ -8,7 +8,7 @@
 }: {
   imports = [
     "${myModulesPath}/shell/fish.nix"
-    "${myModulesPath}/system/home-manager.nix"
+    "${myModulesPath}/base/home-manager.nix"
   ];
 
   config = lib.mkMerge ([
