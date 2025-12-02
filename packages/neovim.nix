@@ -596,8 +596,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "NickvanDyke";
             repo = "opencode.nvim";
-            rev = "217d363bf1263d18ecd00cbb618b74e8553432e2";
-            sha256 = "sha256-axnHVD76ABliyEHD2VD+HOJFn5UA0YrSmk/saerZg8U=";
+            rev = "add4f1d7bb46a1af99e775e0f072730b09e9e265";
+            sha256 = "sha256-0LtPJSZJnraqmlby/EZNtbvT+vLug4CvREZa2kuVg/A=";
           };
           meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
           meta.hydraPlatforms = [];
