@@ -2,7 +2,7 @@
   inputs,
   pkgs,
   ...
-}: {
+} @ args: {
   # example = pkgs.callPackage ./example { };
 
   myOpencode = pkgs.callPackage ./opencode.nix {};
@@ -15,4 +15,6 @@
           ./neovim.nix
         ];
       }).neovim;
+
+  iosevka-kitty = import ./iosevka-kitty.nix args;
 }

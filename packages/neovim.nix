@@ -38,7 +38,6 @@
     options = {
       wrap = false; # Disabled line wrapping
       mouse = ""; # Disable mouse support
-      # mousescroll = "ver:0,hor:0"; # Disable mouse scroll
       updatetime = 250; # Number of milliseconds before "Cursor hold" event is fired
       scrolloff = 15;
       colorcolumn = "80";

@@ -17,12 +17,18 @@
         };
       }
     ]
-    ++ (lib.optional (options.home ? "persistence") {
-      home.persistence."/persist" = {
-        directories = [
-          ".local/state/wireplumber"
-        ];
-      };
+    ++ (lib.optional (options ? "home-manager") {
+      home-manager.sharedModules = [
+        ({options, ...}: {
+          config = lib.mkMerge (lib.optional (options.home ? "persistence") {
+            home.persistence."/persist" = {
+              directories = [
+                ".local/state/wireplumber"
+              ];
+            };
+          });
+        })
+      ];
     })
   );
 }
