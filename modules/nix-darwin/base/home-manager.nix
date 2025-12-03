@@ -3,6 +3,7 @@
   outputs,
   myLib,
   myHomeManagerModulesPath,
+  myConstantsModulesPath,
   ...
 }: {
   imports = [
@@ -10,13 +11,14 @@
   ];
 
   home-manager = {
+    useGlobalPkgs = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit inputs outputs myLib;
       myModulesPath = myHomeManagerModulesPath;
     };
     sharedModules = [
-      outputs.darwinModules.constants
+      "${myConstantsModulesPath}"
     ];
   };
 }

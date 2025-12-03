@@ -55,7 +55,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       };
       "x86_64-linux" = fetchurl {
         url = "https://github.com/sst/opencode/releases/download/v${finalAttrs.version}/opencode-linux-x64.zip";
-        hash = "";
+        hash = "sha256-+JOhuEWj0bRcGQoZmPKvW2kc94C9MezlbF85+omQJkw=";
       };
     };
     tests.version = testers.testVersion {

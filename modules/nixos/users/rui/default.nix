@@ -33,7 +33,7 @@ in {
               "plugdev"
             ];
             shell = pkgs.fish;
-            password = "123456"; # TODO: Load password from sops
+            hashedPassword = "";
           };
         };
       }

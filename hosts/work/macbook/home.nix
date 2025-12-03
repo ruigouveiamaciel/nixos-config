@@ -3,14 +3,12 @@
   pkgs,
   ...
 }: {
-  services = {
-    gpg-agent.enable = lib.mkForce false;
-  };
+  services.gpg-agent.enable = lib.mkForce false;
 
   programs = {
-    git = {
-      userEmail = lib.mkForce "rum@axogroup.com";
-      userName = lib.mkForce "Rui Maciel";
+    git.settings.user = {
+      email = lib.mkForce "rum@axogroup.com";
+      name = lib.mkForce "Rui Maciel";
     };
 
     fish = {
@@ -24,7 +22,6 @@
         "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
         "fo" = "cd ~/repos/frontend && nvim .";
         "no" = "cd ~/repos/nixos-config && nvim .";
-        "rr" = " mpv --vo=tct https://www.youtube.com/watch?v=dQw4w9WgXcQ";
       };
     };
   };

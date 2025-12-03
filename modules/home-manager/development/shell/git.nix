@@ -2,8 +2,12 @@
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
-    userEmail = "rui@iuseneovim.fyi";
-    userName = "Rui Maciel";
     lfs.enable = true;
+    settings = {
+      user = {
+        email = "rui@iuseneovim.fyi";
+        name = "Rui Maciel";
+      };
+    };
   };
 }

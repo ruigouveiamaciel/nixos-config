@@ -3,6 +3,7 @@
   outputs,
   myLib,
   myHomeManagerModulesPath,
+  myConstantsModulesPath,
   ...
 }: {
   imports = [
@@ -11,12 +12,13 @@
 
   home-manager = {
     backupFileExtension = "backup";
+    useGlobalPkgs = true;
     extraSpecialArgs = {
       inherit inputs outputs myLib;
       myModulesPath = myHomeManagerModulesPath;
     };
     sharedModules = [
-      outputs.nixosModules.constants
+      "${myConstantsModulesPath}"
     ];
   };
 }

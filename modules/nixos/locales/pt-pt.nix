@@ -1,6 +1,6 @@
 {lib, ...}: {
   i18n = {
-    defaultLocale = lib.mkDefault "en_IE.UTF-8";
+    defaultLocale = lib.mkDefault "en_US.UTF-8";
     extraLocaleSettings = {
       LC_ADDRESS = lib.mkDefault "pt_PT.UTF-8";
       LC_IDENTIFICATION = lib.mkDefault "pt_PT.UTF-8";

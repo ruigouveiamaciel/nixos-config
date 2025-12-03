@@ -5,11 +5,9 @@
   ...
 }: let
   pinentryPackage =
-    if config.gtk.enable
-    then pkgs.pinentry-gnome3
-    else if pkgs.stdenv.isDarwin
+    if pkgs.stdenv.isDarwin
     then pkgs.pinentry_mac
-    else pkgs.pinentry-tty;
+    else pkgs.pinentry-all;
 in {
   services.gpg-agent = {
     inherit (config.programs.gpg) enable;

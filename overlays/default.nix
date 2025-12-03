@@ -4,16 +4,16 @@
     import ../packages {
       inherit inputs;
       pkgs = import inputs.nixpkgs-packages {
-        inherit (final) system config;
+        inherit (final) config;
+        inherit (final.stdenv.hostPlatform) system;
       };
     };
 
   # Make inputs.nixos-unstable accessible through 'pkgs.unstable'
   unstable = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system config;
+      inherit (final) config;
+      inherit (final.stdenv.hostPlatform) system;
     };
   };
-
-  nur = inputs.nur.overlays.default;
 }
