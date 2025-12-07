@@ -1,7 +1,6 @@
 {
   lib,
   inputs,
-  outputs,
   ...
 }: {
   programs.command-not-found.enable = false;
@@ -33,10 +32,5 @@
     # Add nixpkgs input to NIX_PATH
     # This lets nix2 commands still use <nixpkgs>
     nixPath = ["nixpkgs=${inputs.nixpkgs.outPath}"];
-  };
-
-  nixpkgs = {
-    overlays = builtins.attrValues outputs.overlays;
-    config.allowUnfree = true;
   };
 }

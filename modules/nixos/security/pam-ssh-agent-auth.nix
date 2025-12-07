@@ -1,4 +1,5 @@
 {lib, ...}: {
+  # Only allow sudo via an authorized ssh agent
   security = {
     pam = {
       rssh.enable = true;

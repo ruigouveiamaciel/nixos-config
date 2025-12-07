@@ -1,41 +1,19 @@
-{
-  myModulesPath,
-  pkgs,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
 
     "${myModulesPath}/profiles/essentials.nix"
-    "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+    "${myModulesPath}/desktop/gaming"
+    "${myModulesPath}/desktop/plasma6.nix"
 
     "${myModulesPath}/users/rui"
-    "${myModulesPath}/desktop/gaming"
-    "${myModulesPath}/desktop/pipewire.nix"
 
     "${myModulesPath}/networking/openssh.nix"
+    "${myModulesPath}/security/pam-ssh-agent-auth.nix"
   ];
 
   home-manager.users.rui.imports = [./home.nix];
-
-  services = {
-    desktopManager.plasma6.enable = true;
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
-  };
-
-  environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    kate
-    spectacle
-    konsole
-    kwallet
-    kmenuedit
-    elisa
-    khelpcenter
-  ];
-
-  environment.systemPackages = with pkgs; [wl-clipboard];
 
   networking = {
     hostName = "gaming-desktop";

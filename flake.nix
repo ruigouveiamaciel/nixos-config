@@ -34,6 +34,14 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs-packages";
     };
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
   };
 
   outputs = inputs: let
