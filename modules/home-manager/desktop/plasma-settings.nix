@@ -4,8 +4,13 @@
 
     workspace = {
       lookAndFeel = "org.kde.breezedark.desktop";
-      wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/DarkestHour/contents/images/2560x1440.png";
+      wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/DarkestHour/contents/images/2560x1440.jpg";
       enableMiddleClickPaste = false;
+    };
+    powerdevil = {
+      AC.powerButtonAction = "shutDown";
+      battery.powerButtonAction = "shutDown";
+      lowBattery.powerButtonAction = "shutDown";
     };
 
     input.mice = [
@@ -30,7 +35,7 @@
         name = "Logitech USB Receiver";
         naturalScroll = false;
         productId = "c54d";
-        scrollSpeed = 1;
+        scrollSpeed = 2;
         vendorId = "046d";
       }
     ];
@@ -166,5 +171,61 @@
         "Log Out" = "none";
       };
     };
+
+    panels = [
+      {
+        location = "bottom";
+        widgets = [
+          {
+            kickoff = {
+              sortAlphabetically = true;
+            };
+          }
+          {
+            pager = {};
+          }
+          {
+            iconTasks = {
+              launchers = [
+                "applications:org.kde.dolphin.desktop"
+                "applications:kitty.desktop"
+                "applications:librewolf.desktop"
+                "applications:vesktop.desktop"
+                "applications:steam.desktop"
+              ];
+              behavior = {
+                middleClickAction = "newInstance";
+                minimizeActiveTaskOnClick = false;
+                showTasks = {
+                  onlyInCurrentScreen = false;
+                  onlyInCurrentDesktop = false;
+                  onlyInCurrentActivity = false;
+                  onlyMinimized = false;
+                };
+              };
+              appearance.indicateAudioStreams = false;
+            };
+          }
+          "org.kde.plasma.marginsseparator"
+          {
+            systemTray.items = {
+              shown = [
+                "org.kde.plasma.battery"
+                "org.kde.plasma.bluetooth"
+                "org.kde.plasma.networkmanagement"
+                "org.kde.plasma.volume"
+              ];
+              hidden = [];
+            };
+          }
+          {
+            digitalClock = {
+              calendar.firstDayOfWeek = "sunday";
+              time.format = "24h";
+            };
+          }
+        ];
+      }
+    ];
   };
 }
