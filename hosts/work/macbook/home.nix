@@ -17,8 +17,9 @@
           . "$GHOSTTY_RESOURCES_DIR"/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish
         end
       '';
-      shellAliases = {
-        "rebuild" = "cd ~/repos/nixos-config && sudo darwin-rebuild switch --flake .#work-macbook";
+      shellAbbrs = {
+        "rebuild" = "cd ~/repos/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
+        "build" = "cd ~/repos/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
         "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
         "fo" = "cd ~/repos/frontend && nvim .";
         "no" = "cd ~/repos/nixos-config && nvim .";

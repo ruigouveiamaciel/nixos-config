@@ -4,9 +4,9 @@
   ...
 }: {
   imports = [
-    "${myModulesPath}/profiles/base.nix"
-    "${myModulesPath}/profiles/shell.nix"
+    "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/profiles/development.nix"
+    "${myModulesPath}/shell/starship.nix"
   ];
 
   home = {

@@ -1,8 +1,8 @@
 {
-  pkgs,
   lib,
   options,
   config,
+  pkgs,
   ...
 }: {
   config = lib.mkMerge ([

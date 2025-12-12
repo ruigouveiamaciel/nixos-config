@@ -3,5 +3,6 @@
     deploy-rs
     nixos-anywhere
     alejandra
+    nix-output-monitor
   ];
 }
