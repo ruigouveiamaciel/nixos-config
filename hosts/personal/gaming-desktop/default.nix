@@ -1,4 +1,8 @@
-{myModulesPath, ...}: {
+{
+  myModulesPath,
+  config,
+  ...
+}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
@@ -24,6 +28,11 @@
   boot = {
     plymouth.enable = true;
     loader.systemd-boot.enable = true;
+    initrd.network.ssh = {
+      enable = true;
+      authorizedKeys = config.myConstants.users.rui.authorized-keys;
+      ignoreEmptyHostKeys = true;
+    };
   };
 
   # Don't hang boot because of network timeout

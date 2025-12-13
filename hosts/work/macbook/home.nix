@@ -1,8 +1,13 @@
 {
   lib,
   pkgs,
+  myModulesPath,
   ...
 }: {
+  imports = [
+    "${myModulesPath}/desktop/apps/kitty.nix"
+  ];
+
   services.gpg-agent.enable = lib.mkForce false;
 
   programs = {

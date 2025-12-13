@@ -1,9 +1,9 @@
 {
   imports = [
-    ./firefox.nix
+    ./librewolf.nix
     ./discord.nix
     ./spotify.nix
-    ./terminal.nix
+    ./kitty.nix
     ./flameshot.nix
   ];
 }
