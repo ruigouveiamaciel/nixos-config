@@ -20,11 +20,6 @@
     trim.enable = true;
   };
 
-  # Override mdmonitor to log to syslog instead of emailing or alerting
-  systemd.services."mdmonitor".environment = {
-    MDADM_MONITOR_ARGS = "--scan --syslog";
-  };
-
   disko.devices = {
     disk = {
       nvme1 = {
@@ -37,8 +32,10 @@
               type = "EF00";
               size = "1G";
               content = {
-                type = "mdraid";
-                name = "boot";
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = ["umask=0077" "defaults"];
               };
             };
             zfs = {
@@ -64,14 +61,6 @@
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              type = "EF00";
-              size = "1G";
-              content = {
-                type = "mdraid";
-                name = "boot";
-              };
-            };
             zfs = {
               size = "100%";
               content = {
@@ -95,14 +84,6 @@
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              type = "EF00";
-              size = "1G";
-              content = {
-                type = "mdraid";
-                name = "boot";
-              };
-            };
             zfs = {
               size = "100%";
               content = {
@@ -127,10 +108,6 @@
         level = 1;
         metadata = "1.0";
         content = {
-          type = "filesystem";
-          format = "vfat";
-          mountpoint = "/boot";
-          mountOptions = ["umask=0077" "defaults"];
         };
       };
     };
