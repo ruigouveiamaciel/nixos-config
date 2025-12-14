@@ -7,8 +7,11 @@
     enable = true;
     settings = {
       format = lib.concatStrings [
+        "("
         "$username"
         "$hostname"
+        " "
+        ")"
         "$git_branch"
         "("
         "at "
@@ -36,13 +39,14 @@
 
       hostname = {
         disabled = false;
-        format = "[$ssh_symbol$hostname]($style) ";
+        format = "@[$hostname]($style)";
+        ssh_only = true;
       };
 
       username = {
         disabled = false;
         show_always = true;
-        format = "[$user]($style) ";
+        format = "[$user]($style)";
       };
 
       git_branch = {
