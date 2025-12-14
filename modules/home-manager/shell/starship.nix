@@ -8,6 +8,7 @@
     settings = {
       format = lib.concatStrings [
         "$username"
+        "$hostname"
         "$git_branch"
         "("
         "at "
@@ -31,6 +32,11 @@
         vimcmd_visual_symbol = "[:](bold cyan)";
         vimcmd_replace_symbol = "[:](bold purple)";
         vimcmd_replace_one_symbol = "[:](bold purple)";
+      };
+
+      hostname = {
+        disabled = false;
+        format = "[$ssh_symbol$hostname]($style) ";
       };
 
       username = {
