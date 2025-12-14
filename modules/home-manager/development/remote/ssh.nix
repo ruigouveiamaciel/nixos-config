@@ -1,11 +1,10 @@
 {
   lib,
   options,
-  config,
   ...
 }: {
   config = lib.mkMerge ([
-      {
+      rec {
         programs.ssh = {
           enable = true;
           enableDefaultConfig = false;
@@ -22,10 +21,10 @@
         };
 
         programs.fish.shellAbbrs = {
-          "jupiter" = "ssh rui@${config.programs.ssh.matchBlocks.jupiter.host}";
-          "unlock-jupiter" = "ssh root@${config.programs.ssh.matchBlocks.jupiter.host} -p 2222";
-          "saturn" = "ssh rui@${config.programs.ssh.matchBlocks.saturn.host}";
-          "unlock-saturn" = "ssh root@${config.programs.ssh.matchBlocks.saturn.host} -p 2222";
+          "jupiter" = "ssh rui@${programs.ssh.matchBlocks.jupiter.host}";
+          "unlock-jupiter" = "ssh root@${programs.ssh.matchBlocks.jupiter.host} -p 2222";
+          "saturn" = "ssh rui@${programs.ssh.matchBlocks.saturn.host}";
+          "unlock-saturn" = "ssh root@${programs.ssh.matchBlocks.saturn.host} -p 2222";
         };
       }
     ]
