@@ -14,6 +14,7 @@
     "${myModulesPath}/users/rui"
 
     "${myModulesPath}/networking/openssh.nix"
+    "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
   ];
 
@@ -30,18 +31,6 @@
     loader.systemd-boot = {
       enable = true;
       configurationLimit = 7;
-    };
-    initrd = {
-      systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 2222;
-          authorizedKeys = config.myConstants.users.rui.authorized-keys;
-          hostKeys = ["/persist/initrd_ssh_host_ed25519_key"];
-        };
-      };
     };
   };
 
