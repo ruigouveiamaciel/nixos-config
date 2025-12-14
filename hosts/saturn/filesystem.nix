@@ -20,6 +20,11 @@
     trim.enable = true;
   };
 
+  # Override mdmonitor to log to syslog instead of emailing or alerting
+  systemd.services."mdmonitor".environment = {
+    MDADM_MONITOR_ARGS = "--scan --syslog";
+  };
+
   disko.devices = {
     disk = {
       nvme1 = {
