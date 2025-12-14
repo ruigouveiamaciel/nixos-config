@@ -23,7 +23,7 @@
   disko.devices = {
     disk = {
       nvme1 = {
-        device = "";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S6Z1NU0X554636E";
         type = "disk";
         content = {
           type = "gpt";
@@ -45,11 +45,19 @@
                 pool = "zroot";
               };
             };
+            swap = {
+              name = "swap1";
+              size = "12G";
+              content = {
+                type = "swap";
+                randomEncryption = true;
+              };
+            };
           };
         };
       };
       nvme2 = {
-        device = "";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S6Z1NJ0Y301003F";
         type = "disk";
         content = {
           type = "gpt";
@@ -71,11 +79,19 @@
                 pool = "zroot";
               };
             };
+            swap = {
+              name = "swap2";
+              size = "12G";
+              content = {
+                type = "swap";
+                randomEncryption = true;
+              };
+            };
           };
         };
       };
       nvme3 = {
-        device = "";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S6S2NS0T215740H";
         type = "disk";
         content = {
           type = "gpt";
@@ -95,6 +111,14 @@
               content = {
                 type = "zfs";
                 pool = "zroot";
+              };
+            };
+            swap = {
+              name = "swap3";
+              size = "12G";
+              content = {
+                type = "swap";
+                randomEncryption = true;
               };
             };
           };
