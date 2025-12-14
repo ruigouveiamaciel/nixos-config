@@ -1,6 +1,7 @@
 {
   lib,
   options,
+  config,
   ...
 }: {
   config = lib.mkMerge ([
@@ -18,6 +19,13 @@
               forwardAgent = true;
             };
           };
+        };
+
+        programs.fish.shellAbbrs = {
+          "jupiter" = "ssh rui@${config.programs.ssh.matchBlocks.jupiter.host}";
+          "unlock-jupiter" = "ssh root@${config.programs.ssh.matchBlocks.jupiter.host} -p 2222";
+          "saturn" = "ssh rui@${config.programs.ssh.matchBlocks.saturn.host}";
+          "unlock-saturn" = "ssh root@${config.programs.ssh.matchBlocks.saturn.host} -p 2222";
         };
       }
     ]
