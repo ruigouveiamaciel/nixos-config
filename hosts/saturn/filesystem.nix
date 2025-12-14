@@ -102,15 +102,6 @@
         };
       };
     };
-    mdadm = {
-      boot = {
-        type = "mdadm";
-        level = 1;
-        metadata = "1.0";
-        content = {
-        };
-      };
-    };
     zpool.zroot = {
       type = "zpool";
 
