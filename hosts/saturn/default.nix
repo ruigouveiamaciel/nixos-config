@@ -14,6 +14,7 @@
 
   networking = {
     hostName = "saturn";
+    hostId = "b0d87d98";
     useDHCP = true;
     enableIPv6 = false;
     firewall.interfaces."podman+" = {

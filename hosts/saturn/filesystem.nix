@@ -29,7 +29,6 @@
           type = "gpt";
           partitions = {
             boot = {
-              name = "boot1";
               type = "EF00";
               size = "1G";
               content = {
@@ -37,8 +36,7 @@
                 name = "boot";
               };
             };
-            nixos = {
-              name = "nixos1";
+            zfs = {
               size = "100%";
               content = {
                 type = "zfs";
@@ -46,7 +44,6 @@
               };
             };
             swap = {
-              name = "swap1";
               size = "12G";
               content = {
                 type = "swap";
@@ -63,7 +60,6 @@
           type = "gpt";
           partitions = {
             boot = {
-              name = "boot2";
               type = "EF00";
               size = "1G";
               content = {
@@ -71,8 +67,7 @@
                 name = "boot";
               };
             };
-            nixos = {
-              name = "nixos2";
+            zfs = {
               size = "100%";
               content = {
                 type = "zfs";
@@ -80,7 +75,6 @@
               };
             };
             swap = {
-              name = "swap2";
               size = "12G";
               content = {
                 type = "swap";
@@ -97,7 +91,6 @@
           type = "gpt";
           partitions = {
             boot = {
-              name = "boot3";
               type = "EF00";
               size = "1G";
               content = {
@@ -105,8 +98,7 @@
                 name = "boot";
               };
             };
-            nixos = {
-              name = "nixos3";
+            zfs = {
               size = "100%";
               content = {
                 type = "zfs";
@@ -114,7 +106,6 @@
               };
             };
             swap = {
-              name = "swap3";
               size = "12G";
               content = {
                 type = "swap";
