@@ -27,11 +27,21 @@
 
   boot = {
     plymouth.enable = true;
-    loader.systemd-boot.enable = true;
-    initrd.network.ssh = {
+    loader.systemd-boot = {
       enable = true;
-      authorizedKeys = config.myConstants.users.rui.authorized-keys;
-      ignoreEmptyHostKeys = true;
+      configurationLimit = 7;
+    };
+    initrd = {
+      systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 2222;
+          authorizedKeys = config.myConstants.users.rui.authorized-keys;
+          hostKeys = ["/persist/initrd_ssh_host_ed25519_key"];
+        };
+      };
     };
   };
 

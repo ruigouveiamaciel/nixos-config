@@ -1,0 +1,206 @@
+{
+  inputs,
+  pkgs,
+  myModulesPath,
+  ...
+}: {
+  imports = [
+    inputs.disko.nixosModules.default
+
+    "${myModulesPath}/profiles/impermanence.nix"
+  ];
+
+  boot = {
+    supportedFilesystems = ["zfs"];
+    zfs.devNodes = "/dev/disk/by-partlabel";
+  };
+
+  services.zfs = {
+    autoScrub.enable = true;
+    trim.enable = true;
+  };
+
+  disko.devices = {
+    disk = {
+      nvme1 = {
+        device = "";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              name = "boot1";
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "mdraid";
+                name = "boot";
+              };
+            };
+            nixos = {
+              name = "nixos1";
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "zroot";
+              };
+            };
+          };
+        };
+      };
+      nvme2 = {
+        device = "";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              name = "boot2";
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "mdraid";
+                name = "boot";
+              };
+            };
+            nixos = {
+              name = "nixos2";
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "zroot";
+              };
+            };
+          };
+        };
+      };
+      nvme3 = {
+        device = "";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              name = "boot3";
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "mdraid";
+                name = "boot";
+              };
+            };
+            nixos = {
+              name = "nixos3";
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "zroot";
+              };
+            };
+          };
+        };
+      };
+    };
+    mdadm = {
+      boot = {
+        type = "mdadm";
+        level = 1;
+        metadata = "1.0";
+        content = {
+          type = "filesystem";
+          format = "vfat";
+          mountpoint = "/boot";
+          mountOptions = ["umask=0077" "defaults"];
+        };
+      };
+    };
+    zpool.zroot = {
+      type = "zpool";
+
+      mode = {
+        topology = {
+          type = "topology";
+          vdev = [
+            {
+              members = ["nvme1" "nvme2" "nvme3"];
+            }
+          ];
+        };
+      };
+
+      rootFsOptions = {
+        compression = "zstd";
+        mountpoint = "none";
+        "com.sum:auto-snapshot" = "false";
+        acltype = "posixacl";
+        atime = "off";
+        relatime = "on";
+        xattr = "sa";
+      };
+
+      datasets = {
+        encrypted = {
+          type = "zfs_fs";
+          options = {
+            mountpoint = "none";
+            encryption = "aes-256-gcm";
+            keyformat = "passphrase";
+            keylocation = "prompt";
+          };
+        };
+        "encrypted/root" = {
+          type = "zfs_fs";
+          options.mountpoint = "legacy";
+          mountpoint = "/";
+          postCreateHook = "zfs snapshot zroot/encrypted/root@blank";
+        };
+        "encrypted/nix" = {
+          type = "zfs_fs";
+          options.mountpoint = "legacy";
+          mountpoint = "/nix";
+        };
+        "encrypted/persist" = {
+          type = "zfs_fs";
+          options = {
+            mountpoint = "legacy";
+            "com.sun:auto-snapshot" = "true";
+          };
+          mountpoint = "/persist";
+        };
+      };
+    };
+  };
+
+  fileSystems."/persist".neededForBoot = true;
+
+  boot.initrd.systemd = {
+    enable = true;
+    services.rollback = {
+      description = "Rollback root to an empty state";
+      wantedBy = ["initrd.target"];
+      after = [
+        "zfs-import-zroot.service"
+        "initrd-root-device.target"
+      ];
+      before = ["sysroot.mount"];
+      path = with pkgs; [zfs];
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig.Type = "oneshot";
+      script = ''
+        zfs rollback -r zroot/encrypted/root@blank
+      '';
+    };
+  };
+
+  environment.persistence."/persist" = {
+    hideMounts = true;
+    directories = [
+      "/var/log"
+      "/var/lib/nixos"
+      "/var/lib/systemd/coredump"
+    ];
+    files = [
+      "/etc/machine-id"
+    ];
+  };
+}

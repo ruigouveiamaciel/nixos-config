@@ -21,9 +21,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence = {
-      url = "github:nix-community/impermanence/home-manager-v2"; # Branch with fixes for the latest issues
-    };
+    impermanence.url = "github:nix-community/impermanence/home-manager-v2"; # Branch with fixes for the latest issues
 
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -42,6 +40,8 @@
         home-manager.follows = "home-manager";
       };
     };
+
+    opencode.url = "github:sst/opencode/v1.0.152";
   };
 
   outputs = inputs: let
@@ -49,12 +49,13 @@
   in
     with myLib; {
       nixosConfigurations = {
-        personal-gaming-desktop = mkSystem ./hosts/personal/gaming-desktop;
-        personal-install-iso = mkSystem ./hosts/personal/install-iso;
+        jupiter = mkSystem ./hosts/jupiter;
+        saturn = mkSystem ./hosts/saturn;
+        kde-install-iso = mkSystem ./hosts/kde-install-iso;
       };
 
       darwinConfigurations = {
-        work-macbook = mkDarwinSystem ./hosts/work/macbook;
+        work-macbook = mkDarwinSystem ./hosts/macbook;
       };
 
       packages = pkgsForAllSystems ({system, ...}: (import ./packages {

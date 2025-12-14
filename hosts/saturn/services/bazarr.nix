@@ -1,6 +1,4 @@
 {config, ...}: {
-  imports = [../minimal-lxc];
-
   virtualisation.oci-containers.containers = {
     bazarr = {
       image = "linuxserver/bazarr@sha256:9cea5b5c817379690bb5c53cd14bbf21fec44d39870d56a1d9e003f27a642509";
@@ -11,13 +9,13 @@
         PGID = builtins.toString config.users.groups.nogroup.gid;
       };
       volumes = [
-        "config:/config"
-        "tvshows:/data/tvshows"
-        "anime:/data/anime"
-        "movies:/data/movies"
+        "/persist/services/bazarr/config:/config"
+        "/persist/media/tvshows:/data/tvshows"
+        "/persist/media/anime:/data/anime"
+        "/persist/media/movies:/data/movies"
       ];
     };
   };
 
-  networking.firewall.allowedTCPPorts = [8080];
+  networking.firewall.allowedTCPPorts = [6767];
 }
