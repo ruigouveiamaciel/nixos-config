@@ -23,16 +23,17 @@
   },
   "mcp": {
     "atlassian": {
-      "enabled": true,
+      "enabled": false,
       "type": "local",
       "command": ["npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse"]
     },
     "context7": {
-      "enabled": true,
+      "enabled": false,
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
     },
     "gh_grep": {
+      "enabled": false,
       "type": "remote",
       "url": "https://mcp.grep.app"
     }
