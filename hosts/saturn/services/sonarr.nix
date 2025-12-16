@@ -1,14 +1,14 @@
 {config, ...}: {
   virtualisation.oci-containers.containers = {
-    bazarr = {
+    sonarr = {
       autoStart = true;
-      image = "linuxserver/bazarr@sha256:ad5a5bc5bfc2c109aed772a4b82c067e6aa1b33d2f1e9c2f61a90f0c6d0adefc";
+      image = "linuxserver/sonarr@sha256:60e5edcac39172294ad22d55d1b08c2c0a9fe658cad2f2c4d742ae017d7874de";
       podman.sdnotify = "healthy";
       extraOptions = [
         "--network=podman-hostnet"
-        "--ip=10.0.50.67"
+        "--ip=10.0.50.89"
         "--health-cmd"
-        "curl -f http://localhost:6767 || exit 1"
+        "curl -f http://localhost:8989 || exit 1"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -16,10 +16,9 @@
         PGID = builtins.toString config.users.groups.nogroup.gid;
       };
       volumes = [
-        "/persist/services/bazarr:/config"
-        "/persist/media/tvshows:/data/tvshows"
-        "/persist/media/anime:/data/anime"
+        "/persist/services/sonarr:/config"
         "/persist/media/movies:/data/movies"
+        "/persist/downloads:/data/downloads"
       ];
     };
   };
