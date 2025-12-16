@@ -64,7 +64,7 @@
           # unifi-password.sopsFile = ./secrets.yaml;
           # flood-username.sopsFile = ./secrets.yaml;
           # flood-password.sopsFile = ./secrets.yaml;
-          # jellyfin-key.sopsFile = ./secrets.yaml;
+          jellyfin-key.sopsFile = ../secrets.yaml;
           # radarr-key.sopsFile = ./secrets.yaml;
           # sonarr-key.sopsFile = ./secrets.yaml;
           # bazarr-key.sopsFile = ./secrets.yaml;
@@ -79,6 +79,7 @@
           restartUnits = ["homepage-dashboard.service"];
           content = ''
             HOMEPAGE_ALLOWED_HOSTS=http://10.0.50.254
+            HOMEPAGE_VAR_JELLYFIN_KEY=${config.sops.placeholder.jellyfin-key}
           '';
           # content = ''
           #   HOMEPAGE_VAR_PROXMOX_USERNAME=${config.sops.placeholder.proxmox-username}

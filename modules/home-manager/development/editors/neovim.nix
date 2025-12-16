@@ -5,13 +5,13 @@ in {
 
   programs = {
     bash.initExtra = ''
-      export EDITOR=${neovimPackage}
+      export EDITOR=nvim
     '';
     fish.shellInit = ''
-      export EDITOR=${neovimPackage}
+      export EDITOR=nvim
     '';
     zsh.initExtra = ''
-      export EDITOR=${neovimPackage}
+      export EDITOR=nvim
     '';
   };
 }
