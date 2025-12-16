@@ -20,6 +20,7 @@
     ./services/flood.nix
     ./services/qbittorrent.nix
     ./services/jellyfin.nix
+    ./services/homepage.nix
 
     ./filesystem.nix
     ./hardware-configuration.nix
@@ -64,7 +65,6 @@
         requires = lib.mkIf (config.virtualisation.oci-containers.backend == "podman") ["setup-podman-networks.service"];
         serviceConfig = {
           RestartSec = 60;
-          StartLimitIntervalSec = 3600;
           StartLimitBurst = 60;
         };
       })
