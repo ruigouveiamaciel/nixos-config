@@ -21,12 +21,16 @@
     ./services/qbittorrent.nix
     ./services/jellyfin.nix
     ./services/homepage.nix
+    ./services/unifi.nix
+    ./services/flaresolverr.nix
 
     ./filesystem.nix
     ./hardware-configuration.nix
   ];
 
   home-manager.users.rui.imports = [./home.nix];
+
+  security.apparmor.enable = true;
 
   networking = {
     hostName = "saturn";
@@ -64,8 +68,9 @@
         after = lib.mkIf (config.virtualisation.oci-containers.backend == "podman") ["setup-podman-networks.service"];
         requires = lib.mkIf (config.virtualisation.oci-containers.backend == "podman") ["setup-podman-networks.service"];
         serviceConfig = {
-          RestartSec = 60;
-          StartLimitBurst = 60;
+          # RestartSec = 15;
+          # StartLimitBurst = 60;
+          # StartLimitBurst = 3;
         };
       })
     config.virtualisation.oci-containers.containers

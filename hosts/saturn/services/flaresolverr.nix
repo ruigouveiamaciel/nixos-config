@@ -1,52 +1,51 @@
 {config, ...}: {
   virtualisation.oci-containers.containers = {
-    flood = {
+    flaresolverr = {
       autoStart = true;
-      image = "jesec/flood:4";
+      image = "docker.io/flaresolverr/flaresolverr:latest";
       pull = "newer";
       podman = {
         sdnotify = "healthy";
-        user = "flood";
+        user = "flaresolverr";
       };
       extraOptions = [
         "--cap-drop=ALL"
         "--userns=keep-id"
         "--health-cmd"
-        "curl -f http://localhost:3000/login || exit 1"
+        "curl -f http://localhost:8191 || exit 1"
         "--health-interval"
         "5s"
         "--health-retries"
         "6"
       ];
       ports = [
-        "10.0.50.42:1337:3000/tcp"
+        "10.0.50.42:8191:8191/tcp"
       ];
       volumes = [
-        "/persist/services/flood:/usr/src/app/"
-        "/persist/downloads:/data:ro"
+        "/persist/services/flaresolverr:/config"
       ];
     };
   };
 
-  users.users.flood = {
+  users.users.flaresolverr = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1003;
-    group = "flood";
+    uid = 1002;
+    group = "flaresolverr";
   };
 
-  users.groups.flood = {
-    gid = 1003;
+  users.groups.flaresolverr = {
+    gid = 1002;
   };
 
   networking.firewall.allowedTCPPorts = [
-    1337
+    8191
   ];
 
   boot.postBootCommands = ''
-    mkdir -p /persist/services/flood
-    chown -R ${config.users.users.flood.uid}:${config.users.groups.flood.gid} /persist/services/flood
-    chmod -R 750 /persist/services/flood
+    mkdir -p /persist/services/flaresolverr
+    chown -R ${config.users.users.flaresolverr.uid}:${config.users.groups.flaresolverr.gid} /persist/services/flaresolverr
+    chmod -R 750 /persist/services/flaresolverr
   '';
 }

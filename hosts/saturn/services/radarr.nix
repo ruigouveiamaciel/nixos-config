@@ -18,7 +18,7 @@
       volumes = [
         "/persist/services/radarr:/config"
         "/persist/media/movies:/data/movies"
-        "/persist/downloads:/data/downloads"
+        "/persist/downloads:/downloads"
       ];
     };
   };

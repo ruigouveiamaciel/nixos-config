@@ -17,8 +17,9 @@
       };
       volumes = [
         "/persist/services/sonarr:/config"
-        "/persist/media/movies:/data/movies"
-        "/persist/downloads:/data/downloads"
+        "/persist/media/tvshows:/data/tvshows"
+        "/persist/media/anime:/data/anime"
+        "/persist/downloads:/downloads"
       ];
     };
   };
