@@ -32,6 +32,12 @@
     };
   };
 
+  boot.postBootCommands = ''
+    mkdir -p /persist/media/{movies,tvshows,anime,test,personal,music}
+    chown -R nobody:nogroup /persist/media
+    chmod -R 766 /persist/media
+  '';
+
   # Don't hang boot because of network timeout
   boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;
