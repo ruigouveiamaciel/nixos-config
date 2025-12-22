@@ -1,5 +1,4 @@
 {pkgs, ...}: {
-  # TODO: This should eventually go on home-manager as far as I know
   services.aerospace = {
     enable = true;
     package = pkgs.unstable.aerospace;

@@ -1,11 +1,11 @@
 {config, ...}: {
   virtualisation.oci-containers.containers = {
-    prowlarr = {
+    navidrome = {
       autoStart = true;
-      image = "docker.io/linuxserver/prowlarr@sha256:aeb303a86be70dfb3fa5508bbd9399f5123b74f73b00b91eb76eb34efe4c5650";
+      image = "docker.io/deluan/navidrome@sha256:97533639adaafd3b968d9a3736895945ddf0ed7b4dec3a6102af334274cb7083";
       podman = {
         sdnotify = "healthy";
-        user = "prowlarr";
+        user = "navidrome";
       };
       capabilities = {
         CAP_SETUID = true;
@@ -18,7 +18,7 @@
         "--cap-drop=ALL"
         "--userns=keep-id"
         "--health-cmd"
-        "curl -f http://localhost:9696 || exit 1"
+        "curl -f http://localhost:4533 || exit 1"
         "--health-interval"
         "30s"
         "--health-retries"
@@ -26,37 +26,38 @@
       ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.prowlarr.uid;
-        PGID = builtins.toString config.users.groups.prowlarr.gid;
+        PUID = builtins.toString config.users.users.navidrome.uid;
+        PGID = builtins.toString config.users.groups.navidrome.gid;
       };
       ports = [
-        "9696:9696/tcp"
+        "4533:4533/tcp"
       ];
       volumes = [
-        "/persist/services/prowlarr:/config"
+        "/persist/services/navidrome:/data"
+        "/persist/media/music:/music:ro"
       ];
     };
   };
 
-  users.users.prowlarr = {
+  users.users.navidrome = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1010;
-    group = "prowlarr";
+    uid = 1009;
+    group = "navidrome";
   };
 
-  users.groups.prowlarr = {
-    gid = 1010;
+  users.groups.navidrome = {
+    gid = 1009;
   };
 
   networking.firewall.allowedTCPPorts = [
-    9696
+    4533
   ];
 
   boot.postBootCommands = ''
-    mkdir -p /persist/services/prowlarr
-    chown -R ${config.users.users.prowlarr.uid}:${config.users.groups.prowlarr.gid} /persist/services/prowlarr
-    chmod -R 750 /persist/services/prowlarr
+    mkdir -p /persist/services/navidrome
+    chown -R ${config.users.users.navidrome.uid}:${config.users.groups.navidrome.gid} /persist/services/navidrome
+    chmod -R 750 /persist/services/navidrome
   '';
 }

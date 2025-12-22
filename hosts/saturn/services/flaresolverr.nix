@@ -2,8 +2,7 @@
   virtualisation.oci-containers.containers = {
     flaresolverr = {
       autoStart = true;
-      image = "docker.io/flaresolverr/flaresolverr:latest";
-      pull = "newer";
+      image = "docker.io/flaresolverr/flaresolverr@sha256:524715c5b5d045ff77ae409ffa1d6c0fcf9f23a2e5e957eb44da4f2fc53e6876";
       podman = {
         sdnotify = "healthy";
         user = "flaresolverr";
@@ -14,12 +13,12 @@
         "--health-cmd"
         "curl -f http://localhost:8191 || exit 1"
         "--health-interval"
-        "5s"
+        "30s"
         "--health-retries"
-        "6"
+        "3"
       ];
       ports = [
-        "10.0.50.42:8191:8191/tcp"
+        "8191:8191/tcp"
       ];
       volumes = [
         "/persist/services/flaresolverr:/config"
