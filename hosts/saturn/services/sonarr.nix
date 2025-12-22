@@ -59,7 +59,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/sonarr
-    chown -R ${config.users.users.sonarr.uid}:${config.users.groups.sonarr.gid} /persist/services/sonarr
+    chown -R ${builtins.toString config.users.users.sonarr.uid}:${builtins.toString config.users.groups.sonarr.gid} /persist/services/sonarr
     chmod -R 750 /persist/services/sonarr
   '';
 }

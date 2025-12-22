@@ -56,7 +56,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/prowlarr
-    chown -R ${config.users.users.prowlarr.uid}:${config.users.groups.prowlarr.gid} /persist/services/prowlarr
+    chown -R ${builtins.toString config.users.users.prowlarr.uid}:${builtins.toString config.users.groups.prowlarr.gid} /persist/services/prowlarr
     chmod -R 750 /persist/services/prowlarr
   '';
 }

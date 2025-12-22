@@ -50,7 +50,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/homepage
-    chown -R ${config.users.users.homepage.uid}:${config.users.groups.homepage.gid} /persist/services/homepage
+    chown -R ${builtins.toString config.users.users.homepage.uid}:${builtins.toString config.users.groups.homepage.gid} /persist/services/homepage
     chmod -R 750 /persist/services/homepage
   '';
 

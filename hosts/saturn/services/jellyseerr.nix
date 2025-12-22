@@ -30,12 +30,12 @@
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1007;
+    uid = 1014;
     group = "jellyseerr";
   };
 
   users.groups.jellyseerr = {
-    gid = 1007;
+    gid = 1014;
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -44,7 +44,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/jellyseerr
-    chown -R ${config.users.users.jellyseerr.uid}:${config.users.groups.jellyseerr.gid} /persist/services/jellyseerr
+    chown -R ${builtins.toString config.users.users.jellyseerr.uid}:${builtins.toString config.users.groups.jellyseerr.gid} /persist/services/jellyseerr
     chmod -R 750 /persist/services/jellyseerr
   '';
 }

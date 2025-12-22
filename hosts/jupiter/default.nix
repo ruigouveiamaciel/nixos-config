@@ -12,6 +12,8 @@
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+
+    ../saturn/services
   ];
 
   home-manager.users.rui.imports = [./home.nix];

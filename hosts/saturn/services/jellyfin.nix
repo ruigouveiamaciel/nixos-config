@@ -51,7 +51,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/jellyfin
-    chown -R ${config.users.users.jellyfin.uid}:${config.users.groups.jellyfin.gid} /persist/services/jellyfin
+    chown -R ${builtins.toString config.users.users.jellyfin.uid}:${builtins.toString config.users.groups.jellyfin.gid} /persist/services/jellyfin
     chmod -R 750 /persist/services/jellyfin
   '';
 }

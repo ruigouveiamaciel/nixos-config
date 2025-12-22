@@ -57,7 +57,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/navidrome
-    chown -R ${config.users.users.navidrome.uid}:${config.users.groups.navidrome.gid} /persist/services/navidrome
+    chown -R ${builtins.toString config.users.users.navidrome.uid}:${builtins.toString config.users.groups.navidrome.gid} /persist/services/navidrome
     chmod -R 750 /persist/services/navidrome
   '';
 }

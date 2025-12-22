@@ -45,7 +45,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/flood
-    chown -R ${config.users.users.flood.uid}:${config.users.groups.flood.gid} /persist/services/flood
+    chown -R ${builtins.toString config.users.users.flood.uid}:${builtins.toString config.users.groups.flood.gid} /persist/services/flood
     chmod -R 750 /persist/services/flood
   '';
 }

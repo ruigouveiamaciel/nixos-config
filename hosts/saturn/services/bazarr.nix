@@ -59,7 +59,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/bazarr
-    chown -R ${config.users.users.bazarr.uid}:${config.users.groups.bazarr.gid} /persist/services/bazarr
+    chown -R ${builtins.toString config.users.users.bazarr.uid}:${builtins.toString config.users.groups.bazarr.gid} /persist/services/bazarr
     chmod -R 750 /persist/services/bazarr
   '';
 }

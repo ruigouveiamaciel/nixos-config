@@ -59,7 +59,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/lidarr
-    chown -R ${config.users.users.lidarr.uid}:${config.users.groups.lidarr.gid} /persist/services/lidarr
+    chown -R ${builtins.toString config.users.users.lidarr.uid}:${builtins.toString config.users.groups.lidarr.gid} /persist/services/lidarr
     chmod -R 750 /persist/services/lidarr
   '';
 }

@@ -50,7 +50,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/gitea/{config,data}
-    chown -R ${config.users.users.gitea.uid}:${config.users.groups.gitea.gid} /persist/services/gitea
+    chown -R ${builtins.toString config.users.users.gitea.uid}:${builtins.toString config.users.groups.gitea.gid} /persist/services/gitea
     chmod -R 750 /persist/services/gitea
   '';
 }

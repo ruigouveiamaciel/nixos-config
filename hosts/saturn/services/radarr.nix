@@ -58,7 +58,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/radarr
-    chown -R ${config.users.users.radarr.uid}:${config.users.groups.radarr.gid} /persist/services/radarr
+    chown -R ${builtins.toString config.users.users.radarr.uid}:${builtins.toString config.users.groups.radarr.gid} /persist/services/radarr
     chmod -R 750 /persist/services/radarr
   '';
 }

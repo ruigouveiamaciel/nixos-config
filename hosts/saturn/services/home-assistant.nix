@@ -134,7 +134,7 @@
   boot.postBootCommands = ''
     mkdir -p /persist/services/home-assistant/{config,zigbee2mqtt,node-red}
     mkdir -p /persist/services/home-assistant/mosquitto/{data,log}
-    chown -R ${config.users.users.homeassistant.uid}:${config.users.groups.homeassistant.gid} /persist/services/home-assistant
+    chown -R ${builtins.toString config.users.users.homeassistant.uid}:${builtins.toString config.users.groups.homeassistant.gid} /persist/services/home-assistant
     chmod -R 750 /persist/services/home-assistant
   '';
 }

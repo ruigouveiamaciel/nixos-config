@@ -58,7 +58,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/qbittorrent
-    chown -R ${config.users.users.qbittorrent.uid}:${config.users.groups.qbittorrent.gid} /persist/services/qbittorrent
+    chown -R ${builtins.toString config.users.users.qbittorrent.uid}:${builtins.toString config.users.groups.qbittorrent.gid} /persist/services/qbittorrent
     chmod -R 750 /persist/services/qbittorrent
   '';
 }

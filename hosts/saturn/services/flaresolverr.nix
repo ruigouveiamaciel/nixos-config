@@ -44,7 +44,7 @@
 
   boot.postBootCommands = ''
     mkdir -p /persist/services/flaresolverr
-    chown -R ${config.users.users.flaresolverr.uid}:${config.users.groups.flaresolverr.gid} /persist/services/flaresolverr
+    chown -R ${builtins.toString config.users.users.flaresolverr.uid}:${builtins.toString config.users.groups.flaresolverr.gid} /persist/services/flaresolverr
     chmod -R 750 /persist/services/flaresolverr
   '';
 }
