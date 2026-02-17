@@ -3,7 +3,7 @@
     ./bazarr.nix
     ./flaresolverr.nix
     ./flood.nix
-    ./gitea.nix
+    ./forgejo.nix
     ./home-assistant.nix
     ./homepage.nix
     ./immich.nix

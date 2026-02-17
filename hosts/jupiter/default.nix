@@ -12,8 +12,6 @@
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
-
-    ../saturn/services
   ];
 
   home-manager.users.rui.imports = [./home.nix];
@@ -35,7 +33,10 @@
   boot.postBootCommands = ''
     mkdir -p /persist/media/{movies,tvshows,anime,test,personal,music}
     chown -R nobody:nogroup /persist/media
-    chmod -R 766 /persist/media
+    chmod -R 777 /persist/media
+    mkdir -p /persist/downloads
+    chown -R nobody:nogroup /persist/downloads
+    chmod -R 777 /persist/downloads
   '';
 
   # Don't hang boot because of network timeout

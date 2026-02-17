@@ -11,6 +11,13 @@
         sdnotify = "healthy";
         user = "homeassistant";
       };
+      capabilities = {
+        CAP_SETUID = true;
+        CAP_SETGID = true;
+        CAP_CHOWN = true;
+        CAP_FOWNER = true;
+        CAP_DAC_OVERRIDE = true;
+      };
       extraOptions = [
         "--cap-drop=ALL"
         "--userns=keep-id"
@@ -92,6 +99,13 @@
       podman = {
         sdnotify = "healthy";
         user = "homeassistant";
+      };
+      capabilities = {
+        CAP_SETUID = true;
+        CAP_SETGID = true;
+        CAP_CHOWN = true;
+        CAP_FOWNER = true;
+        CAP_DAC_OVERRIDE = true;
       };
       extraOptions = [
         "--cap-drop=ALL"

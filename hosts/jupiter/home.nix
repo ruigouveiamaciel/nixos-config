@@ -1,8 +1,14 @@
-{myModulesPath, ...}: {
+{
+  myModulesPath,
+  pkgs,
+  ...
+}: {
   imports = [
     "${myModulesPath}/desktop/apps"
     "${myModulesPath}/desktop/plasma-settings.nix"
   ];
+
+  home.packages = [pkgs.google-chrome];
 
   programs.fish.shellAbbrs = {
     "rebuild" = "cd /persist/nixos-config && sudo nixos-rebuild switch --flake .#jupiter";
