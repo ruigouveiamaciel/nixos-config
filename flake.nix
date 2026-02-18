@@ -21,7 +21,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence.url = "github:nix-community/impermanence/home-manager-v2"; # Branch with fixes for the latest issues
+    impermanence.url = "github:nix-community/impermanence";
 
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -41,7 +41,7 @@
       };
     };
 
-    opencode.url = "github:sst/opencode/v1.0.152";
+    opencode.url = "github:sst/opencode/v1.2.6";
   };
 
   outputs = inputs: let

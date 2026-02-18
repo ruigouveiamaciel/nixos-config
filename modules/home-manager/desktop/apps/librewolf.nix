@@ -17,7 +17,7 @@
         };
       }
     ]
-    ++ (lib.optional (builtins.hasAttr "persistence" options.home) {
+    ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
           ".librewolf"
@@ -25,7 +25,7 @@
         ];
       };
     })
-    ++ (lib.optional (builtins.hasAttr "stylix" options) {
+    ++ (lib.optional (options ? "stylix") {
       stylix.targets.firefox.profileNames = ["smokewow"];
     })
   );

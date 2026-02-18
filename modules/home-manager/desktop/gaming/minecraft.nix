@@ -18,7 +18,7 @@
         ];
       }
     ]
-    ++ (lib.optional (builtins.hasAttr "persistence" options.home) {
+    ++ (lib.optional (options.home ? "persistence") {
       persistence."/persist" = {
         directories = [
           ".local/share/PrismLauncher"

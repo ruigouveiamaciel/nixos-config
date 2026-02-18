@@ -1,9 +1,9 @@
-{lib, ...}: {
+{
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = lib.mkForce false;
-      PermitRootLogin = lib.mkForce "no";
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
       GatewayPorts = "clientspecified";
       StreamLocalBindUnlink = "yes";
       AllowTcpForwarding = "yes";

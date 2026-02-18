@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   myModulesPath,
+  config,
   ...
 }: {
   imports = [
@@ -12,7 +13,10 @@
 
   boot = {
     supportedFilesystems = ["zfs"];
-    zfs.devNodes = "/dev/disk/by-partlabel";
+    zfs = {
+      package = pkgs.zfs_2_4;
+      devNodes = "/dev/disk/by-partlabel";
+    };
   };
 
   services.zfs = {
@@ -35,7 +39,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = ["umask=0077" "defaults"];
+                mountOptions = ["umask=0077"];
               };
             };
             zfs = {
@@ -171,7 +175,7 @@
         "initrd-root-device.target"
       ];
       before = ["sysroot.mount"];
-      path = with pkgs; [zfs];
+      path = [config.boot.zfs.package];
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
       script = ''

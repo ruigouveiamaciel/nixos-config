@@ -2,14 +2,14 @@
   lib,
   modulesPath,
   myModulesPath,
+  pkgs,
   ...
 }: {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix"
-    # "${modulesPath}/installer/cd-dvd/latest-kernel.nix"
 
-    "${myModulesPath}/desktop/plasma6.nix"
     "${myModulesPath}/profiles/essentials.nix"
+    "${myModulesPath}/desktop/plasma6.nix"
     "${myModulesPath}/users/rui"
     "${myModulesPath}/networking/openssh.nix"
   ];
@@ -18,7 +18,10 @@
 
   boot = {
     supportedFilesystems = ["zfs"];
-    zfs.devNodes = "/dev/disk/by-partlabel";
+    zfs = {
+      package = pkgs.zfs_2_4;
+      devNodes = "/dev/disk/by-partlabel";
+    };
   };
 
   isoImage = {
@@ -27,6 +30,10 @@
   };
 
   services.displayManager.autoLogin.user = lib.mkForce "rui";
+  services.openssh.settings = {
+    PasswordAuthentication = lib.mkForce true;
+    PermitRootLogin = lib.mkForce "yes";
+  };
 
   networking = {
     hostName = lib.mkForce "pluto";

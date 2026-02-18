@@ -1,9 +1,4 @@
-{
-  myModulesPath,
-  lib,
-  config,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/users/rui"
@@ -14,7 +9,7 @@
 
     ./filesystem.nix
     ./hardware-configuration.nix
-    ./services
+    # ./services
   ];
 
   home-manager.users.rui.imports = [./home.nix];

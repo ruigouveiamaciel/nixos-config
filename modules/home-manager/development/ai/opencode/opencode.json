@@ -1,41 +1,4 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "catppuccin",
-  "autoupdate": true,
-  "instructions": ["~/.config/opencode/INSTRUCTIONS.md"],
-  "permission": {
-    "edit": "ask",
-    "bash": {
-      "*": "ask",
-      "pwd": "allow",
-      "git status *": "allow", 
-      "git status": "allow", 
-      "git fetch *": "allow",
-      "git fetch": "allow",
-      "git log *": "allow",
-      "git log": "allow",
-      "git diff *": "allow",
-      "git diff": "allow",
-      "git add *": "allow",
-      "git commit *": "ask"
-    },
-    "webfetch": "ask"
-  },
-  "mcp": {
-    "atlassian": {
-      "enabled": false,
-      "type": "local",
-      "command": ["npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse"]
-    },
-    "context7": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp"
-    },
-    "gh_grep": {
-      "enabled": false,
-      "type": "remote",
-      "url": "https://mcp.grep.app"
-    }
-  }
+  "autoupdate": false
 }

@@ -25,7 +25,6 @@
           plasma6.excludePackages = with pkgs.kdePackages; [
             kate
             spectacle
-            kwallet
             kmenuedit
             elisa
             khelpcenter
@@ -36,6 +35,22 @@
     ++ (lib.optional (options ? "home-manager") {
       home-manager.sharedModules = [
         inputs.plasma-manager.homeModules.plasma-manager
+      ];
+    })
+    ++ (lib.optional (options ? "home-manager") {
+      home-manager.sharedModules = [
+        ({options, ...}: {
+          config = lib.mkMerge (lib.optional (options.home ? "persistence") {
+            home.persistence."/persist" = {
+              directories = [
+                ".local/share/kwalletd"
+              ];
+              files = [
+                ".config/kwalletrc"
+              ];
+            };
+          });
+        })
       ];
     })
   );

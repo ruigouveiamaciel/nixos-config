@@ -10,8 +10,7 @@
       {
         home = {
           packages = [
-            # pkgs.myOpencode
-            inputs.opencode.packages."${pkgs.stdenv.hostPlatform.system}".default
+            inputs.opencode.packages."${pkgs.stdenv.hostPlatform.system}".opencode
           ];
           file = {
             "${config.home.homeDirectory}/.config/opencode".source = ./opencode;

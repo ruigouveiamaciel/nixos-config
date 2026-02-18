@@ -5,8 +5,6 @@
 } @ args: {
   # example = pkgs.callPackage ./example { };
 
-  myOpencode = pkgs.callPackage ./opencode.nix {};
-
   myNeovim =
     (inputs.nvf.lib.neovimConfiguration
       {

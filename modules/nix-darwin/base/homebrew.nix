@@ -11,7 +11,7 @@
         };
       }
     ]
-    ++ (lib.optional (builtins.hasAttr "home-manager" options) {
+    ++ (lib.optional (options ? "home-manager") {
       home-manager = {
         sharedModules = [
           {

@@ -35,7 +35,7 @@
         name = "Logitech USB Receiver";
         naturalScroll = false;
         productId = "c54d";
-        scrollSpeed = 2;
+        scrollSpeed = 1;
         vendorId = "046d";
       }
     ];

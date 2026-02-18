@@ -10,7 +10,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_17;
+    kernelPackages = pkgs.linuxPackages_6_18;
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "igc"];
     initrd.kernelModules = [];
     kernelModules = ["kvm-amd"];

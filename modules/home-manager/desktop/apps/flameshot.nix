@@ -15,7 +15,7 @@
 
   services.flameshot = {
     enable = true;
-    package = pkgs.flameshot.override {
+    package = pkgs.unstable.flameshot.override {
       enableWlrSupport = true;
     };
     settings = {

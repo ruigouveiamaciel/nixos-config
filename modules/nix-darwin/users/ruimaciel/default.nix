@@ -22,7 +22,7 @@
         system.primaryUser = "ruimaciel";
       }
     ]
-    ++ (lib.optional (builtins.hasAttr "home-manager" options) {
+    ++ (lib.optional (options ? "home-manager") {
       home-manager.users.ruimaciel = {
         imports = [
           ./home.nix

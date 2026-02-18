@@ -588,56 +588,56 @@
     };
 
     extraPlugins = {
-      opencode-nvim = {
-        package = pkgs.vimUtils.buildVimPlugin {
-          pname = "opencode.nvim";
-          version = "2025-11-05";
-          src = pkgs.fetchFromGitHub {
-            owner = "NickvanDyke";
-            repo = "opencode.nvim";
-            rev = "8b737e45b8e665a0c1111d615b314951d8168a44";
-            sha256 = "sha256-irCS0ogm7aHZNYrSfi7vvqAKYe5Wdy9qn3WcBKbYHAo=";
-          };
-          meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
-          meta.hydraPlatforms = [];
-        };
-        after = ["snacks-nvim"];
-        setup =
-          /*
-          lua
-          */
-          ''
-            vim.g.opencode_opts = {
-              auto_reload = true,
-              events = {
-                permissions = {
-                  enabled = false,
-                };
-              };
-              provider = {
-                enabled = "snacks";
-                snacks = {
-                  win = {
-                    position = "float",
-                    enter = true,
-                    border = true,
-                    bo = {
-                      filetype = "opencode_terminal";
-                    },
-                  },
-                },
-              }
-            }
-
-            -- Required for `vim.g.opencode_opts.auto_reload`.
-            vim.o.autoread = true
-
-            vim.keymap.set({"n", "x", "t"}, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
-            vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
-            vim.keymap.set({"n", "x", "t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
-            vim.keymap.set({"n", "x", "t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
-          '';
-      };
+      # opencode-nvim = {
+      #   package = pkgs.vimUtils.buildVimPlugin {
+      #     pname = "opencode.nvim";
+      #     version = "2025-11-05";
+      #     src = pkgs.fetchFromGitHub {
+      #       owner = "NickvanDyke";
+      #       repo = "opencode.nvim";
+      #       rev = "8b737e45b8e665a0c1111d615b314951d8168a44";
+      #       sha256 = "sha256-irCS0ogm7aHZNYrSfi7vvqAKYe5Wdy9qn3WcBKbYHAo=";
+      #     };
+      #     meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
+      #     meta.hydraPlatforms = [];
+      #   };
+      #   after = ["snacks-nvim"];
+      #   setup =
+      #     /*
+      #     lua
+      #     */
+      #     ''
+      #       vim.g.opencode_opts = {
+      #         auto_reload = true,
+      #         events = {
+      #           permissions = {
+      #             enabled = false,
+      #           };
+      #         };
+      #         provider = {
+      #           enabled = "snacks";
+      #           snacks = {
+      #             win = {
+      #               position = "float",
+      #               enter = true,
+      #               border = true,
+      #               bo = {
+      #                 filetype = "opencode_terminal";
+      #               },
+      #             },
+      #           },
+      #         }
+      #       }
+      #
+      #       -- Required for `vim.g.opencode_opts.auto_reload`.
+      #       vim.o.autoread = true
+      #
+      #       vim.keymap.set({"n", "x", "t"}, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
+      #       vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
+      #       vim.keymap.set({"n", "x", "t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
+      #       vim.keymap.set({"n", "x", "t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+      #     '';
+      # };
     };
   };
 }

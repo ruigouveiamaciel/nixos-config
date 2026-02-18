@@ -38,7 +38,7 @@ in {
         };
       }
     ]
-    ++ (lib.optional (builtins.hasAttr "home-manager" options) {
+    ++ (lib.optional (options ? "home-manager") {
       home-manager.users.rui = {
         imports = [
           ./home.nix
