@@ -1,23 +1,14 @@
-{pkgs, ...}: {
-  wayland.windowManager.hyprland.settings = {
-    windowrule = [
-      "noanim, class:^(flameshot)$"
-      "float, class:^(flameshot)$"
-      "move 0 0, class:^(flameshot)$"
-      "pin, class:^(flameshot)$"
-      "monitor 1, class:^(flameshot)$"
-    ];
-    bind = [
-      ", Print, exec, flameshot screen"
-      "CTRL, Print, exec, flameshot gui"
-    ];
-  };
+{
+  pkgs,
+  config,
+  ...
+}: {
+  home.packages = with pkgs; [
+    grim
+  ];
 
   services.flameshot = {
     enable = true;
-    package = pkgs.unstable.flameshot.override {
-      enableWlrSupport = true;
-    };
     settings = {
       General = {
         copyURLAfterUpload = false;
@@ -28,6 +19,10 @@
         useJpgForClipboard = true;
         saveAsFileExtension = "png";
         savePathFixed = true;
+        savePath = "${config.home.homeDirectory}/Screenshots";
+        # Wayland support
+        useGrimAdapter = true;
+        disabledGrimWarning = true;
       };
     };
   };
