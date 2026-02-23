@@ -1,65 +1,65 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "lidarr";
+  serviceId = 1008;
+in {
   virtualisation.oci-containers.containers = {
-    lidarr = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/lidarr@sha256:cfd9fe71f4706e87e9173f1f41740d4b52cda70e2897df7d39d93e6731f3b5d4";
+      image = "lscr.io/linuxserver/lidarr:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "lidarr";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--device=/dev/dri/renderD128:/dev/dri/renderD128"
-        "--health-cmd"
-        "curl -f http://localhost:8096 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.lidarr.uid;
-        PGID = builtins.toString config.users.groups.lidarr.gid;
+        PUID = builtins.toString config.users.users."${serviceName}".uid;
+        PGID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "8686:8686/tcp"
+        "10.0.50.42:8686:8686/tcp"
       ];
       volumes = [
-        "/persist/services/lidarr:/config"
-        "/persist/media/music:/music"
-        "/persist/downloads:/downloads"
+        "/persist/services/${serviceName}/config:/config:U"
+        "/persist/media/music:/data/music"
+        "/persist/media/downloads:/downloads"
       ];
     };
   };
 
-  users.users.lidarr = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1008;
-    group = "lidarr";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.lidarr = {
-    gid = 1008;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     8686
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/lidarr
-    chown -R ${builtins.toString config.users.users.lidarr.uid}:${builtins.toString config.users.groups.lidarr.gid} /persist/services/lidarr
-    chmod -R 750 /persist/services/lidarr
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

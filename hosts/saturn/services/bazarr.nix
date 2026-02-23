@@ -1,39 +1,26 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "bazarr";
+  serviceId = 1001;
+in {
   virtualisation.oci-containers.containers = {
-    bazarr = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/bazarr@sha256:bd481eaad7f694a5b13f7163321466d30c8ae29a503346888d69f8dc8267be9c";
+      image = "lscr.io/linuxserver/bazarr:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "bazarr";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:6767 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.bazarr.uid;
-        PGID = builtins.toString config.users.groups.bazarr.gid;
+        PUID = builtins.toString config.users.users."${serviceName}".uid;
+        PGID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "6767:6767/tcp"
+        "10.0.50.42:6767:6767/tcp"
       ];
       volumes = [
-        "/persist/services/bazarr:/config"
+        "/persist/services/${serviceName}/config:/config:U"
         "/persist/media/tvshows:/data/tvshows"
         "/persist/media/anime:/data/anime"
         "/persist/media/movies:/data/movies"
@@ -41,25 +28,39 @@
     };
   };
 
-  users.users.bazarr = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1001;
-    group = "bazarr";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.bazarr = {
-    gid = 1001;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     6767
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/bazarr
-    chown -R ${builtins.toString config.users.users.bazarr.uid}:${builtins.toString config.users.groups.bazarr.gid} /persist/services/bazarr
-    chmod -R 750 /persist/services/bazarr
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

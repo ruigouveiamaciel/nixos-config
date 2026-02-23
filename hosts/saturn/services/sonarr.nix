@@ -1,65 +1,66 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "sonarr";
+  serviceId = 1013;
+in {
   virtualisation.oci-containers.containers = {
-    sonarr = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/sonarr@sha256:60e5edcac39172294ad22d55d1b08c2c0a9fe658cad2f2c4d742ae017d7874de";
+      image = "lscr.io/linuxserver/sonarr:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "sonarr";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:8989 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.sonarr.uid;
-        PGID = builtins.toString config.users.groups.sonarr.gid;
+        PUID = builtins.toString config.users.users."${serviceName}".uid;
+        PGID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "8989:8989/tcp"
+        "10.0.50.42:8989:8989/tcp"
       ];
       volumes = [
-        "/persist/services/sonarr:/config"
-        "/persist/media/tvshows:/data/tvshows"
+        "/persist/services/${serviceName}/config:/config:U"
         "/persist/media/anime:/data/anime"
-        "/persist/downloads:/downloads"
+        "/persist/media/tvshows:/data/tvshows"
+        "/persist/media/downloads:/downloads"
       ];
     };
   };
 
-  users.users.sonarr = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1013;
-    group = "sonarr";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.sonarr = {
-    gid = 1013;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     8989
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/sonarr
-    chown -R ${builtins.toString config.users.users.sonarr.uid}:${builtins.toString config.users.groups.sonarr.gid} /persist/services/sonarr
-    chmod -R 750 /persist/services/sonarr
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

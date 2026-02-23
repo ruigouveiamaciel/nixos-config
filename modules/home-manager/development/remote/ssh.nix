@@ -1,6 +1,7 @@
 {
   lib,
   options,
+  pkgs,
   ...
 }: {
   config = lib.mkMerge ([
@@ -16,6 +17,10 @@
             saturn = {
               host = "10.0.50.42";
               forwardAgent = true;
+            };
+            forgejo = {
+              host = "ssh-git.iuseneovim.fyi";
+              proxyCommand = "${lib.getExe' pkgs.cloudflared "cloudflared"} access ssh --hostname %h";
             };
           };
         };

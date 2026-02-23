@@ -1,4 +1,9 @@
-{myModulesPath, ...}: {
+{
+  myModulesPath,
+  lib,
+  config,
+  ...
+}: {
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/users/rui"
@@ -9,63 +14,67 @@
 
     ./filesystem.nix
     ./hardware-configuration.nix
-    # ./services
+
+    ./services
   ];
 
   home-manager.users.rui.imports = [./home.nix];
-
   networking = {
     hostName = "saturn";
     hostId = "b0d87d98";
-    useDHCP = true;
+    useDHCP = false;
     enableIPv6 = false;
-    firewall.interfaces."podman+" = {
-      allowedUDPPorts = [53];
-      allowedTCPPorts = [53];
+    defaultGateway = {
+      address = "10.0.50.1";
+      interface = "enp90s0";
+    };
+    nameservers = ["10.0.50.1"];
+    interfaces.enp90s0 = {
+      ipv4.addresses = [
+        {
+          address = "10.0.50.42";
+          prefixLength = 24;
+        }
+        {
+          address = "10.0.50.200";
+          prefixLength = 24;
+        }
+      ];
     };
   };
 
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 7;
+  services.openssh.listenAddresses = [
+    {
+      addr = "10.0.50.42";
+      port = 22;
+    }
+  ];
+
+  boot = {
+    kernelParams = ["ip=10.0.50.42::10.0.50.1:255.255.255.0:saturn:enp90s0:off:10.0.50.1::"];
+
+    loader.systemd-boot = {
+      enable = true;
+      configurationLimit = 7;
+    };
+
+    # Don't hang boot because of network timeout
+    initrd.systemd.network.wait-online.enable = false;
   };
 
   time.timeZone = "Etc/UTC";
-
-  # Don't hang boot because of network timeout
-  boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;
 
-  # systemd.services =
-  #   lib.attrsets.mapAttrs' (_: {serviceName, ...}:
-  #     lib.attrsets.nameValuePair serviceName {
-  #       after = lib.mkIf (config.virtualisation.oci-containers.backend == "podman") ["setup-podman-networks.service"];
-  #       requires = lib.mkIf (config.virtualisation.oci-containers.backend == "podman") ["setup-podman-networks.service"];
-  #       serviceConfig = {
-  #         # RestartSec = 15;
-  #         # StartLimitBurst = 60;
-  #         # StartLimitBurst = 3;
-  #       };
-  #     })
-  #   config.virtualisation.oci-containers.containers
-  #   // {
-  #     setup-podman-networks = let
-  #       podman = "${config.virtualisation.podman.package}/bin/podman";
-  #     in
-  #       lib.mkIf (config.virtualisation.oci-containers.backend == "podman") {
-  #         after = ["podman.service"];
-  #         requires = ["podman.service"];
-  #         wantedBy = ["multi-user.target"];
-  #         script = ''
-  #           ${podman} network exists podman-internal || \
-  #           ${podman} network create --internal podman-internal
-  #         '';
-  #         serviceConfig = {
-  #           Type = "oneshot";
-  #           RemainAfterExit = true;
-  #         };
-  #       };
-  #   };
+  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
+    lib.attrsets.nameValuePair serviceName {
+      serviceConfig = {
+        # Required to for rootless containers to work with sdnotify=conmon
+        # Already been fixed for 26.05, merge for backport to 25.11 was not
+        # merged
+        Delegate = true;
+      };
+    })
+  config.virtualisation.oci-containers.containers;
 
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";

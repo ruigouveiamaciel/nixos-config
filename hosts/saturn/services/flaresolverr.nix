@@ -1,50 +1,63 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "flaresolverr";
+  serviceId = 1002;
+in {
   virtualisation.oci-containers.containers = {
-    flaresolverr = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/flaresolverr/flaresolverr@sha256:524715c5b5d045ff77ae409ffa1d6c0fcf9f23a2e5e957eb44da4f2fc53e6876";
+      image = "docker.io/flaresolverr/flaresolverr:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "flaresolverr";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:8191 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = builtins.toString config.users.users."${serviceName}".uid;
+        PGID = builtins.toString config.users.groups."${serviceName}".gid;
+      };
       ports = [
-        "8191:8191/tcp"
+        "10.0.50.42:8191:8191/tcp"
       ];
       volumes = [
-        "/persist/services/flaresolverr:/config"
+        "/persist/services/${serviceName}/config:/config:U"
       ];
     };
   };
 
-  users.users.flaresolverr = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1002;
-    group = "flaresolverr";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.flaresolverr = {
-    gid = 1002;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     8191
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/flaresolverr
-    chown -R ${builtins.toString config.users.users.flaresolverr.uid}:${builtins.toString config.users.groups.flaresolverr.gid} /persist/services/flaresolverr
-    chmod -R 750 /persist/services/flaresolverr
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

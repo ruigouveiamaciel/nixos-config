@@ -1,23 +1,15 @@
 {
   imports = [
     ./bazarr.nix
-    ./flaresolverr.nix
-    ./flood.nix
-    ./forgejo.nix
-    ./home-assistant.nix
-    ./homepage.nix
-    ./immich.nix
-    ./jellyfin.nix
-    ./jellyseerr.nix
-    ./lidarr.nix
-    ./navidrome.nix
-    ./paperless.nix
-    ./prowlarr.nix
-    ./qbittorrent.nix
-    ./radarr.nix
-    ./restic.nix
     ./sonarr.nix
-    ./unifi.nix
+    ./radarr.nix
+    ./lidarr.nix
+    ./prowlarr.nix
+    ./flaresolverr.nix
+    ./forgejo.nix
+    ./fava.nix
+    ./flood.nix
+    ./qbittorrent.nix
   ];
 
   security.apparmor.enable = true;
@@ -28,4 +20,10 @@
     };
     oci-containers.backend = "podman";
   };
+
+  boot.postBootCommands = ''
+    mkdir -p /persist/media/{anime,movies,tvshows,personal,music,downloads}
+    chown nobody:nogroup -R /persist/media
+    chmod 777 -R /persist/media
+  '';
 }

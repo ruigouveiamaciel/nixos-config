@@ -1,29 +1,16 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "qbittorrent";
+  serviceId = 1011;
+in {
   virtualisation.oci-containers.containers = {
-    qbittorrent = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/qbittorrent@sha256:043498de39c3dd63eec94360c5ad966a51271d1581070f42cb73ab0cf4776f29";
+      image = "docker.io/linuxserver/qbittorrent:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "qbittorrent";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:1338 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       environment = {
         TZ = config.time.timeZone;
         PUID = builtins.toString config.users.users.qbittorrent.uid;
@@ -31,34 +18,48 @@
         WEBUI_PORT = "1338";
       };
       ports = [
-        "1338:1338/tcp"
+        "10.0.50.42:1338:1338/tcp"
       ];
       volumes = [
-        "/persist/services/qbittorrent:/config"
-        "/persist/downloads:/downloads"
+        "/persist/services/${serviceName}/data:/config:U"
+        "/persist/media/downloads:/downloads:ro"
       ];
     };
   };
 
-  users.users.qbittorrent = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1011;
-    group = "qbittorrent";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.qbittorrent = {
-    gid = 1011;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     1338
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/qbittorrent
-    chown -R ${builtins.toString config.users.users.qbittorrent.uid}:${builtins.toString config.users.groups.qbittorrent.gid} /persist/services/qbittorrent
-    chmod -R 750 /persist/services/qbittorrent
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/data
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

@@ -1,62 +1,63 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "prowlarr";
+  serviceId = 1010;
+in {
   virtualisation.oci-containers.containers = {
-    prowlarr = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/prowlarr@sha256:aeb303a86be70dfb3fa5508bbd9399f5123b74f73b00b91eb76eb34efe4c5650";
+      image = "lscr.io/linuxserver/prowlarr:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "prowlarr";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:9696 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.prowlarr.uid;
-        PGID = builtins.toString config.users.groups.prowlarr.gid;
+        PUID = builtins.toString config.users.users."${serviceName}".uid;
+        PGID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "9696:9696/tcp"
+        "10.0.50.42:9696:9696/tcp"
       ];
       volumes = [
-        "/persist/services/prowlarr:/config"
+        "/persist/services/${serviceName}/config:/config:U"
       ];
     };
   };
 
-  users.users.prowlarr = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1010;
-    group = "prowlarr";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.prowlarr = {
-    gid = 1010;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     9696
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/prowlarr
-    chown -R ${builtins.toString config.users.users.prowlarr.uid}:${builtins.toString config.users.groups.prowlarr.gid} /persist/services/prowlarr
-    chmod -R 750 /persist/services/prowlarr
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

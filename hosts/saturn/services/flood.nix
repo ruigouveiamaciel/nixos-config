@@ -1,51 +1,59 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "flood";
+  serviceId = 1003;
+in {
   virtualisation.oci-containers.containers = {
-    flood = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/jesec/flood@sha256:fa5722fc637ad494cf347959f89d67c5a95ca42306495a814ca0a8b10c5374aa";
+      image = "docker.io/jesec/flood:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "flood";
+        sdnotify = "conmon";
+        user = serviceName;
       };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:3000/login || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
       ports = [
-        "1337:3000/tcp"
+        "10.0.50.42:1337:3000/tcp"
       ];
       volumes = [
-        "/persist/services/flood:/usr/src/app"
-        "/persist/downloads:/data:ro"
+        "/persist/services/${serviceName}/data:/usr/src/app:U"
+        "/persist/media/downloads:/downloads:ro"
       ];
     };
   };
 
-  users.users.flood = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1003;
-    group = "flood";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.flood = {
-    gid = 1003;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     1337
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/flood
-    chown -R ${builtins.toString config.users.users.flood.uid}:${builtins.toString config.users.groups.flood.gid} /persist/services/flood
-    chmod -R 750 /persist/services/flood
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/data
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }
