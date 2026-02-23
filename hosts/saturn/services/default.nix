@@ -10,6 +10,10 @@
     ./fava.nix
     ./flood.nix
     ./qbittorrent.nix
+    ./seerr.nix
+    ./jellyfin.nix
+    ./navidrome.nix
+    ./homepage.nix
   ];
 
   security.apparmor.enable = true;
@@ -22,7 +26,7 @@
   };
 
   boot.postBootCommands = ''
-    mkdir -p /persist/media/{anime,movies,tvshows,personal,music,downloads}
+    mkdir -p /persist/media/{anime,movies,tvshows,personal,music,downloads,test}
     chown nobody:nogroup -R /persist/media
     chmod 777 -R /persist/media
   '';

@@ -1,63 +1,60 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "navidrome";
+  serviceId = 1009;
+in {
   virtualisation.oci-containers.containers = {
-    navidrome = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/deluan/navidrome@sha256:97533639adaafd3b968d9a3736895945ddf0ed7b4dec3a6102af334274cb7083";
+      image = "docker.io/deluan/navidrome:latest";
+      pull = "newer";
+      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       podman = {
-        sdnotify = "healthy";
-        user = "navidrome";
-      };
-      capabilities = {
-        CAP_SETUID = true;
-        CAP_SETGID = true;
-        CAP_CHOWN = true;
-        CAP_FOWNER = true;
-        CAP_DAC_OVERRIDE = true;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
-        "--health-cmd"
-        "curl -f http://localhost:4533 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = builtins.toString config.users.users.navidrome.uid;
-        PGID = builtins.toString config.users.groups.navidrome.gid;
+        sdnotify = "conmon";
+        user = serviceName;
       };
       ports = [
-        "4533:4533/tcp"
+        "10.0.50.10:4533:4533/tcp"
       ];
       volumes = [
-        "/persist/services/navidrome:/data"
+        "/persist/services/${serviceName}/config:/data:U"
         "/persist/media/music:/music:ro"
       ];
     };
   };
 
-  users.users.navidrome = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1009;
-    group = "navidrome";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.navidrome = {
-    gid = 1009;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     4533
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/navidrome
-    chown -R ${builtins.toString config.users.users.navidrome.uid}:${builtins.toString config.users.groups.navidrome.gid} /persist/services/navidrome
-    chmod -R 750 /persist/services/navidrome
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/config
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

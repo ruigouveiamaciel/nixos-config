@@ -1,29 +1,25 @@
-{config, ...}: {
+{config, ...}: let
+  serviceName = "jellyfin";
+  serviceId = 1007;
+in {
   virtualisation.oci-containers.containers = {
-    jellyfin = {
+    "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/jellyfin/jellyfin@sha256:6d819e9ab067efcf712993b23455cc100ee5585919bb297ea5a109ac00cb626e";
+      image = "docker.io/jellyfin/jellyfin:latest";
+      pull = "newer";
       podman = {
-        sdnotify = "healthy";
-        user = "jellyfin";
+        sdnotify = "conmon";
+        user = serviceName;
       };
       extraOptions = [
-        "--cap-drop=ALL"
-        "--userns=keep-id"
         "--device=/dev/dri/renderD128:/dev/dri/renderD128"
-        "--health-cmd"
-        "curl -f http://localhost:8096 || exit 1"
-        "--health-interval"
-        "30s"
-        "--health-retries"
-        "3"
       ];
       ports = [
-        "8096:8096/tcp"
+        "10.0.50.10:8096:8096/tcp"
       ];
       volumes = [
-        "/persist/services/jellyfin/config:/config"
-        "/persist/services/jellyfin/cache:/cache"
+        "/persist/services/${serviceName}/config:/config:U"
+        "/persist/services/${serviceName}/cache:/cache:U"
         "/persist/media/movies:/data/movies:ro"
         "/persist/media/tvshows:/data/tvshows:ro"
         "/persist/media/anime:/data/anime:ro"
@@ -33,25 +29,39 @@
     };
   };
 
-  users.users.jellyfin = {
+  users.groups."${serviceName}".gid = serviceId;
+  users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
     packages = [config.virtualisation.podman.package];
-    uid = 1007;
-    group = "jellyfin";
+    uid = serviceId;
+    group = serviceName;
+    home = "/var/lib/${serviceName}";
+    createHome = true;
+    subUidRanges = [
+      {
+        count = 65536;
+        startUid = serviceId * 100000;
+      }
+    ];
+    subGidRanges = [
+      {
+        count = 65536;
+        startGid = serviceId * 100000;
+      }
+    ];
   };
 
-  users.groups.jellyfin = {
-    gid = 1007;
-  };
-
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
     8096
   ];
 
-  boot.postBootCommands = ''
-    mkdir -p /persist/services/jellyfin
-    chown -R ${builtins.toString config.users.users.jellyfin.uid}:${builtins.toString config.users.groups.jellyfin.gid} /persist/services/jellyfin
-    chmod -R 750 /persist/services/jellyfin
+  boot.postBootCommands = let
+    uid = builtins.toString config.users.users."${serviceName}".uid;
+    gid = builtins.toString config.users.groups."${serviceName}".gid;
+  in ''
+    mkdir -p /persist/services/${serviceName}/{config,cache}
+    chown ${uid}:${gid} -R /persist/services/${serviceName}
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

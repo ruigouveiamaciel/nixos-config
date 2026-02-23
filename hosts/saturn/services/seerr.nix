@@ -1,30 +1,25 @@
 {config, ...}: let
-  serviceName = "homepage";
-  serviceId = 1006;
+  serviceName = "seerr";
+  serviceId = 1014;
 in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "ghcr.io/gethomepage/homepage:v1";
+      image = "ghcr.io/seerr-team/seerr:latest";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
       };
       environment = {
-        PUID = builtins.toString config.users.users."${serviceName}".uid;
-        PGID = builtins.toString config.users.groups."${serviceName}".gid;
-        HOMEPAGE_ALLOWED_HOSTS = "10.0.50.42:8080";
-        PORT = "8080";
+        TZ = config.time.timeZone;
+        PORT = "5055";
       };
       ports = [
-        "10.0.50.42:8080:8080/tcp"
+        "10.0.50.42:5055:5055/tcp"
       ];
       volumes = [
-        "/persist/services/${serviceName}/config:/app/config"
-      ];
-      environmentFiles = [
-        "/persist/services/${serviceName}/secrets.env"
+        "/persist/services/${serviceName}/config:/app/config:U"
       ];
     };
   };
@@ -53,7 +48,7 @@ in {
   };
 
   networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
-    8080
+    5055
   ];
 
   boot.postBootCommands = let
@@ -61,10 +56,7 @@ in {
     gid = builtins.toString config.users.groups."${serviceName}".gid;
   in ''
     mkdir -p /persist/services/${serviceName}/config
-    touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} -R /persist/services/${serviceName}
-    chmod 750 /persist/services/${serviceName}
-    chmod 750 -R /persist/services/${serviceName}/config
-    chmod 600 /persist/services/${serviceName}/secrets.env
+    chmod 750 -R /persist/services/${serviceName}
   '';
 }

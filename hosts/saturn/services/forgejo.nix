@@ -84,7 +84,7 @@ in {
     touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
-    chmod 750 /persist/services/${serviceName}/{data,conf}
+    chmod 750 -R /persist/services/${serviceName}/{data,conf}
     chmod 600 /persist/services/${serviceName}/secrets.env
   '';
 
