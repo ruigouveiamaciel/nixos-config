@@ -12,7 +12,7 @@ in {
         user = serviceName;
       };
       extraOptions = [
-        "--device=/dev/dri/renderD128:/dev/dri/renderD128"
+        "--device=/dev/dri:/dev/dri"
       ];
       ports = [
         "10.0.50.10:8096:8096/tcp"

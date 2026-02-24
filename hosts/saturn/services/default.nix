@@ -14,6 +14,10 @@
     ./jellyfin.nix
     ./navidrome.nix
     ./homepage.nix
+    ./home-assistant.nix
+    ./immich.nix
+    ./restic.nix
+    ./paperless.nix
   ];
 
   security.apparmor.enable = true;

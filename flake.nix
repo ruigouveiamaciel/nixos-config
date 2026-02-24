@@ -41,7 +41,7 @@
       };
     };
 
-    opencode.url = "github:sst/opencode/v1.2.6";
+    opencode.url = "github:sst/opencode/v1.2.10";
   };
 
   outputs = inputs: let
