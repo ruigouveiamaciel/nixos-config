@@ -55,6 +55,7 @@ in {
     exclude = [
       "/persist/services/*/*.env"
       "/persist/services/${serviceName}"
+      "/persist/services/forgejo/data/git/repositories/mirrors"
     ];
     pruneOpts = [
       "--keep-daily 7"
