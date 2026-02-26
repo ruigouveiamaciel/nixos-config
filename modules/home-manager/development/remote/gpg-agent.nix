@@ -29,11 +29,18 @@ in {
         export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       fi
     '';
-    fish.shellInit = lib.mkIf config.services.gpg-agent.enable ''
-      if test -z "$SSH_CLIENT" -a -z "$SSH_TTY"
-        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-      end
-    '';
+    fish = {
+      shellInit = lib.mkIf config.services.gpg-agent.enable ''
+        if test -z "$SSH_CLIENT" -a -z "$SSH_TTY"
+          export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+        end
+      '';
+
+      shellAbbrs = {
+        use-ssh-agent = "ssh-agent -c | source";
+        rk = "ssh-agent -c | source && ssh-add -K";
+      };
+    };
     zsh.initExtra = lib.mkIf config.services.gpg-agent.enable ''
       if [[ -z $SSH_CLIENT && -z $SSH_TTY ]]; then
         export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)

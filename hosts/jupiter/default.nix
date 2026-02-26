@@ -17,7 +17,7 @@
   home-manager.users.rui.imports = [./home.nix];
 
   networking = {
-    hostName = "gaming-desktop";
+    hostName = "jupiter";
     hostId = "397d7c75";
     useDHCP = true;
   };

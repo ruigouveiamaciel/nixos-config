@@ -26,4 +26,6 @@
       };
     };
   };
+
+  home.file."${config.services.flameshot.settings.General.savePath}/.init".text = "";
 }

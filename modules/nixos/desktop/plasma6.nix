@@ -20,11 +20,12 @@
           };
         };
 
+        xdg.portal.enable = true;
+
         environment = {
           systemPackages = with pkgs; [wl-clipboard];
           plasma6.excludePackages = with pkgs.kdePackages; [
             kate
-            spectacle
             kmenuedit
             elisa
             khelpcenter
