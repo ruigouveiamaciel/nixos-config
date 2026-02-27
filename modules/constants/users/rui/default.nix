@@ -11,11 +11,7 @@
       };
       pgp = lib.mkOption {
         type = lib.types.path;
-        default = ./pgp.asc;
-      };
-      gpg-agent-keygrips = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = ["308155094625A2F5BA83D78EC1FEBB4FA9C3AC52"];
+        default = ./smokewow.asc;
       };
     };
   };

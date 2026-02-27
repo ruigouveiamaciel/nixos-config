@@ -30,6 +30,21 @@
     };
   };
 
+  hardware.printers = {
+    ensurePrinters = [
+      {
+        name = "Xerox_B225";
+        location = "Home";
+        deviceUri = "http://10.0.150.42:631";
+        model = "drv:///sample.drv/generic.ppd";
+        ppdOptions = {
+          PageSize = "A4";
+        };
+      }
+    ];
+    ensureDefaultPrinter = "Xerox_B225";
+  };
+
   # Don't hang boot because of network timeout
   boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;

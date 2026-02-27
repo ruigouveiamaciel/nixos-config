@@ -16,7 +16,6 @@ in {
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableScDaemon = true; # Enable support for smart cards
-    sshKeys = config.myConstants.users.rui.gpg-agent-keygrips;
     enableExtraSocket = true; # Required for agent forwarding
   };
 
