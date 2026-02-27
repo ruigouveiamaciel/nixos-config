@@ -20,6 +20,7 @@
 
   home-manager.users.rui.imports = [./home.nix];
   networking = {
+    hostName = "saturn";
     hostId = "b0d87d98";
     useDHCP = false;
     enableIPv6 = false;
