@@ -21,8 +21,8 @@ in {
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
-        "/persist/media/movies:/data/movies"
-        "/persist/media/downloads:/downloads"
+        "/persist/forced/media/movies:/data/movies"
+        "/persist/forced/media/downloads:/downloads"
       ];
     };
   };

@@ -34,4 +34,16 @@
     chown nobody:nogroup -R /persist/media
     chmod 777 -R /persist/media
   '';
+
+  fileSystems."/persist/forced/media" = {
+    device = "/persist/media";
+    fsType = "fuse.bindfs";
+    options = [
+      "force-user=nobody"
+      "force-group=nogroup"
+      "create-for-user=nobody"
+      "create-for-group=nogroup"
+      "perms=0777"
+    ];
+  };
 }

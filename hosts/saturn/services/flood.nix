@@ -15,8 +15,9 @@ in {
         "10.0.50.42:1337:3000/tcp"
       ];
       volumes = [
-        "/persist/services/${serviceName}/data:/usr/src/app:U"
-        "/persist/media/downloads:/downloads:ro"
+        # "/persist/services/${serviceName}/data:/usr/src/app:U"
+        "/persist/services/${serviceName}/data:/home/download/.local/share/flood:U"
+        "/persist/forced/media/downloads:/downloads:ro"
       ];
     };
   };

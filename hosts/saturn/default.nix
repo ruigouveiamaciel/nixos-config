@@ -20,7 +20,6 @@
 
   home-manager.users.rui.imports = [./home.nix];
   networking = {
-    hostName = "saturn";
     hostId = "b0d87d98";
     useDHCP = false;
     enableIPv6 = false;
@@ -37,10 +36,6 @@
         }
         {
           address = "10.0.50.10";
-          prefixLength = 24;
-        }
-        {
-          address = "10.0.50.200";
           prefixLength = 24;
         }
       ];

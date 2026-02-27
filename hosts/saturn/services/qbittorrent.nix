@@ -16,13 +16,16 @@ in {
         PUID = builtins.toString config.users.users.qbittorrent.uid;
         PGID = builtins.toString config.users.groups.qbittorrent.gid;
         WEBUI_PORT = "1338";
+        TORRENTING_PORT = "6881";
       };
       ports = [
         "10.0.50.42:1338:1338/tcp"
+        "10.0.50.42:6881:6881/tcp"
+        "10.0.50.42:6881:6881/udp"
       ];
       volumes = [
         "/persist/services/${serviceName}/data:/config:U"
-        "/persist/media/downloads:/downloads:ro"
+        "/persist/forced/media/downloads:/downloads"
       ];
     };
   };
@@ -49,10 +52,15 @@ in {
       }
     ];
   };
-
-  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
-    1338
-  ];
+  networking.firewall.interfaces.enp90s0 = {
+    allowedTCPPorts = [
+      1338
+      6881
+    ];
+    allowedUDPPorts = [
+      6881
+    ];
+  };
 
   boot.postBootCommands = let
     uid = builtins.toString config.users.users."${serviceName}".uid;

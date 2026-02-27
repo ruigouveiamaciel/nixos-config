@@ -5,8 +5,8 @@
     lfs.enable = true;
     settings = {
       user = {
-        email = "rui@iuseneovim.fyi";
-        name = "Rui Maciel";
+        email = "5m0k3w0w@proton.me";
+        name = "SmOkEwOw";
       };
     };
   };

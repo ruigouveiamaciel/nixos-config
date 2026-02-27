@@ -16,15 +16,16 @@ in {
       ];
       ports = [
         "10.0.50.10:8096:8096/tcp"
+        "10.0.50.42:8096:8096/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
         "/persist/services/${serviceName}/cache:/cache:U"
-        "/persist/media/movies:/data/movies:ro"
-        "/persist/media/tvshows:/data/tvshows:ro"
-        "/persist/media/anime:/data/anime:ro"
-        "/persist/media/test:/data/test:ro"
-        "/persist/media/personal:/data/personal:ro"
+        "/persist/forced/media/movies:/data/movies:ro"
+        "/persist/forced/media/tvshows:/data/tvshows:ro"
+        "/persist/forced/media/anime:/data/anime:ro"
+        "/persist/forced/media/test:/data/test:ro"
+        "/persist/forced/media/personal:/data/personal:ro"
       ];
     };
   };

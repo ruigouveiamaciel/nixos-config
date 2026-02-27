@@ -14,10 +14,11 @@ in {
       };
       ports = [
         "10.0.50.10:4533:4533/tcp"
+        "10.0.50.42:4533:4533/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/data:U"
-        "/persist/media/music:/music:ro"
+        "/persist/forced/media/music:/music:ro"
       ];
     };
   };
