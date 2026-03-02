@@ -8,6 +8,9 @@
         homebrew = {
           enable = true;
           onActivation.cleanup = "uninstall";
+          # enableFishIntegration = true;
+          # enableBashIntegration = true;
+          # enableZshIntegration = true;
         };
       }
     ]

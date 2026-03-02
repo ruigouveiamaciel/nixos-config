@@ -19,7 +19,6 @@ in rec {
 
   mkDarwinSystem = config:
     inputs.nix-darwin.lib.darwinSystem {
-      # system = "aarch64-darwin";
       specialArgs = {
         inherit inputs outputs myLib;
         myModulesPath = ./modules/nix-darwin;
