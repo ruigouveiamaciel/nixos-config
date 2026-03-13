@@ -9,8 +9,9 @@
   config = lib.mkMerge ([
       {
         home = {
-          packages = [
+          packages = with pkgs; [
             inputs.opencode.packages."${pkgs.stdenv.hostPlatform.system}".opencode
+            claude-code
           ];
           file = {
             "${config.home.homeDirectory}/.config/opencode".source = ./opencode;

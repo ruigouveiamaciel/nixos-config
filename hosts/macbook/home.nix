@@ -33,6 +33,7 @@
   };
 
   home = {
+    packages = with pkgs; [glab];
     sessionVariables = {
       GOPRIVATE = "go.axofinance.io";
     };
