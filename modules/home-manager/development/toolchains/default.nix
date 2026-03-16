@@ -6,6 +6,5 @@
     ./json.nix
     ./lua.nix
     ./nix.nix
-    ./sops.nix
   ];
 }

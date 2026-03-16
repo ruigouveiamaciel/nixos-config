@@ -49,13 +49,24 @@ in {
     };
     paths = [
       "/persist/services"
-      "/persist/media/personal"
       "/persist/nixos-config"
     ];
     exclude = [
       "/persist/services/*/*.env"
-      "/persist/services/${serviceName}"
+      "/persist/services/*/cache"
+      "/persist/services/bazarr/config/backup"
+      "/persist/services/bazarr/config/cache"
       "/persist/services/forgejo/data/git/repositories/mirrors"
+      "/persist/services/flaresolverr"
+      "/persist/services/immich/upload/encoded-video"
+      "/persist/services/immich/upload/backups"
+      "/persist/services/immich/upload/thumbs"
+      "/persist/services/jellyfin/cache"
+      "/persist/services/lidarr/config/Backups"
+      "/persist/services/navidrome/config/cache"
+      "/persist/services/prowlarr/config/Backups"
+      "/persist/services/radarr/config/Backups"
+      "/persist/services/sonarr/config/Backups"
     ];
     pruneOpts = [
       "--keep-daily 7"

@@ -9,7 +9,6 @@ in {
       autoStart = true;
       image = "ghcr.io/immich-app/immich-server:${version}";
       pull = "newer";
-      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
@@ -43,7 +42,6 @@ in {
       autoStart = true;
       image = "ghcr.io/immich-app/immich-machine-learning:${version}-openvino";
       pull = "newer";
-      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
@@ -69,7 +67,6 @@ in {
       autoStart = true;
       image = "docker.io/valkey/valkey:9@sha256:546304417feac0874c3dd576e0952c6bb8f06bb4093ea0c9ca303c73cf458f63";
       pull = "newer";
-      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
@@ -91,7 +88,6 @@ in {
       autoStart = true;
       image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23";
       pull = "newer";
-      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       podman = {
         sdnotify = "conmon";
         user = serviceName;

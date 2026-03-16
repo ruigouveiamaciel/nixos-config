@@ -57,32 +57,19 @@ in {
       };
       extraOptions = [
         "--network=${serviceName}"
-        "--device=/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_6c9223e7658cee11bd4805028acbdcd8-if00-port0"
+        "--group-add"
+        "keep-groups"
+        "--device=/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_6c9223e7658cee11bd4805028acbdcd8-if00-port0:/dev/ttyACM0"
       ];
       ports = [
         "10.0.50.42:8124:8080/tcp"
       ];
+      environment = {
+        TZ = config.time.timeZone;
+      };
       volumes = [
         "/persist/services/${serviceName}/zigbee2mqtt:/app/data:U"
-      ];
-      dependsOn = ["${serviceName}-mosquitto"];
-    };
-    "${serviceName}-node-red" = {
-      autoStart = true;
-      image = "docker.io/nodered/node-red:4.1";
-      pull = "newer";
-      podman = {
-        sdnotify = "conmon";
-        user = serviceName;
-      };
-      extraOptions = [
-        "--network=${serviceName}"
-      ];
-      ports = [
-        "10.0.50.42:8125:1880/tcp"
-      ];
-      volumes = [
-        "/persist/services/${serviceName}/node-red:/data:U"
+        "/run/udev:/run/udev:ro"
       ];
       dependsOn = ["${serviceName}-mosquitto"];
     };
@@ -112,6 +99,7 @@ in {
     packages = [config.virtualisation.podman.package];
     uid = serviceId;
     group = serviceName;
+    extraGroups = ["dialout"];
     home = "/var/lib/${serviceName}";
     createHome = true;
     subUidRanges = [
@@ -171,10 +159,6 @@ in {
       after = ["${serviceName}-network.service"];
     };
     "${config.virtualisation.oci-containers.containers."${serviceName}-zigbee2mqtt".serviceName}" = {
-      requires = ["${serviceName}-network.service"];
-      after = ["${serviceName}-network.service"];
-    };
-    "${config.virtualisation.oci-containers.containers."${serviceName}-node-red".serviceName}" = {
       requires = ["${serviceName}-network.service"];
       after = ["${serviceName}-network.service"];
     };
