@@ -8,14 +8,17 @@
     [
       {
         packages = with pkgs; [
-          spotify
+          (bottles.override
+            {
+              removeWarningPopup = true;
+            })
         ];
       }
     ]
     ++ (lib.optional (options.home ? "persistence") {
       persistence."/persist" = {
         directories = [
-          ".config/spotify"
+          ".local/share/bottles"
         ];
       };
     })

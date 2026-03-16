@@ -8,7 +8,9 @@
     "${myModulesPath}/desktop/plasma-settings.nix"
   ];
 
-  home.packages = with pkgs; [yubikey-manager];
+  home.packages = with pkgs; [
+    libreoffice
+  ];
 
   programs.fish.shellAbbrs = {
     "rebuild" = "cd /persist/nixos-config && sudo nixos-rebuild switch --log-format internal-json -v --flake .#jupiter &| nom --json";

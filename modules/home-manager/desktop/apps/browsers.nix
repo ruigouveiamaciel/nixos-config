@@ -7,6 +7,8 @@
   config = lib.mkMerge (
     [
       {
+        home.packages = with pkgs; [ungoogled-chromium];
+
         programs.firefox = {
           enable = true;
           package = pkgs.librewolf;

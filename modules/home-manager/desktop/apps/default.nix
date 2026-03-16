@@ -1,9 +1,10 @@
 {
   imports = [
-    ./librewolf.nix
+    ./browsers.nix
     ./discord.nix
-    ./spotify.nix
     ./kitty.nix
     ./flameshot.nix
+    ./bottles.nix
+    ./media.nix
   ];
 }
