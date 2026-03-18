@@ -4,8 +4,6 @@
 
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-packages.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +23,7 @@
 
     nvf = {
       url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs-packages";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     plasma-manager = {
@@ -35,8 +33,6 @@
         home-manager.follows = "home-manager";
       };
     };
-
-    opencode.url = "github:sst/opencode";
   };
 
   outputs = inputs: let
@@ -55,7 +51,7 @@
 
       packages = pkgsForAllSystems ({system, ...}: (import ./packages {
         inherit inputs;
-        pkgs = import inputs.nixpkgs-packages {
+        pkgs = import inputs.nixpkgs-unstable {
           inherit system;
         };
       }));

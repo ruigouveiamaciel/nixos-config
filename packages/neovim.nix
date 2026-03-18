@@ -36,9 +36,8 @@
     searchCase = "smart";
 
     options = {
-      wrap = false; # Disabled line wrapping
-      mouse = ""; # Disable mouse support
-      updatetime = 250; # Number of milliseconds before "Cursor hold" event is fired
+      wrap = false;
+      updatetime = 250;
       scrolloff = 15;
       colorcolumn = "80";
       timeoutlen = 400;
@@ -51,13 +50,6 @@
         mode = "n";
         action = "<cmd>nohlsearch<CR>";
         desc = "Clear highlight on search";
-      }
-      {
-        key = "<leader>fk";
-        mode = "n";
-        unique = true;
-        action = "<cmd>lua Snacks.picker.keymaps()<CR>";
-        desc = "Search keymaps";
       }
       {
         key = "gd";
@@ -88,12 +80,6 @@
         desc = "Goto type definitions";
       }
       {
-        key = "<C-j>";
-        mode = "n";
-        action = "<C-d>";
-        desc = "Alias for Ctrl-d";
-      }
-      {
         key = "<C-h>";
         mode = "n";
         action = "<C-w><C-h>";
@@ -121,6 +107,13 @@
         key = "<F1>";
         mode = "n";
         action = "<nop>";
+      }
+      {
+        key = "<leader>fk";
+        mode = "n";
+        unique = true;
+        action = "<cmd>lua Snacks.picker.keymaps()<CR>";
+        desc = "Search keymaps";
       }
       {
         key = "<leader>ft";
@@ -317,29 +310,11 @@
 
     augroups = [
       {
-        name = "highlight-yank";
-        clear = true;
-      }
-      {
         name = "nvf_nvim_lint";
       }
     ];
 
     autocmds = [
-      {
-        event = ["TextYankPost"];
-        group = "highlight-yank";
-        callback =
-          lib.mkLuaInline
-          /*
-          lua
-          */
-          ''
-            function(args)
-              vim.hl.on_yank()
-             end
-          '';
-      }
       {
         event = ["BufWritePost" "BufEnter" "TextChanged"];
         group = "nvf_nvim_lint";
@@ -581,22 +556,20 @@
       yaml.enable = true;
       rust.enable = true;
       python.enable = true;
-      svelte.enable = true;
-      tailwind.enable = true;
       sql.enable = true;
-      java.enable = true;
+      json.enable = true;
     };
 
     extraPlugins = {
       opencode-nvim = {
         package = pkgs.vimUtils.buildVimPlugin {
           pname = "opencode.nvim";
-          version = "2025-11-05";
+          version = "0.5.2";
           src = pkgs.fetchFromGitHub {
             owner = "NickvanDyke";
             repo = "opencode.nvim";
-            rev = "v0.5.1";
-            sha256 = "sha256-MYFlB+EPaCUzeztgTCxE9N6eam7Eo8zOtrmtnddvh58=";
+            rev = "v0.5.2";
+            sha256 = "sha256-MXmu06RfalvBb6kGb/Pr5mvVrFLvy93fY5qLAJ/nvVc=";
           };
           meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
           meta.hydraPlatforms = [];
@@ -607,22 +580,49 @@
           lua
           */
           ''
+            local opencode_cmd = 'opencode --port'
+            local snacks_terminal_opts = {
+              win = {
+                position = "float",
+                border = true,
+                enter = false,
+                on_win = function(win)
+                  require('opencode.terminal').setup(win.win)
+                end,
+              },
+            }
+
             vim.g.opencode_opts = {
-              auto_reload = true,
               events = {
+                reload = true,
                 permissions = {
                   enabled = false,
                 };
               };
+              server = {
+                start = function()
+                  require('snacks.terminal').open(opencode_cmd, snacks_terminal_opts)
+                end,
+                stop = function()
+                  require('snacks.terminal').get(opencode_cmd, snacks_terminal_opts):close()
+                end,
+                toggle = function()
+                  require('snacks.terminal').toggle(opencode_cmd, snacks_terminal_opts)
+                end,
+              },
             }
 
-            -- Required for `vim.g.opencode_opts.auto_reload`.
-            vim.o.autoread = true
+            vim.o.autoread = true -- Required for `opts.events.reload`
 
-            vim.keymap.set({"n", "x", "t"}, "<C-.>", function() require("opencode").toggle() end, { desc = "Toggle embedded" })
-            vim.keymap.set({"n", "x"}, "<leader>oa", function() require("opencode").prompt("@this") end, { desc = "Add this" })
-            vim.keymap.set({"n", "x", "t"},        "<A-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
-            vim.keymap.set({"n", "x", "t"},        "<A-C-j>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+            vim.keymap.set({ "n", "x" }, "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode…" })
+            vim.keymap.set({ "n", "x" }, "<leader>ox", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
+            vim.keymap.set({ "n", "t" }, "<C-.>",      function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+
+            vim.keymap.set({ "n", "x" }, "<leader>om",  function() return require("opencode").operator("@this ") end,        { desc = "Add range to opencode", expr = true })
+            vim.keymap.set("n",          "<leader>omm", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
+
+            vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "Scroll opencode up" })
+            vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
           '';
       };
     };

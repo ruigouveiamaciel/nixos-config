@@ -3,7 +3,7 @@
   packages = final: _prev:
     import ../packages {
       inherit inputs;
-      pkgs = import inputs.nixpkgs-packages {
+      pkgs = import inputs.nixpkgs-unstable {
         inherit (final) config;
         inherit (final.stdenv.hostPlatform) system;
       };

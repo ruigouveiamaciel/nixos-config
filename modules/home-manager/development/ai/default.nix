@@ -2,7 +2,6 @@
   lib,
   options,
   config,
-  inputs,
   pkgs,
   ...
 }: {
@@ -10,11 +9,11 @@
       {
         home = {
           packages = with pkgs; [
-            inputs.opencode.packages."${pkgs.stdenv.hostPlatform.system}".opencode
+            opencode
             claude-code
           ];
           file = {
-            "${config.home.homeDirectory}/.config/opencode".source = ./opencode;
+            "${config.home.homeDirectory}/.config/opencode/opencode.json".source = ./opencode/opencode.json;
           };
         };
       }
@@ -28,6 +27,7 @@
               ".cache/opencode"
               ".local/share/opencode"
               ".local/state/opencode"
+              ".claude"
             ];
           };
         };
