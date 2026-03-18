@@ -101,6 +101,16 @@
     }
   },
   "mcp": {
+    "nixos": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "nix",
+        "run",
+        "github:utensils/mcp-nixos",
+        "--"
+      ]
+    },
     "atlassian": {
       "enabled": false,
       "type": "local",

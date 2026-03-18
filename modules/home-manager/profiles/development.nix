@@ -1,6 +1,6 @@
 {myModulesPath, ...}: {
   imports = [
-    "${myModulesPath}/development/ai"
+    "${myModulesPath}/development/agents"
     "${myModulesPath}/development/editors/neovim.nix"
     "${myModulesPath}/development/remote/gpg-agent.nix"
     "${myModulesPath}/development/remote/ssh.nix"

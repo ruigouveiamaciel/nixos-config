@@ -627,8 +627,10 @@
             local snacks_terminal_opts = {
               win = {
                 position = "float",
-                border = true,
+                border = false,
                 enter = true,
+                height = 0.9999,
+                width = 0.9,
                 on_win = function(win)
                   require('opencode.terminal').setup(win.win)
                 end,
