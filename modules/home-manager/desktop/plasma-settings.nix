@@ -40,11 +40,95 @@
       }
     ];
 
+    window-rules = [
+      {
+        description = "Kitty on workspace 1 maximized";
+        match = {
+          window-class = {
+            value = "kitty kitty";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "17fa73e5-92c7-474b-9965-9b281f632d9d";
+            apply = "initially";
+          };
+          maximizehoriz = {
+            value = true;
+            apply = "initially";
+          };
+          maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+        };
+      }
+      {
+        description = "LibreWolf on workspace 4 maximized";
+        match = {
+          window-class = {
+            value = "librewolf librewolf";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "88d4ecc2-5849-4254-8295-607759b70c25";
+            apply = "initially";
+          };
+          maximizehoriz = {
+            value = true;
+            apply = "initially";
+          };
+          maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+        };
+      }
+      {
+        description = "Vesktop on workspace 10 maximized";
+        match = {
+          window-class = {
+            value = "electron vesktop";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "fe00c54d-8792-4c79-b8c2-eea7fd033356";
+            apply = "initially";
+          };
+          maximizehoriz = {
+            value = true;
+            apply = "initially";
+          };
+          maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+        };
+      }
+    ];
+
     configFile = {
       baloofilerc."Basic Settings"."Indexing-Enabled" = false;
       kwinrc = {
         "Effect-overview"."BorderActivate".value = 9;
-        "Desktops"."Number".value = 10;
+        "Desktops" = {
+          "Number".value = 10;
+          "Id_1".value = "17fa73e5-92c7-474b-9965-9b281f632d9d";
+          "Id_2".value = "da5ed6bd-9b1d-4a76-adbb-f1efe56e5718";
+          "Id_3".value = "bc0b02bd-037e-4a26-a0b8-470db1b9818c";
+          "Id_4".value = "88d4ecc2-5849-4254-8295-607759b70c25";
+          "Id_5".value = "27f88eb5-e254-4a91-85c0-7faf617b2c2f";
+          "Id_6".value = "eacd5a71-392c-472a-8c83-81d536176454";
+          "Id_7".value = "4961db74-0107-40d5-a78d-43da653fc331";
+          "Id_8".value = "f404a3ae-ec9c-4465-9ffc-ad015b8e9368";
+          "Id_9".value = "66f0dd2f-90c8-49c9-a105-49ad53537bf1";
+          "Id_10".value = "fe00c54d-8792-4c79-b8c2-eea7fd033356";
+        };
       };
       kdeglobals = {
         "KDE"."AnimationDurationFactor".value = 0;
