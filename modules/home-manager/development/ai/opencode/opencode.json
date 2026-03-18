@@ -1,11 +1,30 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
+  "permission": {
+    "*": "ask",
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "todoread": "allow",
+    "todowrite": "allow",
+    "lsp": "allow",
+    "skill": "allow",
+    "webfetch": "allow",
+    "websearch": "allow",
+    "question": "allow"
+  },
   "mcp": {
     "atlassian": {
       "enabled": false,
       "type": "local",
-      "command": ["npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse"]
+      "command": [
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://mcp.atlassian.com/v1/sse"
+      ]
     }
   }
 }
