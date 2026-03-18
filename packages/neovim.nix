@@ -370,6 +370,14 @@
                 height = 0.9;
               };
             };
+            sources = {
+              files = {
+                exclude = ["specs" "ai"];
+              };
+              grep = {
+                exclude = ["specs" "ai"];
+              };
+            };
           };
           input.enable = true;
           terminal.enable = true;

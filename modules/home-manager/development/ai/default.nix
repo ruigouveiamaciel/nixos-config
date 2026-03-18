@@ -12,6 +12,9 @@
             opencode
             claude-code
           ];
+          sessionVariables = {
+            OPENCODE_ENABLE_EXA = "1";
+          };
           file = {
             "${config.home.homeDirectory}/.config/opencode/opencode.json".source = ./opencode/opencode.json;
           };
