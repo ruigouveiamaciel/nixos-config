@@ -336,6 +336,41 @@
         pattern = ["*"];
         command = "wincmd =";
       }
+      {
+        # Keep cursor in opencode terminal and auto-enter insert mode
+        event = ["BufEnter" "WinEnter"];
+        pattern = ["*"];
+        callback =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function()
+              -- Find the opencode terminal window
+              local opencode_win = nil
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                local buf = vim.api.nvim_win_get_buf(win)
+                local bufname = vim.api.nvim_buf_get_name(buf)
+                if bufname:match("opencode") and vim.bo[buf].buftype == "terminal" then
+                  opencode_win = win
+                  break
+                end
+              end
+
+              -- If opencode terminal exists, focus it and enter insert mode
+              if opencode_win then
+                local current_win = vim.api.nvim_get_current_win()
+                if current_win ~= opencode_win then
+                  vim.api.nvim_set_current_win(opencode_win)
+                end
+                if vim.api.nvim_get_mode().mode ~= "t" then
+                  vim.cmd("startinsert")
+                end
+              end
+            end
+          '';
+      }
     ];
 
     binds.whichKey.enable = true;
