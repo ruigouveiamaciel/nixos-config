@@ -13,6 +13,7 @@
     "webfetch": "allow",
     "websearch": "allow",
     "question": "allow",
+    "nixos_nix": "allow",
     "read": {
       "*": "allow",
       "*.env": "deny",

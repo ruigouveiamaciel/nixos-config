@@ -629,8 +629,8 @@
                 position = "float",
                 border = false,
                 enter = true,
-                height = 0.9999,
-                width = 0.9,
+                height = 0.999,
+                width = 0.900,
                 on_win = function(win)
                   require('opencode.terminal').setup(win.win)
                 end,
