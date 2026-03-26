@@ -3,7 +3,12 @@
   lib,
   options,
   ...
-}: {
+}: let
+  haldclut = pkgs.fetchzip {
+    url = "http://rawtherapee.com/shared/HaldCLUT.zip";
+    sha256 = "sha256-OtsHpOKrZImvWnKCTqewyo2xjYg7dwpqxdXLVutfhzw=";
+  };
+in {
   home = lib.mkMerge (
     [
       {
@@ -14,6 +19,9 @@
           rawtherapee
           hdrmerge
         ];
+      }
+      {
+        file.".config/RawTherapee/clutsdir".source = haldclut;
       }
     ]
     ++ (lib.optional (options.home ? "persistence") {

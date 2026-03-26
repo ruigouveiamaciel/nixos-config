@@ -11,6 +11,7 @@
           packages = with pkgs.unstable; [
             opencode
             claude-code
+            lmstudio
           ];
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
@@ -31,6 +32,7 @@
               ".local/share/opencode"
               ".local/state/opencode"
               ".claude"
+              ".lmstudio"
             ];
           };
         };
