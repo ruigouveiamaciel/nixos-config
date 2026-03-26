@@ -8,7 +8,7 @@
   config = lib.mkMerge ([
       {
         home = {
-          packages = with pkgs; [
+          packages = with pkgs.unstable; [
             opencode
             claude-code
           ];
