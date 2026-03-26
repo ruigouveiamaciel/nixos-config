@@ -8,11 +8,12 @@
   config = lib.mkMerge ([
       {
         home = {
-          packages = with pkgs.unstable; [
-            opencode
-            claude-code
-            lmstudio
-          ];
+          packages = with pkgs.unstable;
+            [
+              opencode
+              claude-code
+            ]
+            ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio;
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
           };
