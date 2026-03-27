@@ -15,6 +15,7 @@
       "google-chrome"
       "dbeaver-community"
       "obsidian"
+      "lm-studio"
     ];
   };
 }
