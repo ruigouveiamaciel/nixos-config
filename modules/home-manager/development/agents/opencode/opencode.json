@@ -45,6 +45,19 @@
     "atlassian_getIssueLinkTypes": "allow",
     "atlassian_searchAtlassian": "allow",
     "atlassian_fetchAtlassian": "allow",
+    "sentry_whoami": "allow",
+    "sentry_find_organizations": "allow",
+    "sentry_find_teams": "allow",
+    "sentry_find_projects": "allow",
+    "sentry_find_releases": "allow",
+    "sentry_get_issue_tag_values": "allow",
+    "sentry_get_event_attachment": "allow",
+    "sentry_search_events": "allow",
+    "sentry_search_issues": "allow",
+    "sentry_search_issue_events": "allow",
+    "sentry_get_profile_details": "allow",
+    "sentry_get_sentry_resource": "allow",
+    "sentry_analyze_issue_with_seer": "allow",
     "read": {
       "*": "allow",
       "*.env": "deny",
@@ -143,13 +156,12 @@
       "name": "LM Studio (local)",
       "options": {
         "baseURL": "http://127.0.0.1:1234/v1"
-      },
-      "models": {}
+      }
     }
   },
   "mcp": {
     "nixos": {
-      "enabled": true,
+      "enabled": false,
       "type": "local",
       "command": [
         "nix",
@@ -166,6 +178,34 @@
         "-y",
         "mcp-remote",
         "https://mcp.atlassian.com/v1/sse"
+      ]
+    },
+    "sentry": {
+      "enabled": false,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://mcp.sentry.dev/mcp"
+      ]
+    },
+    "playwright": {
+      "enabled": false,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp-server"
+      ]
+    },
+    "context7": {
+      "enabled": false,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "context7-mcp"
       ]
     }
   }

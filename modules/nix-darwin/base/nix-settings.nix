@@ -19,10 +19,11 @@
 
     # Add each flake input as a registry
     # To make nix3 commands consistent with the flake
-    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
+    # registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
+    registry.nixpkgs.flake = lib.mkForce inputs.nixpkgs-darwin;
 
     # Add nixpkgs input to NIX_PATH
     # This lets nix2 commands still use <nixpkgs>
-    nixPath = ["nixpkgs=${inputs.nixpkgs.outPath}"];
+    nixPath = ["nixpkgs=${inputs.nixpkgs-darwin.outPath}"];
   };
 }

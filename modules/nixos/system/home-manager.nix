@@ -4,10 +4,16 @@
   myLib,
   myHomeManagerModulesPath,
   myConstantsModulesPath,
+  pkgs,
   ...
-}: {
+}: let
+  home-manager-input =
+    if pkgs.stdenv.isDarwin
+    then inputs.home-manager-darwin
+    else inputs.home-manager;
+in {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
+    home-manager-input.nixosModules.home-manager
   ];
 
   home-manager = {
