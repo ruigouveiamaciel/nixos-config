@@ -7,10 +7,31 @@
       wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/DarkestHour/contents/images/2560x1440.jpg";
       enableMiddleClickPaste = false;
     };
+
+    kscreenlocker = {
+      autoLock = false;
+      lockOnResume = false;
+    };
+
     powerdevil = {
-      AC.powerButtonAction = "shutDown";
-      battery.powerButtonAction = "shutDown";
-      lowBattery.powerButtonAction = "shutDown";
+      AC = {
+        powerButtonAction = "shutDown";
+        autoSuspend.action = "nothing";
+        turnOffDisplay.idleTimeout = "never";
+        dimDisplay.enable = false;
+      };
+      battery = {
+        powerButtonAction = "shutDown";
+        autoSuspend.action = "nothing";
+        turnOffDisplay.idleTimeout = "never";
+        dimDisplay.enable = false;
+      };
+      lowBattery = {
+        powerButtonAction = "shutDown";
+        autoSuspend.action = "nothing";
+        turnOffDisplay.idleTimeout = "never";
+        dimDisplay.enable = false;
+      };
     };
 
     input.mice = [

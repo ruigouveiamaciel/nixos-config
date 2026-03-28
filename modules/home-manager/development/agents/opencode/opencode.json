@@ -196,17 +196,13 @@
       "command": [
         "npx",
         "-y",
-        "@playwright/mcp-server"
+        "@playwright/mcp@latest"
       ]
     },
     "context7": {
       "enabled": false,
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "context7-mcp"
-      ]
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
     }
   }
 }

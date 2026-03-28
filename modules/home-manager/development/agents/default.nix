@@ -35,6 +35,9 @@
               ".claude"
               ".lmstudio"
             ];
+            files = [
+              ".claude.json"
+            ];
           };
         };
       }
