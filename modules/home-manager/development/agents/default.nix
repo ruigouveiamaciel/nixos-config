@@ -13,7 +13,7 @@
               opencode
               claude-code
             ]
-            ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio;
+            ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio; # Package is broken in darwin
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
           };
@@ -36,7 +36,10 @@
               ".lmstudio"
             ];
             files = [
-              ".claude.json"
+              {
+                file = ".claude.json";
+                method = "symlink";
+              }
             ];
           };
         };

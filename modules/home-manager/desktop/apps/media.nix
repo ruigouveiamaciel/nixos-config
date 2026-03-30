@@ -3,33 +3,30 @@
   lib,
   options,
   ...
-}: let
-  haldclut = pkgs.fetchzip {
-    url = "http://rawtherapee.com/shared/HaldCLUT.zip";
-    sha256 = "sha256-OtsHpOKrZImvWnKCTqewyo2xjYg7dwpqxdXLVutfhzw=";
-  };
-in {
-  home = lib.mkMerge (
+}: {
+  config = lib.mkMerge (
     [
       {
-        packages = with pkgs; [
-          vlc
-          aonsoku
-          spotify
-          rawtherapee
-          hdrmerge
-        ];
-      }
-      {
-        file.".config/RawTherapee/clutsdir".source = haldclut;
+        home = {
+          packages = with pkgs; [
+            vlc
+            spotify
+            rawtherapee
+            hdrmerge
+          ];
+
+          file.".config/RawTherapee/clutsdir".source = pkgs.fetchzip {
+            url = "http://rawtherapee.com/shared/HaldCLUT.zip";
+            sha256 = "sha256-OtsHpOKrZImvWnKCTqewyo2xjYg7dwpqxdXLVutfhzw=";
+          };
+        };
       }
     ]
     ++ (lib.optional (options.home ? "persistence") {
-      persistence."/persist" = {
+      home.persistence."/persist" = {
         directories = [
           ".config/spotify"
           ".config/RawTherapee"
-          ".local/share/com.victoralvesf.aonsoku"
         ];
       };
     })
