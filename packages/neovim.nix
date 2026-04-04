@@ -178,7 +178,7 @@
         desc = "Open parent directiory";
       }
       {
-        key = "<leader>gb";
+        key = "<leader>gu";
         mode = "n";
         action = "<CMD>lua Snacks.gitbrowse()<CR>";
         desc = "Open this file in github/gitlab";
@@ -259,6 +259,28 @@
               end
           '';
         desc = "Toggle git fugitive";
+      }
+      {
+        key = "<leader>gp";
+        mode = "n";
+        lua = true;
+        action =
+          /*
+          lua
+          */
+          ''
+            function()
+              local bufname = vim.api.nvim_buf_get_name(0)
+              if bufname == "" then
+                vim.notify("Buffer has no file path", vim.log.levels.WARN)
+                return
+              end
+              local absolute_path = vim.fn.fnamemodify(bufname, ":p")
+              vim.fn.setreg("+", absolute_path)
+              vim.notify("Copied: " .. absolute_path, vim.log.levels.INFO)
+            end
+          '';
+        desc = "Copy absolute buffer path";
       }
     ];
 
@@ -469,16 +491,6 @@
                   end
                 end,
                 cond = function() return vim.fn.reg_recording() ~= "" end,
-              }
-            ''
-          ];
-          z = [
-            /*
-            lua
-            */
-            ''
-              {
-                require("opencode").statusline
               }
             ''
           ];

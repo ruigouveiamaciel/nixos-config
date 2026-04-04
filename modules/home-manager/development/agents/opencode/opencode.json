@@ -2,8 +2,9 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
   "plugin": [
-    "opencode-claude-bridge@latest",
-    "opencode-lmstudio@latest"
+    "opencode-claude-bridge@1.8.0",
+    "opencode-lmstudio@0.3.0",
+    "@mohak34/opencode-notifier@0.2.0"
   ],
   "permission": {
     "*": "ask",
@@ -79,6 +80,7 @@
       "jq *": "allow",
       "grep *": "allow",
       "rg *": "allow",
+      "mkdir *": "allow",
       "git status*": "allow",
       "git log*": "allow",
       "git diff*": "allow",
@@ -148,6 +150,45 @@
       "docker rmi -f*": "deny",
       "killall*": "deny",
       "pkill*": "deny"
+    }
+  },
+  "agent": {
+    "plan": {
+      "model": "anthropic/claude-sonnet-4-6"
+    },
+    "build": {
+      "model": "anthropic/claude-haiku-4-5",
+      "permission": {
+        "bash": {
+          "git fetch origin main": "allow",
+          "git fetch origin master": "allow",
+          "git checkout *": "allow",
+          "git add *": "allow",
+          "git rm *": "allow"
+        }
+      }
+    },
+    "gitlab": {
+      "mode": "primary",
+      "model": "anthropic/claude-haiku-4-5",
+      "permission": {
+        "bash": {
+          "glab api user": "allow",
+          "glab mr create *": "allow",
+          "glab mr update *": "allow",
+          "glab ci trace *": "allow",
+          "glab api /projects/*/merge_requests": "allow",
+          "glab api /projects/*/merge_requests/*": "allow",
+          "glab api /projects/*/merge_requests/*/discussions": "allow",
+          "glab api /projects/*/merge_requests/*/discussions/*": "allow",
+          "glab api /projects/*/merge_requests/*/discussions/*/notes": "allow",
+          "glab api /projects/*/merge_requests/*/discussions/*/notes/*": "allow",
+          "glab api -X POST /projects/*/merge_requests/*/discussions/*/notes": "allow",
+          "glab api -X PUT /projects/*/merge_requests/*/discussions/*": "allow",
+          "glab api /projects/*/pipelines/*/jobs": "allow",
+          "glab api /projects/*/jobs/*/trace": "allow"
+        }
+      }
     }
   },
   "provider": {

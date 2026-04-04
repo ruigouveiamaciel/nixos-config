@@ -28,6 +28,7 @@
         "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
         "fo" = "cd ~/repos/frontend && nvim .";
         "no" = "cd ~/repos/nixos-config && nvim .";
+        "reviews" = "glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
       };
     };
   };
