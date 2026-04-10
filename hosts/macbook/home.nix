@@ -26,9 +26,10 @@
         "rebuild" = "cd ~/repos/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
         "build" = "cd ~/repos/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
         "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
+        "sod" = "cd ~/repos/frontend/apps/site-one && pnpm dev";
         "fo" = "cd ~/repos/frontend && nvim .";
         "no" = "cd ~/repos/nixos-config && nvim .";
-        "reviews" = "glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
+        "reviews" = "cd ~/repos/frontend && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
       };
     };
   };

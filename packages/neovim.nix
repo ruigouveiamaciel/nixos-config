@@ -429,10 +429,10 @@
             };
             sources = {
               files = {
-                exclude = ["specs" "ai"];
+                exclude = ["specs" "ai" "releases" "code-guidelines"];
               };
               grep = {
-                exclude = ["specs" "ai"];
+                exclude = ["specs" "ai" "releases" "code-guidelines"];
               };
             };
           };
