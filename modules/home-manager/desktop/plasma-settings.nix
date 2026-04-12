@@ -131,6 +131,29 @@
           };
         };
       }
+      {
+        description = "Steam on workspace 6 maximized";
+        match = {
+          window-class = {
+            value = "steamwebhelper steam";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "eacd5a71-392c-472a-8c83-81d536176454";
+            apply = "initially";
+          };
+          maximizehoriz = {
+            value = true;
+            apply = "initially";
+          };
+          maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+        };
+      }
     ];
 
     configFile = {
