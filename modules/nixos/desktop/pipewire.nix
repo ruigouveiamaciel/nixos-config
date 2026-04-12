@@ -23,7 +23,7 @@
           config = lib.mkMerge (lib.optional (options.home ? "persistence") {
             home.persistence."/persist" = {
               directories = [
-                ".local/state/wireplumber"
+                {directory = ".local/state/wireplumber"; mode = "0700";}
               ];
             };
           });

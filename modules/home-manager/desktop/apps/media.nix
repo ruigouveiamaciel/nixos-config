@@ -10,7 +10,6 @@
         home = {
           packages = with pkgs; [
             vlc
-            spotify
             rawtherapee
             hdrmerge
           ];
@@ -25,8 +24,7 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
-          ".config/spotify"
-          ".config/RawTherapee"
+          {directory = ".config/RawTherapee"; mode = "0700";}
         ];
       };
     })

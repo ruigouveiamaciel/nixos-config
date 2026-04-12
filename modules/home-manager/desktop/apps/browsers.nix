@@ -33,10 +33,10 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
-          ".librewolf"
-          ".cache/librewolf"
-          ".config/chromium"
-          ".cache/chromium"
+          {directory = ".librewolf"; mode = "0700";}
+          {directory = ".cache/librewolf"; mode = "0700";}
+          {directory = ".config/chromium"; mode = "0700";}
+          {directory = ".cache/chromium"; mode = "0700";}
         ];
       };
     })

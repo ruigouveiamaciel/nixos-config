@@ -21,9 +21,9 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
-          ".steam"
-          ".local/share/Steam"
-          ".factorio"
+          {directory = ".steam"; mode = "0700";}
+          {directory = ".local/share/Steam"; mode = "0700";}
+          {directory = ".factorio"; mode = "0700";}
         ];
       };
     }));

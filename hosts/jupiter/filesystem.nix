@@ -130,14 +130,14 @@
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
-      "/var/log"
-      "/var/lib/bluetooth"
-      "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
-      "/etc/NetworkManager/system-connections"
+      {directory = "/var/log"; user = "root"; group = "root"; mode = "0755";}
+      {directory = "/var/lib/bluetooth"; user = "root"; group = "root"; mode = "0700";}
+      {directory = "/var/lib/nixos"; user = "root"; group = "root"; mode = "0755";}
+      {directory = "/var/lib/systemd/coredump"; user = "root"; group = "root"; mode = "0755";}
+      {directory = "/etc/NetworkManager/system-connections"; user = "root"; group = "root"; mode = "0700";}
     ];
     files = [
-      "/etc/machine-id"
+      {file = "/etc/machine-id"; parentDirectory = {user = "root"; group = "root"; mode = "0755";};}
     ];
   };
 }

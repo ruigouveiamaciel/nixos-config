@@ -65,4 +65,8 @@ in {
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 -R /persist/services/${serviceName}
   '';
+
+  environment.persistence."/persist".directories = [
+    {directory = "/var/lib/${serviceName}/.local/share/containers/storage"; user = serviceName; group = serviceName; mode = "0700";}
+  ];
 }

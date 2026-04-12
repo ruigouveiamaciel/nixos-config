@@ -67,4 +67,8 @@ in {
     chmod 750 -R /persist/services/${serviceName}/config
     chmod 600 /persist/services/${serviceName}/secrets.env
   '';
+
+  environment.persistence."/persist".directories = [
+    {directory = "/var/lib/${serviceName}/.local/share/containers/storage"; user = serviceName; group = serviceName; mode = "0700";}
+  ];
 }
