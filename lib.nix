@@ -48,7 +48,10 @@ in rec {
     forAllSystems (system: let
       parsedSystem = inputs.nixpkgs.lib.systems.parse.mkSystemFromString system;
       isDarwin = inputs.nixpkgs.lib.systems.inspect.predicates.isDarwin parsedSystem;
-      nixpkgs = if isDarwin then inputs.nixpkgs-darwin else inputs.nixpkgs-linux;
+      nixpkgs =
+        if isDarwin
+        then inputs.nixpkgs-darwin
+        else inputs.nixpkgs;
     in
       f {
         inherit system;
