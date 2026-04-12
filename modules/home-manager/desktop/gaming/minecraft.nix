@@ -21,7 +21,10 @@
     ++ (lib.optional (options.home ? "persistence") {
       persistence."/persist" = {
         directories = [
-          {directory = ".local/share/PrismLauncher"; mode = "0700";}
+          {
+            directory = ".local/share/PrismLauncher";
+            mode = "0700";
+          }
         ];
       };
     })

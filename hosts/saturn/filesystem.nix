@@ -187,13 +187,40 @@
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
-      {directory = "/var/log"; user = "root"; group = "root"; mode = "0755";}
-      {directory = "/var/lib/nixos"; user = "root"; group = "root"; mode = "0755";}
-      {directory = "/var/lib/systemd/coredump"; user = "root"; group = "root"; mode = "0755";}
-      {directory = "/var/lib/containers/storage"; user = "root"; group = "root"; mode = "0700";}
+      {
+        directory = "/var/log";
+        user = "root";
+        group = "root";
+        mode = "0755";
+      }
+      {
+        directory = "/var/lib/nixos";
+        user = "root";
+        group = "root";
+        mode = "0755";
+      }
+      {
+        directory = "/var/lib/systemd/coredump";
+        user = "root";
+        group = "root";
+        mode = "0755";
+      }
+      {
+        directory = "/var/lib/containers/storage";
+        user = "root";
+        group = "root";
+        mode = "0700";
+      }
     ];
     files = [
-      {file = "/etc/machine-id"; parentDirectory = {user = "root"; group = "root"; mode = "0755";};}
+      {
+        file = "/etc/machine-id";
+        parentDirectory = {
+          user = "root";
+          group = "root";
+          mode = "0755";
+        };
+      }
     ];
   };
 }

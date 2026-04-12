@@ -44,10 +44,16 @@
           config = lib.mkMerge (lib.optional (options.home ? "persistence") {
             home.persistence."/persist" = {
               directories = [
-                {directory = ".local/share/kwalletd"; mode = "0700";}
+                {
+                  directory = ".local/share/kwalletd";
+                  mode = "0700";
+                }
               ];
               files = [
-                {file = ".config/kwalletrc"; parentDirectory = {mode = "0700";};}
+                {
+                  file = ".config/kwalletrc";
+                  parentDirectory = {mode = "0700";};
+                }
               ];
             };
           });

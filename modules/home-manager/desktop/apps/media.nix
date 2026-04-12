@@ -24,7 +24,10 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
-          {directory = ".config/RawTherapee"; mode = "0700";}
+          {
+            directory = ".config/RawTherapee";
+            mode = "0700";
+          }
         ];
       };
     })
