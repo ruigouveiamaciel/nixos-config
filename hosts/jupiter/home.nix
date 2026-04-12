@@ -1,15 +1,7 @@
-{
-  myModulesPath,
-  pkgs,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     "${myModulesPath}/desktop/apps"
     "${myModulesPath}/desktop/plasma-settings.nix"
-  ];
-
-  home.packages = with pkgs; [
-    libreoffice
   ];
 
   programs.fish.shellAbbrs = {

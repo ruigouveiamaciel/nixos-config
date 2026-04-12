@@ -12,6 +12,8 @@
             [
               opencode
               claude-code
+
+              mcp-nixos
             ]
             ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio; # Package is broken in darwin
           sessionVariables = {
@@ -23,8 +25,7 @@
             "${config.home.homeDirectory}/.config/opencode/opencode.json".source = ./opencode.json;
             "${config.home.homeDirectory}/.config/opencode/skills/caveman/SKILL.md".source = ./skills/caveman/SKILL.md;
             "${config.home.homeDirectory}/.config/opencode/skills/caveman-commit/SKILL.md".source = ./skills/caveman-commit/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/caveman-compress".source = ./skills/caveman-compress;
-            "${config.home.homeDirectory}/.config/opencode/skills/caveman-help/SKILL.md".source = ./skills/caveman-help/SKILL.md;
+            "${config.home.homeDirectory}/.config/opencode/skills/caveman-compress".source = ./skills/caveman-compress;
             "${config.home.homeDirectory}/.config/opencode/skills/caveman-review/SKILL.md".source = ./skills/caveman-review/SKILL.md;
           };
         };
