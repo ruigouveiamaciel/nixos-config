@@ -3,7 +3,7 @@
   "autoupdate": false,
   "instructions": [],
   "plugin": [
-    "opencode-claude-auth@latest",
+    "opencode-claude-auth@1.4.9",
     "@mohak34/opencode-notifier@0.2.0"
   ],
   "permission": {
@@ -170,7 +170,21 @@
       "glab repo view*": "allow",
       "git push --force*": "deny",
       "git push -f*": "deny",
-      "curl * | *sh*": "deny"
+      "curl * | *sh*": "deny",
+      "echo *": "deny",
+      "printf *": "deny",
+      "cat *": "deny",
+      "head *": "ask",
+      "tail *": "ask",
+      "less *": "deny",
+      "more *": "deny",
+      "ls *": "deny",
+      "ls": "deny",
+      "find *": "deny",
+      "grep *": "deny",
+      "rg *": "deny",
+      "sed *": "deny",
+      "awk *": "deny"
     },
     "nixos_nix": "allow",
     "atlassian_atlassianUserInfo": "allow",

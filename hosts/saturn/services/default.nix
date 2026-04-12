@@ -18,6 +18,7 @@
     ./immich.nix
     ./restic.nix
     ./paperless.nix
+    ./snikket.nix
   ];
 
   security.apparmor.enable = true;
