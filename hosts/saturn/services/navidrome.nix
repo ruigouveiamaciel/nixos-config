@@ -61,7 +61,7 @@ in {
 
   environment.persistence."/persist".directories = [
     {
-      directory = "/var/lib/${serviceName}/.local/share/containers/storage";
+      directory = "/var/lib/${serviceName}/.local/share/containers";
       user = serviceName;
       group = serviceName;
       mode = "0700";
