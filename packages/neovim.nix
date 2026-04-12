@@ -631,12 +631,12 @@
       opencode-nvim = {
         package = pkgs.vimUtils.buildVimPlugin {
           pname = "opencode.nvim";
-          version = "0.5.2";
+          version = "0.7.0";
           src = pkgs.fetchFromGitHub {
             owner = "NickvanDyke";
             repo = "opencode.nvim";
-            rev = "v0.5.2";
-            sha256 = "sha256-MXmu06RfalvBb6kGb/Pr5mvVrFLvy93fY5qLAJ/nvVc=";
+            rev = "v0.7.0";
+            sha256 = "sha256-A9uhcU1Wm4yDnaON8j6KVe7ahdKIkzW3cZwZK93RNew=";
           };
           meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
           meta.hydraPlatforms = [];
