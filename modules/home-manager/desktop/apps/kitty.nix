@@ -8,15 +8,25 @@
 
   programs.kitty = {
     enable = true;
-    package = pkgs.kitty;
+    package =
+      if pkgs.stdenv.isDarwin
+      then null
+      else pkgs.kitty;
     shellIntegration.enableFishIntegration = true;
+    settings = {
+      shell = "${pkgs.fish}/bin/fish";
+    };
     extraConfig = ''
       # Fonts
       font_family Iosevka Kitty Extended
       bold_font Iosevka Kitty Bold Extended
       italic_font Iosevka Kitty Extended Italic
       bold_italic_font Iosevka Kitty Bold Extended Italic
-      font_size 14.0
+      font_size ${
+        if pkgs.stdenv.isDarwin
+        then "16.0"
+        else "14.0"
+      }
 
       ## Source: https://github.com/catppuccin/kitty/blob/b14e8385c827f2d41660b71c7fec1e92bdcf2676/themes/macchiato.conf
       # vim:ft=kitty

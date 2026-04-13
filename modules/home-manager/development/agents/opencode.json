@@ -29,7 +29,7 @@
     "codesearch": "allow",
     "question": "allow",
     "read": {
-      "*": "deny",
+      "*": "ask",
       "*.nix": "allow",
       "*.md": "allow",
       "*.txt": "allow",
@@ -61,12 +61,18 @@
       "*.conf": "ask",
       "*.cfg": "ask",
       "*.ini": "ask",
-      "*.sh": "ask"
+      "*.sh": "ask",
+      "flake.lock": "ask",
+      "package-lock.json": "ask",
+      "yarn.lock": "ask",
+      "pnpm-lock.yaml": "ask",
+      "bun.lockb": "ask"
     },
     "external_directory": {
       "*": "deny",
       "$HOME/repos/*": "ask",
-      "$HOME/projects/*": "ask"
+      "$HOME/projects/*": "ask",
+      "$HOME/.local/share/opencode/tool-output/*": "allow"
     },
     "bash": {
       "*": "deny",
@@ -170,19 +176,26 @@
       "glab repo view*": "allow",
       "git push --force*": "deny",
       "git push -f*": "deny",
+      "sudo *": "deny",
+      "chmod *": "deny",
+      "chown *": "deny",
       "curl * | *sh*": "deny",
-      "echo *": "deny",
+      "rm -rf*": "deny",
+      "rm -fr*": "deny",
+      "rm *": "ask",
+      "echo *": "ask",
       "printf *": "deny",
-      "cat *": "deny",
+      "cat *": "ask",
       "head *": "ask",
       "tail *": "ask",
       "less *": "deny",
       "more *": "deny",
-      "ls *": "deny",
-      "ls": "deny",
+      "ls *": "ask",
+      "ls": "ask",
+      "mkdir *": "ask",
       "find *": "deny",
-      "grep *": "deny",
-      "rg *": "deny",
+      "grep *": "ask",
+      "rg *": "ask",
       "sed *": "deny",
       "awk *": "deny"
     },
@@ -200,12 +213,17 @@
   },
   "agent": {
     "plan": {
-      "model": "anthropic/claude-sonnet-4-6",
+      "model": "anthropic/claude-sonnet-4-5",
       "variant": "high"
     },
     "build": {
-      "model": "anthropic/claude-haiku-4-5",
+      "model": "anthropic/claude-sonnet-4-5",
       "variant": "high"
+    },
+    "caveman": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "variant": "high",
+      "prompt": "Load caveman skill immediately. Use caveman mode (full intensity) for all responses AND reasoning. Apply caveman compression to thinking blocks too. Drop articles, filler, hedging. Keep technical substance exact."
     }
   },
   "provider": {

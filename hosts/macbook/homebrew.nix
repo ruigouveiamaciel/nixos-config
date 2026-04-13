@@ -2,7 +2,6 @@
   homebrew = {
     casks = [
       "raycast"
-      "spotify"
       "slack"
       "notunes"
       "scroll-reverser"
@@ -13,6 +12,8 @@
       "capslocknodelay"
       "keymapp"
       "google-chrome"
+      "wezterm"
+      "kitty"
       "dbeaver-community"
       "obsidian"
       "lm-studio"

@@ -48,6 +48,7 @@
         theme = catppuccin-macchiato
         command = ${pkgs.fish}/bin/fish --login --interactive
         shell-integration = none
+        font-family = Iosevka Kitty Extended
         font-size = 16
         font-thicken = true
         font-thicken-strength = 32
