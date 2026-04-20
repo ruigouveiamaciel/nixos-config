@@ -1,8 +1,6 @@
 ---
 name: mymrflow-generate-changeset
 description: Generate a changeset following defined rules
-metadata:
-  parent: mymrflow
 ---
 
 # Steps

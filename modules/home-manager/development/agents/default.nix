@@ -1,8 +1,8 @@
 {
   lib,
   options,
-  config,
   pkgs,
+  inputs,
   ...
 }: {
   config = lib.mkMerge ([
@@ -14,6 +14,7 @@
               claude-code
 
               mcp-nixos
+              inputs.peon-ping.packages.${pkgs.stdenv.hostPlatform.system}.default
             ]
             ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio; # Package is broken in darwin
           sessionVariables = {
@@ -21,16 +22,12 @@
             OPENCODE_DISABLE_CLAUDE_CODE = "1";
             OPENCODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS = "720000";
           };
-          file = {
-            "${config.home.homeDirectory}/.config/opencode/opencode.json".source = ./opencode.json;
-            "${config.home.homeDirectory}/.config/opencode/skills/caveman/SKILL.md".source = ./skills/caveman-reasoning/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/caveman-commit/SKILL.md".source = ./skills/caveman-commit/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/caveman-compress".source = ./skills/caveman-compress;
-            "${config.home.homeDirectory}/.config/opencode/skills/caveman-review/SKILL.md".source = ./skills/caveman-review/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/mymrflow/SKILL.md".source = ./skills/mymrflow/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/mymrflow-check-pipeline/SKILL.md".source = ./skills/mymrflow-check-pipeline/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/mymrflow-generate-changeset/SKILL.md".source = ./skills/mymrflow-generate-changeset/SKILL.md;
-            "${config.home.homeDirectory}/.config/opencode/skills/mymrflow-generate-description/SKILL.md".source = ./skills/mymrflow-generate-description/SKILL.md;
+          activation = {
+            opencodePackageActivation = lib.hm.dag.entryAfter ["writeBoundary"] ''
+              mkdir -p $HOME/.config/opencode
+              ${pkgs.rsync}/bin/rsync -vH --recursive --delete --exclude=node_modules ${./opencode}/* $HOME/.config/opencode/
+              chmod -R u=rwX,g=,o= $HOME/.config/opencode
+            '';
           };
         };
       }

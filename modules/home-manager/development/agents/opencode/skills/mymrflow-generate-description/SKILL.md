@@ -1,8 +1,6 @@
 ---
 name: mymrflow-generate-description
 description: Generate concise MR description
-metadata:
-  parent: mymrflow
 ---
 
 # Steps

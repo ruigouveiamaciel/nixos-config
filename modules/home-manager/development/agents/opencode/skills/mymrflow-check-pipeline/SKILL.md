@@ -1,8 +1,6 @@
 ---
 name: mymrflow-check-pipeline
 description: Check GitLab pipeline status and unresolved review comments for the current merge request
-metadata:
-  parent: mymrflow
 ---
 
 # Steps

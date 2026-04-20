@@ -1,29 +1,21 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
-  "instructions": [],
   "plugin": [
-    "opencode-claude-auth@1.4.9",
-    "@mohak34/opencode-notifier@0.2.0"
+    "@ex-machina/opencode-anthropic-auth@1.7.4",
+    "@mohak34/opencode-notifier@0.2.0",
+    "opencode-lmstudio@0.3.0"
   ],
   "permission": {
     "*": "ask",
-    "task": {
-      "*": "ask",
-      "general": "allow",
-      "explore": "allow"
-    },
+    "task": "allow",
     "glob": "allow",
     "grep": "allow",
     "list": "allow",
     "todoread": "allow",
     "todowrite": "allow",
     "lsp": "allow",
-    "skill": {
-      "*": "ask",
-      "caveman": "allow",
-      "caveman-commit": "allow"
-    },
+    "skill": "allow",
     "webfetch": "allow",
     "websearch": "allow",
     "codesearch": "allow",
@@ -50,23 +42,7 @@
       "*.js": "allow",
       "*.jsx": "allow",
       "*.mjs": "allow",
-      "*.py": "allow",
-      "Makefile": "allow",
-      "Dockerfile": "allow",
-      "*.json": "ask",
-      "*.toml": "ask",
-      "*.yaml": "ask",
-      "*.yml": "ask",
-      "*.xml": "ask",
-      "*.conf": "ask",
-      "*.cfg": "ask",
-      "*.ini": "ask",
-      "*.sh": "ask",
-      "flake.lock": "ask",
-      "package-lock.json": "ask",
-      "yarn.lock": "ask",
-      "pnpm-lock.yaml": "ask",
-      "bun.lockb": "ask"
+      "*.py": "allow"
     },
     "external_directory": {
       "*": "deny",
@@ -219,16 +195,11 @@
     "build": {
       "model": "anthropic/claude-sonnet-4-5",
       "variant": "high"
-    },
-    "caveman": {
-      "model": "anthropic/claude-sonnet-4-5",
-      "variant": "high",
-      "prompt": "Load caveman skill immediately. Use caveman mode (full intensity) for all responses AND reasoning. Apply caveman compression to thinking blocks too. Drop articles, filler, hedging. Keep technical substance exact."
     }
   },
   "provider": {
     "lmstudio": {
-      "npm": "@ai-sdk/openai-compatible",
+      "npm": "@ai-sdk/openai-compatible@2.0.41",
       "name": "LM Studio (local)",
       "options": {
         "baseURL": "http://127.0.0.1:1234/v1"
@@ -252,15 +223,6 @@
       "enabled": false,
       "type": "remote",
       "url": "https://mcp.sentry.dev/mcp"
-    },
-    "playwright": {
-      "enabled": false,
-      "type": "local",
-      "command": [
-        "pnpx",
-        "-y",
-        "@playwright/mcp@latest"
-      ]
     }
   }
 }
