@@ -2,21 +2,20 @@
   lib,
   options,
   pkgs,
-  inputs,
   ...
 }: {
   config = lib.mkMerge ([
       {
+        programs.fish.shellAliases = {
+          "pi" = "pnpx @mariozechner/pi-coding-agent@0.69.0";
+        };
         home = {
-          packages = with pkgs.unstable;
-            [
-              opencode
-              claude-code
+          packages = with pkgs.unstable; [
+            opencode
+            claude-code
 
-              mcp-nixos
-              inputs.peon-ping.packages.${pkgs.stdenv.hostPlatform.system}.default
-            ]
-            ++ lib.optional (!pkgs.stdenv.isDarwin) lmstudio; # Package is broken in darwin
+            mcp-nixos
+          ];
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
             OPENCODE_DISABLE_CLAUDE_CODE = "1";
@@ -42,7 +41,6 @@
               ".local/share/opencode"
               ".local/state/opencode"
               ".claude"
-              ".lmstudio"
             ];
             files = [
               {

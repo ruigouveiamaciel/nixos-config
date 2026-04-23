@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@opencode-ai/plugin": "1.14.19",
-    "@types/bun": "1.3.12",
-    "@types/node": "25.6.0",
-    "unbash": "2.2.0"
-  }
-}
