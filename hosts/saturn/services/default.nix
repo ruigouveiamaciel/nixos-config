@@ -19,6 +19,7 @@
     ./restic.nix
     ./paperless.nix
     ./snikket.nix
+    ./searxng.nix
   ];
 
   security.apparmor.enable = true;
