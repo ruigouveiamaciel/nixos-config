@@ -4,7 +4,10 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("undo", {
     description: "Revert to just before the last user prompt",
     handler: async (_args, ctx) => {
-      await ctx.waitForIdle();
+      if (!ctx.isIdle()) {
+        ctx.ui.notify("Cannot undo while the agent is working", "error");
+        return;
+      }
 
       const branch = ctx.sessionManager.getBranch();
 
