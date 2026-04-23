@@ -618,76 +618,13 @@
       bash.enable = true;
       css.enable = true;
       html.enable = true;
-      ts.enable = true;
+      typescript.enable = true;
       go.enable = true;
       yaml.enable = true;
       rust.enable = true;
       python.enable = true;
       sql.enable = true;
       json.enable = true;
-    };
-
-    extraPlugins = {
-      opencode-nvim = {
-        package = pkgs.vimUtils.buildVimPlugin {
-          pname = "opencode.nvim";
-          version = "0.7.0";
-          src = pkgs.fetchFromGitHub {
-            owner = "NickvanDyke";
-            repo = "opencode.nvim";
-            rev = "v0.7.0";
-            sha256 = "sha256-A9uhcU1Wm4yDnaON8j6KVe7ahdKIkzW3cZwZK93RNew=";
-          };
-          meta.homepage = "https://github.com/NickvanDyke/opencode.nvim/";
-          meta.hydraPlatforms = [];
-        };
-        after = ["snacks-nvim"];
-        setup =
-          /*
-          lua
-          */
-          ''
-            local opencode_cmd = 'opencode --port'
-            local snacks_terminal_opts = {
-              win = {
-                position = "float",
-                border = false,
-                enter = true,
-                height = 0.999,
-                width = 0.900,
-                on_win = function(win)
-                  require('opencode.terminal').setup(win.win)
-                end,
-              },
-            }
-
-            vim.g.opencode_opts = {
-              events = {
-                reload = true,
-                permissions = {
-                  enabled = false,
-                };
-              };
-              server = {
-                start = function()
-                  local term = require('snacks.terminal').open(opencode_cmd, snacks_terminal_opts)
-                end,
-                stop = function()
-                  require('snacks.terminal').get(opencode_cmd, snacks_terminal_opts):close()
-                end,
-                toggle = function()
-                  local term = require('snacks.terminal').toggle(opencode_cmd, snacks_terminal_opts)
-                end,
-              },
-            }
-
-            vim.o.autoread = true -- Required for `opts.events.reload`
-
-            vim.keymap.set({ "n", "t" }, "<C-.>",      function() require("opencode").toggle() end,                                 { desc = "Toggle opencode" })
-            vim.keymap.set({ "n", "x" }, "<leader>om",  function() return require("opencode").operator("@this ") end,               { desc = "Add range to opencode", expr = true })
-            vim.keymap.set("n",          "<leader>omm", function() return require("opencode").operator("@this ") .. "_" end,        { desc = "Add line to opencode",  expr = true })
-          '';
-      };
     };
   };
 }
