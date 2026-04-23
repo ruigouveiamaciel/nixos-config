@@ -68,7 +68,7 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       access: "write",
       action: "deny",
       reason:
-        "pi agent configuration is now stored in the NixOS configuration, usually on: /persist/nixos-config/ or ~/repos/nixos-config/",
+        "pi agent configuration is now stored in the NixOS configuration, usually on: /persist/nixos-config/modules/home-manager/development/agents/pi/ or ~/repos/nixos-config/modules/home-manager/development/agents/pi/",
     },
     {
       globs: ["~/repos/**", "~/projects/**", "/persist/nixos-config/**"],
