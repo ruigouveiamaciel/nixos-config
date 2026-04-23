@@ -29,7 +29,7 @@ interface FilesystemPermissionRule {
 const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
   [
     {
-      globs: ["~/Library/Caches/pnpm/**"],
+      globs: ["~/Library/Caches/pnpm/**", "~/.cache/pnpm/**"],
       access: "read",
       action: "allow",
       reason: "can contain useful documentation.",
@@ -71,7 +71,7 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
         "pi agent configuration is now stored in the NixOS configuration, usually on: /persist/nixos-config/ or ~/repos/nixos-config/",
     },
     {
-      globs: ["~/repos/**", "~/projects/**"],
+      globs: ["~/repos/**", "~/projects/**", "/persist/nixos-config/**"],
       access: "readwrite",
       action: "allow",
     },
@@ -90,7 +90,7 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
 const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
   [
     {
-      globs: ["~/Library/Caches/pnpm/**"],
+      globs: ["~/Library/Caches/pnpm/**", "~/.cache/pnpm/**"],
       access: "read",
       action: "allow",
       reason: "can contain useful documentation.",
