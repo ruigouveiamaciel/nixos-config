@@ -5,8 +5,8 @@ export default function (pi: ExtensionAPI) {
     description: "Revert to just before the last user prompt",
     handler: async (_args, ctx) => {
       if (!ctx.isIdle()) {
-        ctx.ui.notify("Cannot undo while the agent is working", "error");
-        return;
+        ctx.abort();
+        await ctx.waitForIdle();
       }
 
       const branch = ctx.sessionManager.getBranch();
