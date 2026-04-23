@@ -15,7 +15,6 @@ in {
         "10.0.50.42:1337:3000/tcp"
       ];
       volumes = [
-        # "/persist/services/${serviceName}/data:/usr/src/app:U"
         "/persist/services/${serviceName}/data:/home/download/.local/share/flood:U"
         "/persist/forced/media/downloads:/downloads:ro"
       ];
@@ -53,6 +52,9 @@ in {
     uid = builtins.toString config.users.users."${serviceName}".uid;
     gid = builtins.toString config.users.groups."${serviceName}".gid;
   in ''
+    mkdir -p /var/lib/${serviceName}
+    chown ${uid}:${gid} /var/lib/${serviceName}
+    chmod 750 /var/lib/${serviceName}
     mkdir -p /persist/services/${serviceName}/data
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 -R /persist/services/${serviceName}

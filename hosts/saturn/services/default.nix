@@ -18,7 +18,6 @@
     ./immich.nix
     ./restic.nix
     ./paperless.nix
-    ./snikket.nix
     ./searxng.nix
   ];
 

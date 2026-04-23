@@ -131,6 +131,9 @@ in {
     uid = builtins.toString config.users.users."${serviceName}".uid;
     gid = builtins.toString config.users.groups."${serviceName}".gid;
   in ''
+    mkdir -p /var/lib/${serviceName}
+    chown ${uid}:${gid} /var/lib/${serviceName}
+    chmod 750 /var/lib/${serviceName}
     mkdir -p /persist/services/${serviceName}/{database,media,export,consume,redis}
     touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} /persist/services/${serviceName}
@@ -144,7 +147,8 @@ in {
 
   systemd.services = {
     "${serviceName}-network" = {
-      wantedBy = ["multi-user.target"];
+      requires = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
+      after = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
       script = let
         podman = "${config.virtualisation.podman.package}/bin/podman";
       in ''

@@ -126,6 +126,9 @@ in {
     uid = builtins.toString config.users.users."${serviceName}".uid;
     gid = builtins.toString config.users.groups."${serviceName}".gid;
   in ''
+    mkdir -p /var/lib/${serviceName}
+    chown ${uid}:${gid} /var/lib/${serviceName}
+    chmod 750 /var/lib/${serviceName}
     mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt,node-red}
     mkdir -p /persist/services/${serviceName}/mosquitto/{data,log}
     touch /persist/services/${serviceName}/secrets.env
@@ -137,7 +140,8 @@ in {
 
   systemd.services = {
     "${serviceName}-network" = {
-      wantedBy = ["multi-user.target"];
+      requires = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
+      after = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
       script = let
         podman = "${config.virtualisation.podman.package}/bin/podman";
       in ''
