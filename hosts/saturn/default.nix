@@ -65,6 +65,12 @@
   time.timeZone = "Etc/UTC";
   systemd.network.wait-online.enable = false;
 
+  services.journald.extraConfig = ''
+    SystemMaxUse=2G
+    SystemKeepFree=1G
+    MaxRetentionSec=2592000
+  '';
+
   systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
     lib.attrsets.nameValuePair serviceName {
       serviceConfig = {

@@ -205,12 +205,6 @@
         group = "root";
         mode = "0755";
       }
-      {
-        directory = "/var/lib/containers/storage";
-        user = "root";
-        group = "root";
-        mode = "0700";
-      }
     ];
     files = [
       {
