@@ -15,6 +15,7 @@
             claude-code
 
             mcp-nixos
+            lynx
           ];
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
@@ -26,6 +27,16 @@
               mkdir -p $HOME/.config/opencode
               ${pkgs.rsync}/bin/rsync -vH --recursive --delete --exclude=node_modules ${./opencode}/* $HOME/.config/opencode/
               chmod -R u=rwX,g=,o= $HOME/.config/opencode
+            '';
+            piPackageActivation = lib.hm.dag.entryAfter ["writeBoundary"] ''
+              mkdir -p $HOME/.pi/agent
+              ${pkgs.rsync}/bin/rsync -vH --recursive --delete \
+                --exclude=node_modules \
+                --exclude=sessions \
+                --exclude=auth.json \
+                --exclude=models.json \
+                ${./pi}/* $HOME/.pi/agent/
+              chmod -R u=rwX,g=,o= $HOME/.pi
             '';
           };
         };
@@ -41,6 +52,7 @@
               ".local/share/opencode"
               ".local/state/opencode"
               ".claude"
+              ".pi/agent"
             ];
             files = [
               {
