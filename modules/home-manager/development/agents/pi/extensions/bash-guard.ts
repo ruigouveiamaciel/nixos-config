@@ -27,12 +27,14 @@ export default function (pi: ExtensionAPI) {
           };
         }
 
-        const accepted = await ctx.ui.confirm(
-          `Allow ${event.toolName}?`,
-          command,
+        const choice = await ctx.ui.select(
+          `Allow ${event.toolName}?\n${command}`,
+          ["Yes", "No"],
         );
 
-        if (!accepted) {
+        if (!choice) {
+          return ctx.abort();
+        } else if (choice === "No") {
           const reason = await ctx.ui.input(
             `Deny reason?`,
             "Leave empty to deny silently",

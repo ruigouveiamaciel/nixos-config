@@ -11,7 +11,7 @@ export default function (pi: ExtensionAPI) {
         isToolCallEventType("write", event)) &&
       event.input.path
     ) {
-      await handlePathPermissionCheck({
+      return await handlePathPermissionCheck({
         path: event.input.path,
         access: "write",
         ctx: ctx,

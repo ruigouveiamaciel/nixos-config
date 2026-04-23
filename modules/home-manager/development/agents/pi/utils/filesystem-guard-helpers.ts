@@ -1,14 +1,12 @@
 import { ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { lstatSync } from "node:fs";
 import { homedir } from "node:os";
-import {
-  resolve,
-  normalize,
-  matchesGlob,
-  isAbsolute,
-  basename,
-  dirname,
-} from "node:path";
+import { resolve, normalize, isAbsolute, basename, dirname } from "node:path";
+import { minimatch } from "minimatch";
+
+function matchesGlob(path: string, pattern: string): boolean {
+  return minimatch(path, pattern, { dot: true });
+}
 
 function expandHome(path: string): string {
   if (path.startsWith("~/")) {
@@ -34,6 +32,13 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       globs: ["~/Library/Caches/pnpm/**"],
       access: "read",
       action: "allow",
+      reason: "can contain useful documentation.",
+    },
+    {
+      globs: ["/var/folders/**"],
+      access: "read",
+      action: "ask",
+      reason: "can contain tool outputs.",
     },
     {
       globs: ["~/.pi/agent/auth.json", "~/.ssh/id_*"],
@@ -55,13 +60,26 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
     },
     {
       globs: ["~/.pi/agent/**"],
-      access: "readwrite",
+      access: "read",
       action: "allow",
+    },
+    {
+      globs: ["~/.pi/agent/**"],
+      access: "write",
+      action: "deny",
+      reason:
+        "pi agent configuration is now stored in the NixOS configuration, usually on: /persist/nixos-config/ or ~/repos/nixos-config/",
     },
     {
       globs: ["~/repos/**", "~/projects/**"],
       access: "readwrite",
       action: "allow",
+    },
+    {
+      globs: ["/tmp/**"],
+      access: "readwrite",
+      action: "ask",
+      reason: "temporary files can contain sensitive information temporarily.",
     },
   ] satisfies FilesystemPermissionRule[]
 ).map((rule) => ({
@@ -69,40 +87,57 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
   globs: rule.globs.map(expandHome).map(normalize),
 }));
 
-const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = [
-  {
-    globs: ["**/"],
-    access: "read",
-    action: "allow",
-  },
-  {
-    globs: [
-      "**/*.nix",
-      "**/*.md",
-      "**/*.txt",
-      "**/*.html",
-      "**/*.css",
-      "**/*.scss",
-      "**/*.sass",
-      "**/*.rs",
-      "**/*.go",
-      "**/*.java",
-      "**/*.c",
-      "**/*.cpp",
-      "**/*.h",
-      "**/*.hpp",
-      "**/*.svg",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.js",
-      "**/*.jsx",
-      "**/*.mjs",
-      "**/*.py",
-    ],
-    access: "read",
-    action: "allow",
-  },
-];
+const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
+  [
+    {
+      globs: ["~/Library/Caches/pnpm/**"],
+      access: "read",
+      action: "allow",
+      reason: "can contain useful documentation.",
+    },
+    {
+      globs: ["~/.pi/agent/skills/**"],
+      access: "read",
+      action: "allow",
+      reason: "allow reading skills.",
+    },
+    {
+      globs: ["**/"],
+      access: "read",
+      action: "allow",
+    },
+    {
+      globs: [
+        "**/*.nix",
+        "**/*.md",
+        "**/*.txt",
+        "**/*.html",
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.rs",
+        "**/*.go",
+        "**/*.java",
+        "**/*.c",
+        "**/*.cpp",
+        "**/*.h",
+        "**/*.hpp",
+        "**/*.svg",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.mjs",
+        "**/*.py",
+      ],
+      access: "read",
+      action: "allow",
+    },
+  ] satisfies FilesystemPermissionRule[]
+).map((rule) => ({
+  ...rule,
+  globs: rule.globs.map(expandHome).map(normalize),
+}));
 
 const SESSION_FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = [];
 const SESSION_FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = [];
@@ -270,8 +305,8 @@ export async function handlePathPermissionCheck(args: {
 }) {
   const permission =
     args.access === "read"
-      ? isWriteAllowed({ path: args.path, cwd: args.ctx.cwd })
-      : isReadAllowed({ path: args.path, cwd: args.ctx.cwd });
+      ? isReadAllowed({ path: args.path, cwd: args.ctx.cwd })
+      : isWriteAllowed({ path: args.path, cwd: args.ctx.cwd });
 
   const gerund = args.access === "read" ? "reading" : "editing";
 
@@ -293,11 +328,13 @@ export async function handlePathPermissionCheck(args: {
     const options = ["Yes", "Yes, allow edits during this session", "No"];
 
     const selectedOption = await args.ctx.ui.select(
-      `Allow ${gerund}?\n${args.path}`,
+      `Allow ${gerund}? Reason: ${permission.reason || "None provided."}\n${args.path}`,
       options,
     );
 
-    if (selectedOption === options[2]) {
+    if (!selectedOption) {
+      return args.ctx.abort();
+    } else if (selectedOption === options[2]) {
       const reason = await args.ctx.ui.input(
         `Deny reason?`,
         "Leave empty to deny silently",
@@ -319,6 +356,8 @@ export async function handlePathPermissionCheck(args: {
           glob: selectedGlob,
           access: args.access === "read" ? "read" : "readwrite",
         });
+      } else {
+        return args.ctx.abort();
       }
     }
   }

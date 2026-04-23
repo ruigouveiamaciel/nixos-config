@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@mariozechner/pi-coding-agent": "0.68.0",
+    "minimatch": "10.2.5",
     "unbash": "2.2.0"
   }
 }
