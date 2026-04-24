@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "atlassian": {
+      "description": "Atlassian Rovo Remote MCP Server (Jira, Confluence, JSM, Compass)",
+      "baseUrl": "https://mcp.atlassian.com/v1/mcp",
+      "auth": "oauth"
+    }
+  },
+  "imports": []
+}

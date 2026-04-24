@@ -15,6 +15,7 @@
             claude-code
 
             mcp-nixos
+            mcporter
             lynx
           ];
           sessionVariables = {
@@ -53,6 +54,7 @@
               ".local/state/opencode"
               ".claude"
               ".pi/agent"
+              ".mcporter"
             ];
             files = [
               {
