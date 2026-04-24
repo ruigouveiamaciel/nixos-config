@@ -16,13 +16,8 @@ First check if already authenticated:
 {baseDir}/atlassian.sh status
 ```
 
-If `unauthenticated`, guide the user through setup:
-
-1. Ask them to run `{baseDir}/atlassian.sh auth` — it opens a browser on
-   Atlassian's consent page
-2. They click "Allow"; mcporter persists and auto-refreshes the tokens
-
-The agent cannot run `auth` itself — it needs a browser.
+If `unauthenticated`, run `{baseDir}/atlassian.sh auth` — it opens a browser on
+Atlassian's consent page asking the user to authenticate.
 
 ## Usage
 
@@ -77,12 +72,4 @@ Example — current user's open issues:
 
 ## When Not to Use
 
-- Atlassian Server/DC (non-Cloud) — use
-  [sooperset/mcp-atlassian](https://github.com/sooperset/mcp-atlassian) instead.
 - Truly headless environments with no browser available for the one-time auth.
-
-## Data Storage
-
-- `~/.mcporter/` — OAuth tokens (managed by mcporter; layout is internal — do
-  not read)
-- `{baseDir}/mcporter.json` — server config
