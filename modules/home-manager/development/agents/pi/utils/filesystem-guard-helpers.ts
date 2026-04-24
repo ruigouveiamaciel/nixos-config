@@ -340,6 +340,7 @@ export async function handlePathPermissionCheck(args: {
         "Leave empty to deny silently",
       );
 
+      if (reason === undefined) return args.ctx.abort();
       return { block: true, reason: reason?.trim() || undefined };
     } else if (selectedOption === options[1]) {
       const suggestedGlob = getGlobSuggestions({
