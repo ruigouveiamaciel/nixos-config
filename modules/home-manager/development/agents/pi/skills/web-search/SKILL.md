@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: Web search via self-hosted SearXNG. Aggregates 70+ engines (Google, Bing, DuckDuckGo, Wikipedia, GitHub, StackOverflow, ...) with no API keys and no rate limits. Use for documentation, facts, current events, or any web search.
+description: Web search via self-hosted service. Aggregates 70+ engines (Google, Bing, DuckDuckGo, Wikipedia, GitHub, StackOverflow, ...). Use for documentation, facts, current events, or any web search.
 ---
 
 # SearXNG
