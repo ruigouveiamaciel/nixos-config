@@ -41,7 +41,7 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       reason: "can contain tool outputs.",
     },
     {
-      globs: ["~/.pi/agent/auth.json", "~/.ssh/id_*"],
+      globs: ["~/.pi/agent/auth.json", "~/.ssh/id_*", "**/*.env"],
       access: "readwrite",
       action: "deny",
       reason: "contains credentials.",
