@@ -8,7 +8,7 @@ function matchesGlob(path: string, pattern: string): boolean {
   return minimatch(path, pattern, { dot: true });
 }
 
-function expandHome(path: string): string {
+export function expandHome(path: string): string {
   if (path.startsWith("~/")) {
     return resolve(homedir(), path.slice(2));
   }
@@ -105,6 +105,7 @@ const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
       globs: ["**/"],
       access: "read",
       action: "allow",
+      reason: "allow reading directory structures.",
     },
     {
       globs: [
