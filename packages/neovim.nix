@@ -262,7 +262,10 @@
       }
       {
         key = "<leader>gp";
-        mode = "n";
+        mode = [
+          "n"
+          "v"
+        ];
         lua = true;
         action =
           /*
@@ -276,11 +279,37 @@
                 return
               end
               local absolute_path = vim.fn.fnamemodify(bufname, ":p")
-              vim.fn.setreg("+", absolute_path)
-              vim.notify("Copied: " .. absolute_path, vim.log.levels.INFO)
+              local mode = vim.fn.mode()
+              local start_line, end_line
+              if mode == "v" or mode == "V" or mode == "\22" then
+                -- In visual mode: use the current visual selection bounds
+                start_line = vim.fn.line("v")
+                end_line = vim.fn.line(".")
+                if start_line > end_line then
+                  start_line, end_line = end_line, start_line
+                end
+                -- Exit visual mode so the selection marks settle
+                vim.api.nvim_feedkeys(
+                  vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+                  "n",
+                  false
+                )
+              else
+                start_line = vim.fn.line(".")
+                end_line = start_line
+              end
+              local suffix
+              if start_line == end_line then
+                suffix = ":L" .. start_line
+              else
+                suffix = ":L" .. start_line .. "-" .. end_line
+              end
+              local result = absolute_path .. suffix
+              vim.fn.setreg("+", result)
+              vim.notify("Copied: " .. result, vim.log.levels.INFO)
             end
           '';
-        desc = "Copy absolute buffer path";
+        desc = "Copy absolute buffer path with line numbers";
       }
     ];
 
