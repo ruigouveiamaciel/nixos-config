@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "nixos": {
+      "description": "Local mcp-nixos server — NixOS / Home Manager / nix-darwin / flakes / Nixvim / Noogle / NixHub / Wiki / nix.dev lookups.",
+      "command": "mcp-nixos"
+    }
+  },
+  "imports": []
+}
