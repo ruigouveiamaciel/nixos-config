@@ -1,121 +1,112 @@
 ---
 name: web-search
-description: Web search via a self-hosted SearXNG metasearch instance. Aggregates 70+ engines (Google, Bing, DuckDuckGo, Wikipedia, GitHub, StackOverflow, ...) with no API keys and no rate limits. Use for documentation, facts, current events, or any web search.
+description: Web search via self-hosted SearXNG. Aggregates 70+ engines (Google, Bing, DuckDuckGo, Wikipedia, GitHub, StackOverflow, ...) with no API keys and no rate limits. Use for documentation, facts, current events, or any web search.
 ---
 
 # SearXNG
 
-Self-hosted metasearch at `http://10.0.50.42:8888` (LAN/VPN). Query the JSON API
-directly with `curl` + `jq` — no auth, no installs.
+Self-hosted metasearch at `http://10.0.50.42:8888` (requires LAN/VPN). Returns a
+stable JSON envelope — no markdown escaping or link-syntax ambiguity to deal
+with.
+
+## Requirements
+
+The SearXNG instance must be reachable. Verify with:
+
+```bash
+curl -sfI http://10.0.50.42:8888/
+```
+
+If unreachable, ask the user to connect to the VPN or check the instance.
+Override the URL with `SEARXNG_URL=http://other:8888`.
 
 ## Search
 
 ```bash
-# Basic search (5 results, clean fields)
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=rust async traits" \
-    --data-urlencode "format=json" \
-  | jq '.results[:5] | .[] | {title, url, engine, content}'
-
-# Human-readable output
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=nixos impermanence" \
-    --data-urlencode "format=json" \
-  | jq -r '.results[:5] | to_entries[] |
-      "--- Result \(.key + 1) ---\nTitle: \(.value.title)\nURL: \(.value.url)\nEngine: \(.value.engine)\nSnippet: \(.value.content)\n"'
-
-# URLs only (for piping into curl/lynx)
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=kubernetes operator" \
-    --data-urlencode "format=json" \
-  | jq -r '.results[:3] | .[].url'
+{baseDir}/search.sh "query"                             # Top 5 results (JSON)
+{baseDir}/search.sh -n 10 "rust async traits"           # More results
+{baseDir}/search.sh -c news -t week "ecb rates"         # Recent news
+{baseDir}/search.sh -e google,wikipedia "query"         # Specific engines
+{baseDir}/search.sh -f urls -n 3 "kubernetes operator"  # URLs only, one per line
 ```
 
-## Parameters
+Run `{baseDir}/search.sh --help` for full reference.
 
-Add any of these as additional `--data-urlencode` flags:
+### Options
 
-| Param        | Values                                                                                          | Default                  |
-| ------------ | ----------------------------------------------------------------------------------------------- | ------------------------ |
-| `q`          | query string                                                                                    | — (required)             |
-| `format`     | `json`, `html`, `csv`, `rss`                                                                    | — (required, use `json`) |
-| `categories` | `general`, `images`, `videos`, `news`, `science`, `it`, `files`, `music`, `map`, `social media` | `general`                |
-| `language`   | `en`, `pt`, `de`, `all`, ...                                                                    | `all`                    |
-| `time_range` | `day`, `week`, `month`, `year`                                                                  | —                        |
-| `pageno`     | `1`, `2`, ...                                                                                   | `1`                      |
-| `engines`    | comma-separated list (`google,wikipedia`)                                                       | all                      |
-| `safesearch` | `0`, `1`, `2`                                                                                   | `0`                      |
+- `-n, --count N` - Number of results (default: 5)
+- `-c, --category CAT` -
+  `general|images|videos|news|science|it|files|music|map|"social media"`
+- `-l, --language LANG` - `en|pt|de|all|...` (default: all)
+- `-t, --time RANGE` - `day|week|month|year`
+- `-e, --engines LIST` - Comma-separated engine names
+- `-p, --page N` - Page number (default: 1)
+- `-s, --safesearch 0|1|2` - default: 0
+- `-f, --format FMT` - `json|urls` (default: json)
 
-## Filtered searches
+Quote the query if it contains shell metacharacters (`|`, `&`, `;`, `$`, `(`,
+`)`, backticks) — otherwise the shell eats them before the script sees them.
 
-```bash
-# Recent news from the past week
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=ecb interest rates" \
-    --data-urlencode "format=json" \
-    --data-urlencode "categories=news" \
-    --data-urlencode "time_range=week" \
-  | jq '.results[:5] | .[] | {title, url, publishedDate, content}'
-
-# Restrict to a specific engine
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=site-reliability engineering" \
-    --data-urlencode "format=json" \
-    --data-urlencode "engines=wikipedia" \
-  | jq '.results[:3]'
-```
-
-## Instant answers & infoboxes
-
-SearXNG returns Wikipedia summaries and direct answers when relevant:
-
-```bash
-curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=define serendipity" \
-    --data-urlencode "format=json" \
-  | jq -r '.answers[]?, (.infoboxes[]? | "\(.infobox)\n\(.content)")'
-```
-
-## Search + fetch in one shot
-
-```bash
-URL=$(curl -sfG "http://10.0.50.42:8888/search" \
-    --data-urlencode "q=nixos-anywhere tutorial" \
-    --data-urlencode "format=json" \
-  | jq -r '.results[0].url')
-curl -sL "$URL" | lynx -stdin -dump -nolist -width=120
-```
-
-## Output shape
+## Output Envelope (json)
 
 ```json
 {
   "query": "...",
-  "number_of_results": 348000,
+  "instance": "http://...",
+  "total_hits": 348000,
+  "returned": 5,
+  "answers": ["direct answer text", "..."],
+  "infobox": { "title": "...", "content": "..." },
   "results": [
-    { "title": "...", "url": "...", "content": "snippet",
-      "engine": "google", "score": 9.2,
-      "publishedDate": "2024-01-15T00:00:00Z",
-      "category": "general", "thumbnail": "...", "img_src": "..." }
+    {
+      "n": 1,
+      "title": "...",
+      "url": "https://...",
+      "engine": "google",
+      "published_date": "2024-01-15T00:00:00Z",
+      "snippet": "..."
+    }
   ],
-  "infoboxes": [ { "infobox": "...", "content": "...", "urls": [...] } ],
-  "answers": [ "instant answer text" ],
-  "suggestions": [ "related query" ],
-  "unresponsive_engines": [ ["engine_name", "reason"] ]
+  "suggestions": ["...", "..."],
+  "unresponsive_engines": ["...", "..."],
+  "warnings": []
 }
 ```
 
-## Troubleshooting
+All top-level fields are always present. Missing per-result data
+(`published_date`, `snippet`, `infobox`) is `null`, not absent. `snippet` is
+whitespace-collapsed and capped at 1024 chars with a trailing `…` when
+truncated. `answers` is always a plain `string[]` — object-valued answers (e.g.
+DuckDuckGo) are flattened to the `answer` text.
 
-- **Instance up?** `curl -sfI "http://10.0.50.42:8888/"`
-- **HTML instead of JSON?** The `settings.yml` is missing
-  `formats: [html, json]` — tell the user.
-- **`unresponsive_engines` populated?** Harmless if `results` is non-empty;
-  those engines failed but others succeeded.
+## Examples
 
-## When to Use
+```bash
+# Top result URL only
+{baseDir}/search.sh "nixos impermanence" | jq -r '.results[0].url'
 
-- Searching for documentation or API references
-- Looking up facts or current information
-- Fetching content from specific URLs
-- Any task requiring web search without interactive browsing
+# Titles + URLs, one per line
+{baseDir}/search.sh -n 5 "rust async traits" \
+  | jq -r '.results[] | "\(.n). \(.title)\n   \(.url)"'
+
+# Instant answers (if any)
+{baseDir}/search.sh "define serendipity" | jq -r '.answers[]?'
+
+# Search + fetch top result
+URL=$({baseDir}/search.sh -f urls -n 1 "nixos-anywhere tutorial")
+curl -sL "$URL" | lynx -stdin -dump -nolist -width=120
+```
+
+## Gotchas
+
+- Empty results still exit 0. Check `.warnings` for
+  `"no results, answers, or infobox returned"` before telling the user you found
+  something.
+- `.unresponsive_engines` being non-empty is harmless when `.returned > 0`.
+  `karmasearch` is chronically flaky.
+- Exit code 1 = network/parse error; exit 2 = usage error.
+
+## When Not to Use
+
+- The SearXNG instance is unreachable (off-LAN, no VPN).
+- Tasks requiring interactive browsing, JS execution, or logged-in sessions.
