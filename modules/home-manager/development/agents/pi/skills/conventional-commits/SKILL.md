@@ -15,7 +15,8 @@ description: Create git commits following Conventional Commits. Splits changes i
 [BREAKING CHANGE: ...]
 ```
 
-**Types:** `feat` `fix` `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert`
+**Types:** `feat` `fix` `docs` `style` `refactor` `perf` `test` `build` `ci`
+`chore` `revert`
 
 ## Workflow
 
@@ -36,7 +37,7 @@ description: Create git commits following Conventional Commits. Splits changes i
 - One logical change per commit
 - Imperative mood, present tense: "add" not "added"
 - Subject line under 72 characters
-- Add body only when the *why* isn't obvious
+- Add body only when the _why_ isn't obvious
 - Never stage with `git add .` or `git add -A`
 - Never commit secrets, debug code, or unrelated formatting
 - Append `!` after type/scope for breaking changes: `feat!: remove v1 api`
