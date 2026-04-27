@@ -17,4 +17,6 @@
   iosevka-kitty = import ./iosevka-kitty.nix args;
 
   docker-sbx = pkgs.callPackage ./docker-sbx {};
+
+  agent-sandbox = pkgs.callPackage ../modules/home-manager/development/agents/sandbox/image.nix {};
 }
