@@ -276,6 +276,12 @@ const BASH_PERMISSION_RULES: BashPermissionRule[] = [
     action: "ask",
     reason: "Nix tooling — can execute code and mutate system config.",
   },
+  {
+    commands: ["nix-prefetch-url", "nix-prefetch-git", "nix-prefetch-github"],
+    argsGlobs: ["*"],
+    action: "ask",
+    reason: "network operation — fetches remote content to compute its hash.",
+  },
 
   // Containers
   {
@@ -349,6 +355,22 @@ const BASH_PERMISSION_RULES: BashPermissionRule[] = [
   // File inspection
   {
     commands: ["cat", "head", "tail", "hexdump"],
+    argsGlobs: ["*"],
+    action: "allow",
+  },
+
+  // Hashing — pure local compute over files / stdin.
+  {
+    commands: [
+      "shasum",
+      "sha1sum",
+      "sha256sum",
+      "sha512sum",
+      "md5sum",
+      "md5",
+      "cksum",
+      "b2sum",
+    ],
     argsGlobs: ["*"],
     action: "allow",
   },
