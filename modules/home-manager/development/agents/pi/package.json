@@ -4,6 +4,7 @@
   "dependencies": {
     "@anthropic-ai/sandbox-runtime": "0.0.49",
     "@mariozechner/pi-coding-agent": "0.70.0",
+    "@types/node": "25.6.0",
     "matcher": "6.0.0",
     "minimatch": "10.2.5",
     "unbash": "2.2.0"
