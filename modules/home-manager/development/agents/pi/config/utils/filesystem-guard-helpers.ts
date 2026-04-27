@@ -32,13 +32,19 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       globs: ["~/Library/Caches/pnpm/**", "~/.cache/pnpm/**"],
       access: "read",
       action: "allow",
-      reason: "can contain useful documentation.",
+      reason: "can contain documentation for dependencies.",
     },
     {
       globs: ["/var/folders/**"],
       access: "read",
       action: "ask",
-      reason: "can contain tool outputs.",
+      reason: "macOS temporary files.",
+    },
+    {
+      globs: ["/tmp/**"],
+      access: "readwrite",
+      action: "ask",
+      reason: "temporary files.",
     },
     {
       globs: ["~/.pi/agent/auth.json", "~/.ssh/id_*", "**/*.env"],
@@ -59,27 +65,21 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       reason: "never modify .git directly.",
     },
     {
-      globs: ["~/.pi/agent/**"],
+      globs: ["~/.pi/agent/skills/**"],
       access: "read",
       action: "allow",
     },
     {
       globs: ["~/.pi/agent/**"],
-      access: "write",
+      access: "readwrite",
       action: "deny",
       reason:
-        "pi agent configuration is now stored in the NixOS configuration, usually on: /persist/nixos-config/modules/home-manager/development/agents/pi/ or ~/repos/nixos-config/modules/home-manager/development/agents/pi/",
+        "pi agent configuration is now stored in the NixOS configuration on: ~/projects/nixos-config/modules/home-manager/development/agents/pi/config/",
     },
     {
-      globs: ["~/repos/**", "~/projects/**", "/persist/nixos-config/**"],
+      globs: ["~/projects/**"],
       access: "readwrite",
       action: "allow",
-    },
-    {
-      globs: ["/tmp/**"],
-      access: "readwrite",
-      action: "ask",
-      reason: "temporary files can contain sensitive information temporarily.",
     },
   ] satisfies FilesystemPermissionRule[]
 ).map((rule) => ({
@@ -93,19 +93,19 @@ const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
       globs: ["~/Library/Caches/pnpm/**", "~/.cache/pnpm/**"],
       access: "read",
       action: "allow",
-      reason: "can contain useful documentation.",
+      reason: "can contain documentation for dependencies.",
     },
     {
       globs: ["~/.pi/agent/skills/**"],
       access: "read",
       action: "allow",
-      reason: "allow reading skills.",
+      reason: "contains agent skills.",
     },
     {
-      globs: ["**/"],
-      access: "read",
-      action: "allow",
-      reason: "allow reading directory structures.",
+      globs: ["**/*.env"],
+      access: "readwrite",
+      action: "deny",
+      reason: "contains credentials.",
     },
     {
       globs: [
@@ -130,9 +130,16 @@ const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
         "**/*.jsx",
         "**/*.mjs",
         "**/*.py",
+        "**/*.json",
       ],
       access: "read",
       action: "allow",
+    },
+    {
+      globs: ["**/"],
+      access: "read",
+      action: "allow",
+      reason: "allow reading directory structures.",
     },
   ] satisfies FilesystemPermissionRule[]
 ).map((rule) => ({
@@ -314,15 +321,13 @@ export async function handlePathPermissionCheck(args: {
   if (permission.action === "deny") {
     return {
       block: true,
-      reason: [`${gerund} ${args.path} is blocked`, permission.reason].join(
-        ` — `,
-      ),
+      reason: ["Operation was blocked", permission.reason].join(` — `),
     };
   } else if (permission.action === "ask") {
     if (!args.ctx.hasUI) {
       return {
         block: true,
-        reason: `${gerund} ${args.path} is blocked — no UI available to grant permission.`,
+        reason: "Operation was blocked — no UI available to grant permission.",
       };
     }
 
@@ -342,7 +347,14 @@ export async function handlePathPermissionCheck(args: {
       );
 
       if (reason === undefined) return args.ctx.abort();
-      return { block: true, reason: reason?.trim() || undefined };
+
+      return {
+        block: true,
+        reason: [
+          "Operation was blocked by the user",
+          reason.trim() || undefined,
+        ].join(` — `),
+      };
     } else if (selectedOption === options[1]) {
       const suggestedGlob = getGlobSuggestions({
         path: args.path,
