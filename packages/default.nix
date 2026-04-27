@@ -16,5 +16,5 @@
 
   iosevka-kitty = import ./iosevka-kitty.nix args;
 
-  agent-sandbox = pkgs.callPackage ../modules/home-manager/development/agents/sandbox/image.nix {};
+  agent-sandbox = pkgs.callPackage ../modules/home-manager/development/agents/sandbox/image.nix {inherit inputs;};
 }
