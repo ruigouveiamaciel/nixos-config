@@ -14,7 +14,7 @@ export default function (pi: ExtensionAPI) {
     if (permission.action === "deny") {
       return {
         block: true,
-        reason: [`Bash command was blocked`, permission.reason].join(` — `),
+        reason: ["Operation was blocked", permission.reason].join(` — `),
       };
     }
 
@@ -23,18 +23,27 @@ export default function (pi: ExtensionAPI) {
         return {
           block: true,
           reason:
-            "Bash command was blocked — no UI available to grant permission.",
+            "Operation was blocked — no UI available to grant permission.",
         };
       }
 
-      const firstLine = command.split("\n", 1)[0] ?? "";
+      const lines = command.split("\n");
+      const firstLine = lines[0] ?? "";
       const MAX_LEN = 160;
+      const truncatedFirstLine = firstLine.length > MAX_LEN;
+      const extraLines = lines.length - 1;
+
+      const notes: string[] = [];
+      if (truncatedFirstLine) {
+        notes.push(`+${firstLine.length - MAX_LEN} chars`);
+      }
+      if (extraLines > 0) {
+        notes.push(`+${extraLines} more line${extraLines === 1 ? "" : "s"}`);
+      }
+
+      const head = truncatedFirstLine ? firstLine.slice(0, MAX_LEN) : firstLine;
       const preview =
-        firstLine.length > MAX_LEN
-          ? `${firstLine.slice(0, MAX_LEN)}…`
-          : command.includes("\n")
-            ? `${firstLine} …`
-            : firstLine;
+        notes.length > 0 ? `${head} […truncated: ${notes.join(", ")}]` : head;
 
       const choice = await ctx.ui.select(
         `Allow ${event.toolName}?\n\n${preview}`,
@@ -48,7 +57,13 @@ export default function (pi: ExtensionAPI) {
           "Leave empty to deny silently",
         );
         if (reason === undefined) return ctx.abort();
-        return { block: true, reason: reason.trim() || undefined };
+        return {
+          block: true,
+          reason: [
+            "Operation was blocked by the user",
+            reason.trim() || undefined,
+          ].join(` — `),
+        };
       }
     }
   });
