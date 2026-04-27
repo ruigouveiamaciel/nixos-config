@@ -2,7 +2,6 @@
   "name": "pi-agent",
   "private": true,
   "dependencies": {
-    "@anthropic-ai/sandbox-runtime": "0.0.49",
     "@mariozechner/pi-coding-agent": "0.70.2",
     "@types/node": "25.6.0",
     "matcher": "6.0.0",
