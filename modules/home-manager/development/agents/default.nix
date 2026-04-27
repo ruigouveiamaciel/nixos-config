@@ -10,14 +10,18 @@
           "pi" = "pnpx @mariozechner/pi-coding-agent@0.70.2";
         };
         home = {
-          packages = with pkgs.unstable; [
-            opencode
-            claude-code
+          packages =
+            (with pkgs.unstable; [
+              opencode
+              claude-code
 
-            mcp-nixos
-            mcporter
-            lynx
-          ];
+              mcp-nixos
+              mcporter
+              lynx
+            ])
+            ++ [
+              pkgs.docker-sbx
+            ];
           sessionVariables = {
             OPENCODE_ENABLE_EXA = "1";
             OPENCODE_DISABLE_CLAUDE_CODE = "1";
