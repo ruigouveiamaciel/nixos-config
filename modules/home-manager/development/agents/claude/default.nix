@@ -4,18 +4,14 @@
   pkgs,
   ...
 }: {
-  imports = [
-    ./claude
-    ./pi
-  ];
-
   config = lib.mkMerge ([
       {
+        programs.fish.shellAliases = {
+          "claud" = "claude --setting-sources user";
+        };
         home = {
           packages = with pkgs.unstable; [
-            mcp-nixos
-            mcporter
-            lynx
+            claude-code
           ];
         };
       }
@@ -26,7 +22,13 @@
         home.persistence = {
           "/persist" = {
             directories = [
-              ".mcporter"
+              ".claude"
+            ];
+            files = [
+              {
+                file = ".claude.json";
+                method = "symlink";
+              }
             ];
           };
         };
