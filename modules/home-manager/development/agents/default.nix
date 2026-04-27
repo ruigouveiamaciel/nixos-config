@@ -38,9 +38,6 @@
                 --exclude=models.json \
                 ${./pi}/* $HOME/.pi/agent/
               chmod -R u=rwX,g=,o= $HOME/.pi
-
-              cd $HOME/.pi/agent
-              ${pkgs.nodejs_24}/bin/npm install
             '';
           };
         };
