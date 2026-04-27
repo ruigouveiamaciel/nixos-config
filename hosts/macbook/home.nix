@@ -23,13 +23,13 @@
         end
       '';
       shellAbbrs = {
-        "rebuild" = "cd ~/repos/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
-        "build" = "cd ~/repos/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
-        "ad" = "cd ~/repos/frontend/apps/ace && pnpm dev";
-        "sod" = "cd ~/repos/frontend/apps/site-one && pnpm dev";
-        "fo" = "cd ~/repos/frontend && nvim .";
-        "no" = "cd ~/repos/nixos-config && nvim .";
-        "reviews" = "cd ~/repos/frontend && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
+        "rebuild" = "cd ~/projects/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
+        "build" = "cd ~/projects/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
+        "ad" = "cd ~/projects/frontend/apps/ace && pnpm dev";
+        "sod" = "cd ~/projects/frontend/apps/site-one && pnpm dev";
+        "fo" = "cd ~/projects/frontend && nvim .";
+        "no" = "cd ~/projects/nixos-config && nvim .";
+        "reviews" = "cd ~/projects/frontend && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
       };
     };
   };
@@ -40,7 +40,7 @@
       GOPRIVATE = "go.axofinance.io";
     };
     sessionPath = [
-      "/Users/ruimaciel/repos/ax/out"
+      "/Users/ruimaciel/projects/ax/out"
     ];
     file = {
       # Ghostty config

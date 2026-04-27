@@ -5,9 +5,9 @@
   ];
 
   programs.fish.shellAbbrs = {
-    "rebuild" = "cd /persist/nixos-config && sudo nixos-rebuild switch --log-format internal-json -v --flake .#jupiter &| nom --json";
-    "build" = "cd /persist/nixos-config && sudo nixos-rebuild build --log-format internal-json -v --flake .#jupiter &| nom --json";
+    "rebuild" = "cd ~/projects/nixos-config && sudo nixos-rebuild switch --log-format internal-json -v --flake .#jupiter &| nom --json";
+    "build" = "cd ~/projects/nixos-config && sudo nixos-rebuild build --log-format internal-json -v --flake .#jupiter &| nom --json";
     "root-diff" = "sudo zfs diff zroot/encrypted/root@blank";
-    "no" = "cd /persist/nixos-config && nvim .";
+    "no" = "cd ~/projects/nixos-config && nvim .";
   };
 }
