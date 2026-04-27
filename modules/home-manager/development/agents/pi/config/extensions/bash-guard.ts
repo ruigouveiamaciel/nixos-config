@@ -4,6 +4,7 @@ import {
 } from "@mariozechner/pi-coding-agent";
 import { isBashAllowed } from "../utils/bash-guard-helpers";
 import { notify } from "../utils/notify";
+import { waitForPromptIdle } from "../utils/wait-for-prompt-idle";
 
 export default function (pi: ExtensionAPI) {
   pi.on("tool_call", async (event, ctx) => {
@@ -45,6 +46,8 @@ export default function (pi: ExtensionAPI) {
       const head = truncatedFirstLine ? firstLine.slice(0, MAX_LEN) : firstLine;
       const preview =
         notes.length > 0 ? `${head} […truncated: ${notes.join(", ")}]` : head;
+
+      await waitForPromptIdle(ctx);
 
       notify({
         title: `pi: permission requested (${event.toolName})`,

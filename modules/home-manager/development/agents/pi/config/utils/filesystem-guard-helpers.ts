@@ -4,6 +4,7 @@ import { homedir } from "node:os";
 import { resolve, normalize, isAbsolute, basename, dirname } from "node:path";
 import { minimatch } from "minimatch";
 import { notify } from "./notify";
+import { waitForPromptIdle } from "./wait-for-prompt-idle";
 
 function matchesGlob(path: string, pattern: string): boolean {
   return minimatch(path, pattern, { dot: true });
@@ -331,6 +332,8 @@ export async function handlePathPermissionCheck(args: {
         reason: "Operation was blocked — no UI available to grant permission.",
       };
     }
+
+    await waitForPromptIdle(args.ctx);
 
     notify({
       title: `pi: permission requested (${args.access})`,
