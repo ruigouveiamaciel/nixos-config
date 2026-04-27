@@ -15,4 +15,6 @@
       }).neovim;
 
   iosevka-kitty = import ./iosevka-kitty.nix args;
+
+  docker-sbx = pkgs.callPackage ./docker-sbx {};
 }

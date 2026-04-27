@@ -17,6 +17,7 @@
       "dbeaver-community"
       "obsidian"
       "lm-studio"
+      "podman"
     ];
   };
 }
