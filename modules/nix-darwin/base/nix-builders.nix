@@ -5,9 +5,11 @@
 
     buildMachines = [
       {
-        hostName = "saturn";
+        # saturn — addressed by IP because the hostname doesn't resolve
+        # in every network we use.
+        hostName = "10.0.50.42";
         sshUser = "nixremote";
-        sshKey = "/Users/ruimaciel/.ssh/id_ed25519";
+        sshKey = "/var/root/.ssh/id_ed25519_nixremote";
         protocol = "ssh-ng";
         systems = ["x86_64-linux" "aarch64-linux"];
         maxJobs = 8;
