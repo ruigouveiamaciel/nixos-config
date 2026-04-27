@@ -17,6 +17,8 @@
       "dbeaver-community"
       "obsidian"
       "lm-studio"
+    ];
+    brews = [
       "podman"
     ];
   };
