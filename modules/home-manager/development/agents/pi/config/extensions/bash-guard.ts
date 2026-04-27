@@ -3,6 +3,7 @@ import {
   type ExtensionAPI,
 } from "@mariozechner/pi-coding-agent";
 import { isBashAllowed } from "../utils/bash-guard-helpers";
+import { notify } from "../utils/notify";
 
 export default function (pi: ExtensionAPI) {
   pi.on("tool_call", async (event, ctx) => {
@@ -44,6 +45,11 @@ export default function (pi: ExtensionAPI) {
       const head = truncatedFirstLine ? firstLine.slice(0, MAX_LEN) : firstLine;
       const preview =
         notes.length > 0 ? `${head} […truncated: ${notes.join(", ")}]` : head;
+
+      notify({
+        title: `pi: permission requested (${event.toolName})`,
+        message: `Allow ${event.toolName}?`,
+      });
 
       const choice = await ctx.ui.select(
         `Allow ${event.toolName}?\n\n${preview}`,

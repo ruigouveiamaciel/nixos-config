@@ -3,6 +3,7 @@ import { lstatSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve, normalize, isAbsolute, basename, dirname } from "node:path";
 import { minimatch } from "minimatch";
+import { notify } from "./notify";
 
 function matchesGlob(path: string, pattern: string): boolean {
   return minimatch(path, pattern, { dot: true });
@@ -330,6 +331,11 @@ export async function handlePathPermissionCheck(args: {
         reason: "Operation was blocked — no UI available to grant permission.",
       };
     }
+
+    notify({
+      title: `pi: permission requested (${args.access})`,
+      message: `Allow ${gerund}?`,
+    });
 
     const options = ["Yes", "Yes, allow edits during this session", "No"];
 
