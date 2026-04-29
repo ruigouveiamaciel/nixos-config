@@ -104,6 +104,8 @@ export function isBashAllowed(args: { command: string; pwd: string }): {
     return { action: "deny", reason: "no command found." };
   }
 
+  let pendingAsk: { action: PermissionAction; reason?: string } | undefined;
+
   for (const command of parsed) {
     const match = resolveRuleSet({
       command,
@@ -113,17 +115,20 @@ export function isBashAllowed(args: { command: string; pwd: string }): {
     if (!match) {
       return {
         action: "deny",
-        reason: "one or more commands in this script is not whitelisted.",
+        reason: `\`${command.name}\` is not whitelisted.`,
       };
-    } else if (match.action !== "allow") {
-      return {
-        action: match.action,
-        reason: match.reason,
-      };
+    }
+
+    if (match.action === "deny") {
+      return { action: "deny", reason: match.reason };
+    }
+
+    if (match.action === "ask" && !pendingAsk) {
+      pendingAsk = { action: "ask", reason: match.reason };
     }
   }
 
-  return {
-    action: "allow",
-  };
+  if (pendingAsk) return pendingAsk;
+
+  return { action: "allow" };
 }
