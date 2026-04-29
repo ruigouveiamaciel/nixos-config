@@ -175,7 +175,7 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
   // VCS — remote fetches can carry prompt injection; hooks execute code.
   {
     commands: ["git"],
-    argsGlobs: ["status *", "add *", "rm *", "log *"],
+    argsGlobs: ["status", "status *", "add *", "rm *", "log", "log *"],
     action: "allow",
   },
   {
@@ -183,6 +183,44 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
     argsGlobs: ["*"],
     action: "ask",
     reason: "version control operation — remote content + hook execution.",
+  },
+
+  // GitLab CLI — read-only subcommands are safe; everything else asks.
+  {
+    commands: ["glab"],
+    argsGlobs: [
+      "--version",
+      "version",
+      "--help",
+      "help",
+      "help *",
+      "* --help",
+      "* list",
+      "* list *",
+      "* view",
+      "* view *",
+      "* show",
+      "* show *",
+      "* status",
+      "* status *",
+      "* diff",
+      "* diff *",
+      "* trace",
+      "* trace *",
+      "* get",
+      "* get *",
+      "auth status",
+      "auth status *",
+      "config get",
+      "config get *",
+    ],
+    action: "allow",
+  },
+  {
+    commands: ["glab"],
+    argsGlobs: ["*"],
+    action: "ask",
+    reason: "GitLab CLI — remote operation, may mutate remote state.",
   },
 
   // Language runtimes — execute arbitrary scripts (potentially injected).
