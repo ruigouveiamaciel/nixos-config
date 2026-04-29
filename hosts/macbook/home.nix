@@ -25,11 +25,11 @@
       shellAbbrs = {
         "rebuild" = "cd ~/projects/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
         "build" = "cd ~/projects/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
-        "ad" = "cd ~/projects/frontend/apps/ace && pnpm dev";
-        "sod" = "cd ~/projects/frontend/apps/site-one && pnpm dev";
-        "fo" = "cd ~/projects/frontend && nvim .";
+        "ad" = "cd ~/projects/frontend-monorepo/apps/ace && pnpm dev";
+        "sod" = "cd ~/projects/frontend-monorepo/apps/site-one && pnpm dev";
+        "fo" = "cd ~/projects/frontend-monorepo && nvim .";
         "no" = "cd ~/projects/nixos-config && nvim .";
-        "reviews" = "cd ~/projects/frontend && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
+        "reviews" = "cd ~/projects/frontend-monorepo && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
       };
     };
   };
