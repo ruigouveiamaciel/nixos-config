@@ -84,7 +84,6 @@ function resolveRuleSet(args: {
       rule.commands.includes(args.command.name) &&
       isMatch(args.command.args.join(" "), rule.argsGlobs, {
         caseSensitive: true,
-        allPatterns: true,
       }),
   );
 }
