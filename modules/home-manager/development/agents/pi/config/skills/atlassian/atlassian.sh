@@ -1,26 +1,6 @@
 #!/usr/bin/env bash
-# atlassian.sh — Thin wrapper around `mcporter` for the Atlassian Rovo
-# Remote MCP server (Jira, Confluence, Jira Service Management, Compass).
-#
-# Authentication uses OAuth 2.1 — no API keys in env. Run
-# `atlassian.sh auth` once (interactively, in a shell with a browser
-# available) to complete the consent flow. mcporter manages token
-# persistence itself (location is an implementation detail that has
-# changed between releases) and refreshes tokens automatically.
-# Auth state is checked via `mcporter list … --json`, never by
-# inspecting files on disk.
-#
-# Commands:
-#   atlassian.sh auth                          # one-time OAuth bootstrap
-#   atlassian.sh status                        # show cached-token state
-#   atlassian.sh tools                         # list available tools
-#   atlassian.sh schema <tool>                 # show a tool's JSON schema
-#   atlassian.sh call <tool> [key=value ...]   # invoke a tool
-#   atlassian.sh call <tool> --args '{...}'    # invoke with raw JSON
-#
-# The bundled `mcporter.json` (next to this script) defines the endpoint
-# and declares `auth: oauth`, so mcporter handles registration, the
-# browser flow, and token refresh on its own.
+# atlassian.sh — wrapper around `mcporter` for the Atlassian Rovo MCP
+# server. Run `atlassian.sh help` for usage.
 
 set -euo pipefail
 
@@ -84,11 +64,8 @@ bad() {
     exit 2
 }
 
-# --- Dispatch --------------------------------------------------------------
-#
-# Parse the subcommand first so `help` / bad usage / unknown commands can
-# report cleanly without requiring mcporter to be installed.
-
+# Parse the subcommand before preflight so `help` / bad usage works
+# without mcporter installed.
 cmd="${1:-}"
 [[ -n "$cmd" ]] || { usage >&2; exit 2; }
 shift || true
@@ -98,11 +75,9 @@ help | -h | --help)
     usage
     exit 0
     ;;
-auth | status | tools | schema | call) ;; # fall through to preflight + dispatch
+auth | status | tools | schema | call) ;;
 *) bad "unknown command: $cmd (try: auth | status | tools | schema | call | help)" ;;
 esac
-
-# --- Preflight -------------------------------------------------------------
 
 for bin in mcporter jq; do
     command -v "$bin" >/dev/null 2>&1 \
@@ -112,25 +87,15 @@ done
 CONFIG_FILE="${ATLASSIAN_MCP_CONFIG:-$CONFIG_FILE_DEFAULT}"
 [[ -f "$CONFIG_FILE" ]] || die "mcporter config not found at $CONFIG_FILE"
 
-# Timeout (ms) for the auth probe. Short enough to bail before mcporter
-# finishes any browser dance, long enough that a healthy network round-trip
-# to mcp.atlassian.com can still complete. Override for slow networks.
-AUTH_PROBE_TIMEOUT_MS="${ATLASSIAN_AUTH_PROBE_TIMEOUT_MS:-500}"
+# How long the probe waits for the OAuth callback. Default lets the user
+# complete browser consent; override (e.g. 500) to make `status` non-blocking.
+AUTH_PROBE_TIMEOUT_MS="${ATLASSIAN_AUTH_PROBE_TIMEOUT_MS:-60000}"
 
-# Ask mcporter directly whether we can talk to the server. This is the
-# authoritative check — we don't look at files ourselves, and we don't care
-# where mcporter chooses to persist tokens (which changed between 0.7 and
-# 0.8). On authed: `.status == "ok"`. On missing/expired creds: `.status`
-# is "offline" with an OAuth-flavoured issue message. On network failure:
-# "offline" with a non-OAuth message.
-#
-# Outputs:  "authenticated" | "unauthenticated" | "unknown:<reason>"
+# Returns: "authenticated" | "unauthenticated" | "unknown:<reason>"
 probe_auth() {
     local tmp_out tmp_err status issue_kind issue_msg
     tmp_out=$(mktemp -t atlassian-mcp.probe.XXXXXX)
     tmp_err=$(mktemp -t atlassian-mcp.probe.err.XXXXXX)
-    # --oauth-timeout caps any would-be interactive flow. We don't want
-    # `list` to actually block on a browser if creds are missing.
     mcporter --config "$CONFIG_FILE" --oauth-timeout "$AUTH_PROBE_TIMEOUT_MS" \
         list "$SERVER_NAME" --json >"$tmp_out" 2>"$tmp_err" || true
     if ! jq -e . "$tmp_out" >/dev/null 2>&1; then
@@ -147,7 +112,7 @@ probe_auth() {
             printf 'authenticated'
             ;;
         offline)
-            # Distinguish "no tokens" from "mcp.atlassian.com unreachable".
+            # Distinguish missing creds from network failure.
             if [[ "$issue_msg" == *OAuth* || "$issue_msg" == *authoriz* || "$issue_kind" == *auth* ]]; then
                 printf 'unauthenticated'
             else
@@ -170,13 +135,9 @@ require_tokens() {
     esac
 }
 
+# mcporter 0.8.x truncates piped stdout at ~64 KiB, so we route through a
+# tempfile instead of $(...) capture.
 run_mcporter_json() {
-    # Run mcporter and emit its stdout verbatim.
-    #
-    # Important: mcporter 0.8.x truncates piped stdout at ~64 KiB (the Node
-    # process exits before the stdout stream is flushed when writing to a
-    # pipe). Tool listings for large servers exceed that easily, so we
-    # redirect stdout to a tempfile instead of using $(...) capture.
     local tmp_out tmp_err rc
     tmp_out=$(mktemp -t atlassian-mcp.out.XXXXXX)
     tmp_err=$(mktemp -t atlassian-mcp.err.XXXXXX)
@@ -185,21 +146,17 @@ run_mcporter_json() {
         rc=$?
         echo "atlassian.sh: mcporter failed (exit $rc):" >&2
         cat "$tmp_err" >&2
-        # Some mcporter error paths still write partial JSON to stdout; surface it.
         [[ -s "$tmp_out" ]] && cat "$tmp_out" >&2
         exit 1
     fi
     cat "$tmp_out"
 }
 
-# --- Subcommands -----------------------------------------------------------
-
 case "$cmd" in
 
 auth)
     [[ $# -eq 0 ]] || bad "'auth' takes no arguments"
     echo "atlassian.sh: opening browser for Atlassian OAuth consent…" >&2
-    echo "atlassian.sh: mcporter will persist tokens under ~/.mcporter/ (location managed by mcporter)" >&2
     # Interactive — do NOT capture stdio; let mcporter drive the terminal.
     exec mcporter --config "$CONFIG_FILE" auth "$SERVER_NAME" "$@"
     ;;
@@ -223,7 +180,6 @@ status)
         unknown:*)
             reason="${state#unknown:}"
             echo "atlassian.sh: could not verify auth state: $reason" >&2
-            # Use jq to emit properly-escaped JSON even when reason contains quotes/newlines.
             jq -nc --arg s "$SERVER_NAME" --arg r "$reason" \
                 '{server:$s, authenticated:null, state:"unknown", reason:$r}'
             exit 2
@@ -264,7 +220,6 @@ call)
     tool="${1:-}"
     [[ -n "$tool" ]] || bad "'call' requires a tool name"
     shift
-    # --log-level is strictly not allowed.
     for arg in "$@"; do
         case "$arg" in
             --log-level|--log-level=*)
@@ -273,8 +228,6 @@ call)
         esac
     done
     require_tokens
-    # Remaining args are forwarded to mcporter call. Supports key=value,
-    # key:value, --args '{"k":"v"}', --raw-strings, `--` fencing, etc.
     run_mcporter_json call "$SERVER_NAME.$tool" --output json "$@"
     ;;
 esac
