@@ -172,6 +172,93 @@
         desc = "Find git stashes";
       }
       {
+        key = "<leader>fm";
+        mode = "n";
+        unique = true;
+        lua = true;
+        action =
+          /*
+          lua
+          */
+          ''
+            function()
+              -- Detect the default base branch, preferring the remote-tracking
+              -- ref so we don't include commits others pushed after a stale
+              -- local main/master.
+              local function ref_exists(name)
+                vim.fn.system("git rev-parse --verify --quiet " .. name)
+                return vim.v.shell_error == 0
+              end
+
+              local candidates = {
+                "origin/main",
+                "origin/master",
+                "main",
+                "master",
+              }
+              local base
+              for _, ref in ipairs(candidates) do
+                if ref_exists(ref) then
+                  base = ref
+                  break
+                end
+              end
+              if not base then
+                vim.notify("Could not find a main/master branch", vim.log.levels.WARN)
+                return
+              end
+
+              local cwd = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+              if not cwd or cwd == "" then
+                vim.notify("Not in a git repository", vim.log.levels.WARN)
+                return
+              end
+
+              -- Refresh the remote ref so the merge-base reflects the
+              -- actual current tip of the base branch (only if base is a
+              -- remote-tracking ref).
+              local remote, remote_branch = base:match("^([^/]+)/(.+)$")
+              if remote and remote_branch then
+                vim.fn.system(
+                  "git -C " .. vim.fn.shellescape(cwd)
+                  .. " fetch --quiet " .. remote .. " " .. remote_branch
+                )
+              end
+
+              -- Files actually touched by commits unique to this branch.
+              -- Using `git log --name-only base..HEAD` (two-dot) limits us
+              -- strictly to commits in HEAD but not in base, which matches
+              -- what a merge/pull request diff shows. We exclude merge
+              -- commits so files brought in by merging base back in don't
+              -- pollute the list.
+              local changed = vim.fn.systemlist(
+                "git -C " .. vim.fn.shellescape(cwd)
+                .. " log --no-merges --name-only --pretty=format: "
+                .. base .. "..HEAD"
+              )
+
+              local seen = {}
+              local items = {}
+              for _, file in ipairs(changed) do
+                if file ~= "" and not seen[file] then
+                  seen[file] = true
+                  table.insert(items, { file = file, text = file })
+                end
+              end
+
+              Snacks.picker.pick({
+                title = "Modified vs " .. base,
+                cwd = cwd,
+                items = items,
+                format = "file",
+                preview = "file",
+                confirm = "edit",
+              })
+            end
+          '';
+        desc = "Find files modified vs main";
+      }
+      {
         key = "-";
         mode = "n";
         action = "<CMD>Oil<CR>";
