@@ -361,7 +361,7 @@ export async function handlePathPermissionCheck(args: {
         block: true,
         reason: [
           "Operation was blocked by the user",
-          reason.trim() || undefined,
+          reason.trim() || "No reason provided.",
         ].join(` — `),
       };
     } else if (selectedOption === options[1]) {

@@ -70,7 +70,7 @@ export default function (pi: ExtensionAPI) {
           block: true,
           reason: [
             "Operation was blocked by the user",
-            reason.trim() || undefined,
+            reason.trim() || "No reason provided.",
           ].join(` — `),
         };
       }
