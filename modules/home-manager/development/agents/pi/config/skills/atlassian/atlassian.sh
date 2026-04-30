@@ -5,8 +5,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-CONFIG_FILE_DEFAULT="$SCRIPT_DIR/mcporter.json"
+CONFIG_FILE="$SCRIPT_DIR/mcporter.json"
 SERVER_NAME="atlassian"
+AUTH_PROBE_TIMEOUT_MS=500
 
 usage() {
     cat <<'EOF'
@@ -26,11 +27,6 @@ Commands:
                                 - pass `--` to forward literal positional
                                   values or extra mcporter flags
   help                        Show this message.
-
-Environment:
-  ATLASSIAN_MCP_CONFIG        Path to an alternative mcporter config file
-                              (default: <this script's dir>/mcporter.json).
-  MCPORTER_OAUTH_TIMEOUT_MS   OAuth browser wait in ms (mcporter built-in).
 
 Output:
   `tools` and `schema` use `mcporter list --json`. `call` uses
@@ -82,10 +78,7 @@ for bin in mcporter jq; do
         || die "missing required binary: $bin (install via home-manager 'agents' module)"
 done
 
-CONFIG_FILE="${ATLASSIAN_MCP_CONFIG:-$CONFIG_FILE_DEFAULT}"
 [[ -f "$CONFIG_FILE" ]] || die "mcporter config not found at $CONFIG_FILE"
-
-AUTH_PROBE_TIMEOUT_MS="${ATLASSIAN_AUTH_PROBE_TIMEOUT_MS:-500}"
 
 # Returns: "authenticated" | "unauthenticated" | "unknown:<reason>"
 probe_auth() {
