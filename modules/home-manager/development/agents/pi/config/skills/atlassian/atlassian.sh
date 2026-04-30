@@ -70,7 +70,7 @@ status | tools | schema | call) ;;
 *) bad "unknown command: $cmd (try: status | tools | schema | call | help)" ;;
 esac
 
-for bin in mcporter jq; do
+for bin in mcporter jq jsonschema-cli; do
     command -v "$bin" >/dev/null 2>&1 \
         || die "missing required binary: $bin (install via home-manager 'agents' module)"
 done
@@ -138,6 +138,19 @@ run_mcporter_json() {
     cat "$tmp_out"
 }
 
+# Print the tool object for $1 (with inputSchema) or die if not found.
+fetch_tool_object() {
+    local tool="$1" out
+    out=$(run_mcporter_json list "$SERVER_NAME" --schema --json)
+    jq -e . >/dev/null 2>&1 <<<"$out" \
+        || die "mcporter returned non-JSON when fetching tool list"
+    jq --arg t "$tool" '
+        ((.tools // .servers[0].tools) // [])
+        | map(select(.name == $t))
+        | if length == 0 then error("tool not found: \($t)") else .[0] end
+    ' <<<"$out"
+}
+
 case "$cmd" in
 
 status)
@@ -188,17 +201,7 @@ schema)
     shift
     [[ $# -eq 0 ]] || bad "'schema' takes only a tool name"
     require_tokens
-    out=$(run_mcporter_json list "$SERVER_NAME" --schema --json)
-    jq -e . >/dev/null 2>&1 <<<"$out" \
-        || die "mcporter returned non-JSON. Raw output:
-$out"
-    jq --arg t "$tool" '
-        (.tools // .servers[0].tools // [])
-        | map(select(.name == $t))
-        | if length == 0 then
-            error("tool not found: \($t)")
-          else .[0] end
-    ' <<<"$out"
+    fetch_tool_object "$tool"
     ;;
 
 call)
@@ -211,6 +214,16 @@ call)
     jq -e . >/dev/null 2>&1 <<<"$args_json" \
         || bad "stdin is not valid JSON"
     require_tokens
+    schema_json=$(fetch_tool_object "$tool" | jq '.inputSchema // {}')
+    if ! err=$(jsonschema-cli \
+            --instance <(printf '%s' "$args_json") \
+            <(printf '%s' "$schema_json") 2>&1); then
+        echo "atlassian.sh: input does not match schema for $tool:" >&2
+        printf '%s\n' "$err" \
+            | sed -E '/^\/dev\/fd\/[0-9]+ - INVALID\. Errors:$/d; s/^[[:space:]]*[0-9]+\.[[:space:]]*//' \
+            | sed 's/^/  - /' >&2
+        exit 2
+    fi
     run_mcporter_json call "$SERVER_NAME.$tool" --output json --args "$args_json"
     ;;
 esac
