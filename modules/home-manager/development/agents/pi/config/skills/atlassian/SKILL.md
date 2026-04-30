@@ -80,6 +80,3 @@ jq -nc --arg c "$CID" '{cloudId: $c, issueIdOrKey: "PROJ-123"}' \
   Fetch one issue to learn the IDs per site.
 - Rate limits are per-user — prefer bulk JQL/CQL over N+1 loops.
 - Scope = the OAuth user. Projects the user can't see return empty or 403.
-- Multi-site accounts: mcporter picks the default site. To target another,
-  append `?site=foo.atlassian.net` to `baseUrl` in `{baseDir}/mcporter.json` and
-  re-run `{baseDir}/atlassian.sh status` to re-authorise.
