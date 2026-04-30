@@ -13,10 +13,9 @@ usage() {
 Usage: atlassian.sh <command> [args...]
 
 Commands:
-  auth                        Run the OAuth browser flow. One-time per user
-                              per machine; cached tokens are reused and
-                              refreshed automatically afterwards.
-  status                      Show whether OAuth tokens are cached locally.
+  status                      Report whether OAuth tokens are cached, and
+                              run the interactive browser consent flow when
+                              they are not. Safe to run repeatedly.
   tools                       List all tools exposed by the Atlassian MCP
                               server (JSON).
   schema <tool>               Print the JSON schema for a single tool.
@@ -35,8 +34,8 @@ Environment:
 
 Output:
   `tools` and `schema` use `mcporter list --json`. `call` uses
-  `mcporter call --output json`. `auth` and `status` print human-readable
-  status to stderr and keep stdout clean.
+  `mcporter call --output json`. `status` prints human-readable status
+  to stderr and a JSON envelope on stdout.
 
 Exit codes:
   0  success
@@ -45,7 +44,6 @@ Exit codes:
   2  usage error (bad flag, missing argument, unknown subcommand)
 
 Examples:
-  atlassian.sh auth                        # run once, browser opens
   atlassian.sh status
   atlassian.sh tools | jq '.tools[] | {name, description}'
   atlassian.sh schema getJiraIssue
@@ -75,8 +73,8 @@ help | -h | --help)
     usage
     exit 0
     ;;
-auth | status | tools | schema | call) ;;
-*) bad "unknown command: $cmd (try: auth | status | tools | schema | call | help)" ;;
+status | tools | schema | call) ;;
+*) bad "unknown command: $cmd (try: status | tools | schema | call | help)" ;;
 esac
 
 for bin in mcporter jq; do
@@ -87,9 +85,7 @@ done
 CONFIG_FILE="${ATLASSIAN_MCP_CONFIG:-$CONFIG_FILE_DEFAULT}"
 [[ -f "$CONFIG_FILE" ]] || die "mcporter config not found at $CONFIG_FILE"
 
-# How long the probe waits for the OAuth callback. Default lets the user
-# complete browser consent; override (e.g. 500) to make `status` non-blocking.
-AUTH_PROBE_TIMEOUT_MS="${ATLASSIAN_AUTH_PROBE_TIMEOUT_MS:-60000}"
+AUTH_PROBE_TIMEOUT_MS="${ATLASSIAN_AUTH_PROBE_TIMEOUT_MS:-500}"
 
 # Returns: "authenticated" | "unauthenticated" | "unknown:<reason>"
 probe_auth() {
@@ -130,7 +126,7 @@ require_tokens() {
     state=$(probe_auth)
     case "$state" in
         authenticated) return 0 ;;
-        unauthenticated) die "not authenticated with Atlassian. Run: atlassian.sh auth" ;;
+        unauthenticated) die "not authenticated with Atlassian. Run: atlassian.sh status" ;;
         unknown:*) die "could not verify auth state (${state#unknown:}). Run: atlassian.sh status for details" ;;
     esac
 }
@@ -154,16 +150,15 @@ run_mcporter_json() {
 
 case "$cmd" in
 
-auth)
-    [[ $# -eq 0 ]] || bad "'auth' takes no arguments"
-    echo "atlassian.sh: opening browser for Atlassian OAuth consent…" >&2
-    # Interactive — do NOT capture stdio; let mcporter drive the terminal.
-    exec mcporter --config "$CONFIG_FILE" auth "$SERVER_NAME" "$@"
-    ;;
-
 status)
     [[ $# -eq 0 ]] || bad "'status' takes no arguments"
     state=$(probe_auth)
+    if [[ "$state" == unauthenticated ]]; then
+        echo "atlassian.sh: no cached tokens — opening browser for Atlassian OAuth consent…" >&2
+        mcporter --config "$CONFIG_FILE" auth "$SERVER_NAME" \
+            || die "OAuth flow failed; rerun: atlassian.sh status"
+        state=$(probe_auth)
+    fi
     case "$state" in
         authenticated)
             echo "atlassian.sh: authenticated (verified via mcporter)" >&2
@@ -172,7 +167,7 @@ status)
             exit 0
             ;;
         unauthenticated)
-            echo "atlassian.sh: not authenticated. Run: atlassian.sh auth" >&2
+            echo "atlassian.sh: still not authenticated after OAuth flow" >&2
             printf '{"server":"%s","authenticated":false,"state":"%s"}\n' \
                 "$SERVER_NAME" "unauthenticated"
             exit 1
