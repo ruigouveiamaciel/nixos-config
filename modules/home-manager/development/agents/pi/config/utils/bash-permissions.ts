@@ -109,7 +109,6 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
       "uv",
       "pipx",
       "poetry",
-      "git",
       "go",
       "make",
       "cmake",
@@ -185,7 +184,19 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
   // VCS — remote fetches can carry prompt injection; hooks execute code.
   {
     commands: ["git"],
-    argsGlobs: ["status", "status *", "add *", "rm *", "log", "log *"],
+    argsGlobs: [
+      "-v",
+      "--version",
+      "version",
+      "status",
+      "status *",
+      "add *",
+      "rm *",
+      "log",
+      "log *",
+      "diff",
+      "diff *",
+    ],
     action: "allow",
   },
   {
@@ -376,8 +387,17 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
 
   // Shell primitives & environment queries.
   {
+    commands: ["echo"],
+    argsGlobs: ['"---"'],
+    action: "allow",
+  },
+  {
+    commands: ["echo"],
+    argsGlobs: ["*"],
+    action: "ask",
+  },
+  {
     commands: [
-      "echo",
       "true",
       "false",
       "test",
