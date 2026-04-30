@@ -13,6 +13,11 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
   // Skills
   {
     commands: [`${homedir()}/.pi/agent/skills/atlassian/atlassian.sh`],
+    argsGlobs: ["help", "status", "tools", "schema"],
+    action: "allow",
+  },
+  {
+    commands: [`${homedir()}/.pi/agent/skills/atlassian/atlassian.sh`],
     argsGlobs: ["*"],
     action: "ask",
   },
