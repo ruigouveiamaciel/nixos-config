@@ -20,12 +20,9 @@ Commands:
   tools                       List all tools exposed by the Atlassian MCP
                               server (JSON).
   schema <tool>               Print the JSON schema for a single tool.
-  call <tool> [key=value ...] Invoke a tool. Arguments can be:
-                                - key=value pairs (bool/int/null/JSON
-                                  auto-coerced)
-                                - raw JSON via `--args '{"k":"v"}'`
-                                - pass `--` to forward literal positional
-                                  values or extra flags
+  call <tool>                 Invoke a tool. Tool arguments are read as a
+                              single JSON object on stdin; pipe it from jq.
+                              For no-arg tools, pipe `jq -n '{}'`.
   help                        Show this message.
 
 Output:
@@ -43,9 +40,9 @@ Examples:
   atlassian.sh status
   atlassian.sh tools | jq '.tools[] | {name, description}'
   atlassian.sh schema getJiraIssue
-  atlassian.sh call getJiraIssue issueIdOrKey=PROJ-123
-  atlassian.sh call searchJiraIssuesUsingJql \
-      --args '{"jql":"assignee=currentUser() AND resolution=Unresolved"}'
+  jq -n '{issueIdOrKey:"PROJ-123"}' | atlassian.sh call getJiraIssue
+  jq -n '{jql:"assignee=currentUser() AND resolution=Unresolved"}' \
+      | atlassian.sh call searchJiraIssuesUsingJql
 EOF
 }
 
@@ -208,14 +205,12 @@ call)
     tool="${1:-}"
     [[ -n "$tool" ]] || bad "'call' requires a tool name"
     shift
-    for arg in "$@"; do
-        case "$arg" in
-            --log-level|--log-level=*)
-                bad "--log-level is not allowed"
-                ;;
-        esac
-    done
+    [[ $# -eq 0 ]] || bad "'call' takes only a tool name; pipe JSON args on stdin (e.g. jq -n '{k:\"v\"}' | atlassian.sh call $tool)"
+    [[ -t 0 ]] && bad "'call' requires JSON args on stdin; pipe from jq (e.g. jq -n '{k:\"v\"}' | atlassian.sh call $tool, or jq -n '{}' for no args)"
+    args_json=$(cat)
+    jq -e . >/dev/null 2>&1 <<<"$args_json" \
+        || bad "stdin is not valid JSON"
     require_tokens
-    run_mcporter_json call "$SERVER_NAME.$tool" --output json "$@"
+    run_mcporter_json call "$SERVER_NAME.$tool" --output json --args "$args_json"
     ;;
 esac
