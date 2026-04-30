@@ -26,6 +26,16 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
     reason: "network operation — remote content can carry prompt injection.",
   },
 
+  // mcporter — MCP server proxy used by skills (e.g. atlassian).
+  // Can trigger interactive OAuth flows that open a browser.
+  {
+    commands: ["mcporter"],
+    argsGlobs: ["*"],
+    action: "ask",
+    reason:
+      "mcporter — talks to remote MCP servers and may open a browser for OAuth consent.",
+  },
+
   // Privilege escalation.
   {
     commands: ["sudo", "su", "doas", "pkexec"],
