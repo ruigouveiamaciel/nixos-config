@@ -22,20 +22,20 @@ Commands:
   schema <tool>               Print the JSON schema for a single tool.
   call <tool> [key=value ...] Invoke a tool. Arguments can be:
                                 - key=value pairs (bool/int/null/JSON
-                                  auto-coerced by mcporter)
+                                  auto-coerced)
                                 - raw JSON via `--args '{"k":"v"}'`
                                 - pass `--` to forward literal positional
-                                  values or extra mcporter flags
+                                  values or extra flags
   help                        Show this message.
 
 Output:
-  `tools` and `schema` use `mcporter list --json`. `call` uses
-  `mcporter call --output json`. `status` prints human-readable status
-  to stderr and a JSON envelope on stdout.
+  `tools` and `schema` emit JSON tool listings; `call` emits the tool's
+  JSON result. `status` prints human-readable status to stderr and a
+  JSON envelope on stdout.
 
 Exit codes:
   0  success
-  1  runtime error (network, mcporter failure, non-JSON response,
+  1  runtime error (network failure, non-JSON response,
                     missing tokens for tools/schema/call)
   2  usage error (bad flag, missing argument, unknown subcommand)
 
