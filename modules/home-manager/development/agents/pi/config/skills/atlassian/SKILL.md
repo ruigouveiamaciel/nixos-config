@@ -55,8 +55,7 @@ Example — current user's open issues:
 jq -nc --arg c "$CID" '{
   cloudId: $c,
   jql: "assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC",
-  fields: ["summary","status","priority"],
-  limit: 20
+  fields: ["summary","status","priority"]
 }' \
   | {baseDir}/atlassian.sh call searchJiraIssuesUsingJql \
   | jq '.issues[] | {key, summary: .fields.summary, status: .fields.status.name}'
@@ -68,15 +67,3 @@ Fetch a single issue:
 jq -nc --arg c "$CID" '{cloudId: $c, issueIdOrKey: "PROJ-123"}' \
   | {baseDir}/atlassian.sh call getJiraIssue
 ```
-
-## Gotchas
-
-- Paginate via `limit` + cursor; check `.nextCursor` / `.isLast` before assuming
-  you got everything.
-- Confluence bodies are ADF (nested JSON, not Markdown). Use
-  `jq '.. | .text? // empty'` for plain text, or ask the tool for a rendered
-  variant if offered.
-- Jira custom fields arrive as `customfield_XXXXX`; schemas don't name them.
-  Fetch one issue to learn the IDs per site.
-- Rate limits are per-user — prefer bulk JQL/CQL over N+1 loops.
-- Scope = the OAuth user. Projects the user can't see return empty or 403.
