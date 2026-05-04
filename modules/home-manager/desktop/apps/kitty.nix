@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   # Required for custom fonts to be detected
   fonts.fontconfig.enable = true;
 
@@ -14,7 +18,7 @@
       else pkgs.kitty;
     shellIntegration.enableFishIntegration = true;
     settings = {
-      shell = "${pkgs.fish}/bin/fish";
+      shell = "${config.programs.fish.package}/bin/fish";
     };
     extraConfig = ''
       # Fonts

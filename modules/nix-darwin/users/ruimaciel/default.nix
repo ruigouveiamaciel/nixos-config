@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   myModulesPath,
   lib,
   options,
@@ -16,7 +15,7 @@
         users.users.ruimaciel = {
           openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
           home = "/Users/ruimaciel";
-          shell = pkgs.fish;
+          shell = config.programs.fish.package;
         };
 
         system.primaryUser = "ruimaciel";

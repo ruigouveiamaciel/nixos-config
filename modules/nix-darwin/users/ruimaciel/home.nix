@@ -1,5 +1,5 @@
 {
-  pkgs,
+  config,
   myModulesPath,
   ...
 }: {
@@ -14,7 +14,7 @@
     homeDirectory = "/Users/ruimaciel";
 
     sessionVariables = {
-      SHELL = "${pkgs.fish}/bin/fish";
+      SHELL = "${config.programs.fish.package}/bin/fish";
     };
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

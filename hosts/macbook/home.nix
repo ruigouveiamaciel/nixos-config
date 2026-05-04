@@ -2,6 +2,7 @@
   lib,
   pkgs,
   myModulesPath,
+  config,
   ...
 }: {
   imports = [
@@ -46,7 +47,7 @@
       # Ghostty config
       "/Users/ruimaciel/.config/ghostty/config".text = ''
         theme = catppuccin-macchiato
-        command = ${pkgs.fish}/bin/fish --login --interactive
+        command = ${config.programs.fish.package}/bin/fish --login --interactive
         shell-integration = none
         font-family = Iosevka Kitty Extended
         font-size = 16

@@ -32,7 +32,7 @@ in {
               "dialout"
               "plugdev"
             ];
-            shell = pkgs.fish;
+            shell = config.programs.fish.package;
             hashedPassword = "";
           };
         };
