@@ -1,12 +1,14 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
   hasPackage = pname: lib.any (p: p ? pname && p.pname == pname) config.home.packages;
 in {
   programs.fish = {
     enable = true;
+    package = pkgs.unstable.fish;
     shellAbbrs = {
       ls = lib.mkIf (hasPackage "eza") "eza";
       ll = lib.mkIf (hasPackage "eza") "eza -lh";
