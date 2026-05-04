@@ -237,14 +237,30 @@
                 .. base .. "..HEAD"
               )
 
+              -- Also include local changes that haven't been committed yet:
+              --   * staged + unstaged tracked changes (`git diff HEAD`)
+              --   * untracked, non-ignored files (`ls-files --others
+              --     --exclude-standard`)
+              local uncommitted = vim.fn.systemlist(
+                "git -C " .. vim.fn.shellescape(cwd)
+                .. " diff --name-only HEAD"
+              )
+              local untracked = vim.fn.systemlist(
+                "git -C " .. vim.fn.shellescape(cwd)
+                .. " ls-files --others --exclude-standard"
+              )
+
               local seen = {}
               local items = {}
-              for _, file in ipairs(changed) do
+              local function add(file)
                 if file ~= "" and not seen[file] then
                   seen[file] = true
                   table.insert(items, { file = file, text = file })
                 end
               end
+              for _, file in ipairs(uncommitted) do add(file) end
+              for _, file in ipairs(untracked) do add(file) end
+              for _, file in ipairs(changed) do add(file) end
 
               Snacks.picker.pick({
                 title = "Modified vs " .. base,
