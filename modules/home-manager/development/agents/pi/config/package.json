@@ -2,7 +2,7 @@
   "name": "pi-agent",
   "private": true,
   "dependencies": {
-    "@mariozechner/pi-coding-agent": "0.72.1",
+    "@mariozechner/pi-coding-agent": "0.73.0",
     "@types/node": "25.6.0",
     "matcher": "6.0.0",
     "minimatch": "10.2.5",
