@@ -61,12 +61,6 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
       reason: "never modify node_modules directly.",
     },
     {
-      globs: ["**/.git/**"],
-      access: "write",
-      action: "deny",
-      reason: "never modify .git directly.",
-    },
-    {
       globs: ["~/.pi/agent/skills/**"],
       access: "read",
       action: "allow",
@@ -108,6 +102,11 @@ const FILENAME_PERMISSION_RULES: FilesystemPermissionRule[] = (
       access: "readwrite",
       action: "deny",
       reason: "contains credentials.",
+    },
+    {
+      globs: ["**/.git/**"],
+      access: "write",
+      action: "ask",
     },
     {
       globs: [
