@@ -397,7 +397,7 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
     action: "allow",
   },
   {
-    commands: ["echo"],
+    commands: ["echo", "[", "test"],
     argsGlobs: ["*"],
     action: "ask",
   },
@@ -405,7 +405,6 @@ export const BASH_PERMISSION_RULES: BashPermissionRule[] = [
     commands: [
       "true",
       "false",
-      "test",
       "sleep",
       "hostname",
       "whoami",
