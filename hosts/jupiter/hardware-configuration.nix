@@ -25,7 +25,10 @@
       enable = true;
       enable32Bit = true;
     };
-    amdgpu.initrd.enable = true;
+    amdgpu = {
+      initrd.enable = true;
+      opencl.enable = true;
+    };
     cpu.amd.updateMicrocode = config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = true;
     bluetooth.enable = true;
