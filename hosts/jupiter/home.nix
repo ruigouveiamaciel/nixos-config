@@ -10,4 +10,6 @@
     "root-diff" = "sudo zfs diff zroot/encrypted/root@blank";
     "no" = "cd ~/projects/nixos-config && nvim .";
   };
+
+  home.stateVersion = "24.11";
 }

@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
+  # TODO: Improve this
   users.users.nixremote = {
     isNormalUser = true;
     shell = pkgs.bashInteractive;

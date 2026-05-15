@@ -4,8 +4,10 @@
     ./hardware-configuration.nix
 
     "${myModulesPath}/profiles/essentials.nix"
+
+    "${myModulesPath}/desktop/kde.nix"
     "${myModulesPath}/desktop/gaming"
-    "${myModulesPath}/desktop/plasma6.nix"
+    "${myModulesPath}/desktop/voyager.nix"
 
     "${myModulesPath}/users/rui"
 
@@ -15,6 +17,8 @@
   ];
 
   home-manager.users.rui.imports = [./home.nix];
+
+  virtualisation.docker.enable = true;
 
   networking = {
     hostName = "jupiter";

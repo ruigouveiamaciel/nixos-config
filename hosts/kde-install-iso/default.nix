@@ -9,7 +9,7 @@
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix"
 
     "${myModulesPath}/profiles/essentials.nix"
-    "${myModulesPath}/desktop/plasma6.nix"
+    "${myModulesPath}/desktop/kde.nix"
     "${myModulesPath}/users/rui"
     "${myModulesPath}/networking/openssh.nix"
   ];

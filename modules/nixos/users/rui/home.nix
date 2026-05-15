@@ -11,15 +11,7 @@
   ];
 
   config = lib.mkMerge ([
-      {
-        home = {
-          username = "rui";
-          homeDirectory = "/home/rui";
-
-          # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-          stateVersion = "24.11";
-        };
-      }
+      {}
     ]
     ++ (
       lib.optional (options.home ? "persistence")
@@ -29,6 +21,10 @@
             directories = [
               {
                 directory = "projects";
+                mode = "700";
+              }
+              {
+                directory = "repositories";
                 mode = "700";
               }
             ];

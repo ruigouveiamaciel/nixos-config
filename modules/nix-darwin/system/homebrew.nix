@@ -8,6 +8,7 @@
         homebrew = {
           enable = true;
           onActivation.cleanup = "uninstall";
+          # TODO: Settings bellow will be available in 26.05
           # enableFishIntegration = true;
           # enableBashIntegration = true;
           # enableZshIntegration = true;

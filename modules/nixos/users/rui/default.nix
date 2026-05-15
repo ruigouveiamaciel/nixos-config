@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   myModulesPath,
   lib,
   options,
@@ -17,20 +16,17 @@ in {
       {
         users = {
           users.rui = {
-            description = "Rui";
-            openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
+            description = "SmOkEwOw";
+            openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
             isNormalUser = true;
             extraGroups = filterUnexistentGroups [
               "wheel"
-              "video"
               "audio"
-              "network"
-              "networkmanager"
-              "net"
+              "video"
+              "render"
               "docker"
               "podman"
               "dialout"
-              "plugdev"
             ];
             shell = config.programs.fish.package;
             hashedPassword = "";
@@ -39,10 +35,8 @@ in {
       }
     ]
     ++ (lib.optional (options ? "home-manager") {
-      home-manager.users.rui = {
-        imports = [
-          ./home.nix
-        ];
-      };
+      home-manager.users.rui.imports = [
+        ./home.nix
+      ];
     }));
 }

@@ -1,5 +1,5 @@
-{inputs, ...}: {
+{myModulesPath, ...}: {
   imports = [
-    inputs.impermanence.nixosModules.impermanence
+    "${myModulesPath}/system/impermanence.nix"
   ];
 }

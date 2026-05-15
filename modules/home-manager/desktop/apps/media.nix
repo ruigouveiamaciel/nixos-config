@@ -11,7 +11,6 @@
           packages = with pkgs; [
             vlc
             rawtherapee
-            hdrmerge
           ];
 
           file.".config/RawTherapee/clutsdir".source = pkgs.fetchzip {

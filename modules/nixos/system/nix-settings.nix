@@ -1,8 +1,4 @@
 {
-  lib,
-  inputs,
-  ...
-}: {
   programs.command-not-found.enable = false;
 
   nix = {

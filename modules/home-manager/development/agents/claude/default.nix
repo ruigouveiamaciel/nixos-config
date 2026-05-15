@@ -6,9 +6,6 @@
 }: {
   config = lib.mkMerge ([
       {
-        programs.fish.shellAliases = {
-          "claud" = "claude --setting-sources user";
-        };
         home = {
           packages = with pkgs.unstable; [
             claude-code

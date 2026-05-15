@@ -9,12 +9,6 @@
         home.packages = with pkgs; [
           vesktop
         ];
-
-        wayland.windowManager.hyprland.settings = {
-          exec-once = [
-            "vesktop"
-          ];
-        };
       }
     ]
     ++ (lib.optional (options.home ? "persistence") {

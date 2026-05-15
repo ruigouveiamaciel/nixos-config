@@ -4,7 +4,7 @@
     settings.trust-model = "tofu+pgp";
     publicKeys = [
       {
-        source = config.myConstants.users.rui.pgp;
+        source = config.myConstants.users.smokewow.pgp;
         trust = 5;
       }
     ];

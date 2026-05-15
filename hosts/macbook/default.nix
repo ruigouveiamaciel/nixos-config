@@ -1,6 +1,6 @@
 {myModulesPath, ...}: {
   imports = [
-    "${myModulesPath}/profiles/base.nix"
+    "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/users/ruimaciel"
 
     ./homebrew.nix
