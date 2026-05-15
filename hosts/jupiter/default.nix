@@ -9,14 +9,14 @@
     "${myModulesPath}/desktop/gaming"
     "${myModulesPath}/desktop/voyager.nix"
 
-    "${myModulesPath}/users/rui"
+    "${myModulesPath}/users/smokewow"
 
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
   ];
 
-  home-manager.users.rui.imports = [./home.nix];
+  home-manager.users.smokewow.imports = [./home.nix];
 
   virtualisation.docker.enable = true;
 

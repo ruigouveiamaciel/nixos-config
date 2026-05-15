@@ -26,9 +26,9 @@
         };
 
         programs.fish.shellAbbrs = {
-          "jupiter" = "ssh rui@${programs.ssh.matchBlocks.jupiter.host}";
+          "jupiter" = "ssh smokewow@${programs.ssh.matchBlocks.jupiter.host}";
           "unlock-jupiter" = "ssh root@${programs.ssh.matchBlocks.jupiter.host} -p 2222";
-          "saturn" = "ssh rui@${programs.ssh.matchBlocks.saturn.host}";
+          "saturn" = "ssh smokewow@${programs.ssh.matchBlocks.saturn.host}";
           "unlock-saturn" = "ssh root@${programs.ssh.matchBlocks.saturn.host} -p 2222";
         };
       }

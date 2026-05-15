@@ -10,11 +10,11 @@
 
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/desktop/kde.nix"
-    "${myModulesPath}/users/rui"
+    "${myModulesPath}/users/smokewow"
     "${myModulesPath}/networking/openssh.nix"
   ];
 
-  home-manager.users.rui.imports = [./home.nix];
+  home-manager.users.smokewow.imports = [./home.nix];
 
   boot = {
     supportedFilesystems = ["zfs"];
@@ -29,7 +29,7 @@
     makeUsbBootable = true;
   };
 
-  services.displayManager.autoLogin.user = lib.mkForce "rui";
+  services.displayManager.autoLogin.user = lib.mkForce "smokewow";
   services.openssh.settings = {
     PasswordAuthentication = lib.mkForce true;
     PermitRootLogin = lib.mkForce "yes";

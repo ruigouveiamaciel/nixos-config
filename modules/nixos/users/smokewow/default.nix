@@ -15,7 +15,7 @@ in {
   config = lib.mkMerge ([
       {
         users = {
-          users.rui = {
+          users.smokewow = {
             description = "SmOkEwOw";
             openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
             isNormalUser = true;
@@ -35,7 +35,7 @@ in {
       }
     ]
     ++ (lib.optional (options ? "home-manager") {
-      home-manager.users.rui.imports = [
+      home-manager.users.smokewow.imports = [
         ./home.nix
       ];
     }));

@@ -6,7 +6,7 @@
 }: {
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
-    "${myModulesPath}/users/rui"
+    "${myModulesPath}/users/smokewow"
 
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
@@ -19,7 +19,7 @@
     ./services
   ];
 
-  home-manager.users.rui.imports = [./home.nix];
+  home-manager.users.smokewow.imports = [./home.nix];
   networking = {
     hostName = "saturn";
     hostId = "b0d87d98";

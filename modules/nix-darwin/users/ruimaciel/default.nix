@@ -13,7 +13,7 @@
   config = lib.mkMerge ([
       {
         users.users.ruimaciel = {
-          openssh.authorizedKeys.keys = config.myConstants.users.rui.authorized-keys;
+          openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
           home = "/Users/ruimaciel";
           shell = config.programs.fish.package;
         };
