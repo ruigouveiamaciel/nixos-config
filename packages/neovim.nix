@@ -151,28 +151,28 @@
         desc = "Resume find";
       }
       {
-        key = "<leader>fc";
+        key = "<leader>gc";
         mode = "n";
         unique = true;
         action = "<cmd>lua Snacks.picker.git_log()<CR>";
         desc = "Find git commits";
       }
       {
-        key = "<leader>fb";
+        key = "<leader>gb";
         mode = "n";
         unique = true;
         action = "<cmd>lua Snacks.picker.git_branches()<CR>";
         desc = "Find git branches";
       }
       {
-        key = "<leader>fs";
+        key = "<leader>gs";
         mode = "n";
         unique = true;
         action = "<cmd>lua Snacks.picker.git_stash()<CR>";
         desc = "Find git stashes";
       }
       {
-        key = "<leader>fm";
+        key = "<leader>gm";
         mode = "n";
         unique = true;
         lua = true;
@@ -281,7 +281,7 @@
         desc = "Open parent directiory";
       }
       {
-        key = "<leader>gu";
+        key = "<leader>go";
         mode = "n";
         action = "<CMD>lua Snacks.gitbrowse()<CR>";
         desc = "Open this file in github/gitlab";
@@ -443,7 +443,6 @@
             "cmp_menu"
             "noice"
             "prompt"
-            "TelescopePrompt"
             "snacks_picker_list"
             "snacks_picker_input"
           ];
@@ -471,7 +470,6 @@
     autocmds = [
       {
         event = ["BufWritePost" "BufEnter" "TextChanged"];
-        group = "nvf_nvim_lint";
         callback =
           lib.mkLuaInline
           /*
@@ -484,46 +482,9 @@
           '';
       }
       {
-        # Resize splits when window size changes. Super useful with tiling
-        # window managers
         event = ["VimResized"];
         pattern = ["*"];
         command = "wincmd =";
-      }
-      {
-        # Keep cursor in opencode terminal and auto-enter insert mode
-        event = ["BufEnter" "WinEnter"];
-        pattern = ["*"];
-        callback =
-          lib.mkLuaInline
-          /*
-          lua
-          */
-          ''
-            function()
-              -- Find the opencode terminal window
-              local opencode_win = nil
-              for _, win in ipairs(vim.api.nvim_list_wins()) do
-                local buf = vim.api.nvim_win_get_buf(win)
-                local bufname = vim.api.nvim_buf_get_name(buf)
-                if bufname:match("opencode") and vim.bo[buf].buftype == "terminal" then
-                  opencode_win = win
-                  break
-                end
-              end
-
-              -- If opencode terminal exists, focus it and enter insert mode
-              if opencode_win then
-                local current_win = vim.api.nvim_get_current_win()
-                if current_win ~= opencode_win then
-                  vim.api.nvim_set_current_win(opencode_win)
-                end
-                if vim.api.nvim_get_mode().mode ~= "t" then
-                  vim.cmd("startinsert")
-                end
-              end
-            end
-          '';
       }
     ];
 
@@ -680,10 +641,6 @@
               -- if no linter is configured for this filetype, stops linting
               if linters_from_ft == nil then return end
 
-              local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
-              local client = get_clients({ buf = buf })[1] or { root_dir = vim.fn.getcwd() }
-              local client_root = client.root_dir
-
               for _, name in ipairs(linters_from_ft) do
                 local linter = linters[name]
                 assert(linter, 'Linter with name `' .. name .. '` not available')
@@ -693,30 +650,25 @@
                 end
                 -- for require("lint").lint() to work, linter.name must be set
                 linter.name = linter.name or name
-                local cwd = linter.required_files
 
-                if (name == "eslint_d") then
-                  local buf_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(buf))
-                  local eslint_config = vim.fs.find(
-                    { ".eslintrc", ".eslintrc.js", ".eslintrc.cjs", ".eslintrc.json", ".eslintrc.yaml", ".eslintrc.yml", "eslint.config.js" },
-                    { upward = true, path = buf_dir }
+                -- if no configuration files are configured, lint
+                if linter.required_files == nil then
+                  require("lint").lint(linter)
+                else
+                  -- if configuration files are configured and present in the project, lint
+                  local linter_config_path = vim.fs.find(
+                    linter.required_files,
+                    {
+                      upward = true,
+                      path = vim.fs.dirname(vim.api.nvim_buf_get_name(buf))
+                    }
                   )[1]
 
-                  local lint_cwd = eslint_config and vim.fs.dirname(eslint_config) or client_root or vim.fn.getcwd()
-                  require("lint").lint(linter, { cwd = lint_cwd })
-                else
-                  -- if no configuration files are configured, lint
-                  if cwd == nil then
-                    require("lint").lint(linter)
-                  else
-                    -- if configuration files are configured and present in the project, lint
-                    for _, fn in ipairs(cwd) do
-                      local path = vim.fs.joinpath(linter.cwd or vim.fn.getcwd(), fn);
-                      if vim.uv.fs_stat(path) then
-                        require("lint").lint(linter)
-                        break
-                      end
-                    end
+                  if (linter_config_path) then
+                    require("lint").lint(
+                      linter,
+                      { cwd = vim.fs.dirname(linter_config_path) }
+                    )
                   end
                 end
               end
@@ -751,6 +703,7 @@
       css.enable = true;
       html.enable = true;
       typescript.enable = true;
+      tsx.enable = true;
       go.enable = true;
       yaml.enable = true;
       rust.enable = true;
