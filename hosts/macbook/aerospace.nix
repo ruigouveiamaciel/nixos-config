@@ -18,28 +18,24 @@
       };
       mode = {
         main.binding = {
-          alt-period = "layout tiles horizontal vertical";
-          alt-comma = "layout accordion horizontal vertical";
-          alt-f = "layout floating tiling";
-          alt-r = "flatten-workspace-tree";
+          cmd-period = "layout tiles horizontal vertical";
+          cmd-comma = "layout accordion horizontal vertical";
+          cmd-d = "layout floating tiling";
 
-          alt-h = ["focus left" "move-mouse window-force-center"];
-          alt-j = ["focus down" "move-mouse window-force-center"];
-          alt-k = ["focus up" "move-mouse window-force-center"];
-          alt-l = ["focus right" "move-mouse window-force-center"];
+          cmd-h = ["focus left" "move-mouse window-force-center"];
+          cmd-j = ["focus down" "move-mouse window-force-center"];
+          cmd-k = ["focus up" "move-mouse window-force-center"];
+          cmd-l = ["focus right" "move-mouse window-force-center"];
 
-          alt-shift-h = "move left";
-          alt-shift-j = "move down";
-          alt-shift-k = "move up";
-          alt-shift-l = "move right";
+          cmd-shift-h = "move left";
+          cmd-shift-j = "move down";
+          cmd-shift-k = "move up";
+          cmd-shift-l = "move right";
 
-          alt-ctrl-h = "join-with left";
-          alt-ctrl-j = "join-with down";
-          alt-ctrl-k = "join-with up";
-          alt-ctrl-l = "join-with right";
-
-          alt-n = "resize smart -50";
-          alt-p = "resize smart +50";
+          cmd-ctrl-h = "join-with left";
+          cmd-ctrl-j = "join-with down";
+          cmd-ctrl-k = "join-with up";
+          cmd-ctrl-l = "join-with right";
 
           cmd-1 = "workspace 1";
           cmd-2 = "workspace 2";
