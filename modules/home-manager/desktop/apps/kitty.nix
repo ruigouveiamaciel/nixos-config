@@ -21,6 +21,14 @@
       shell = "${config.programs.fish.package}/bin/fish";
     };
     extraConfig = ''
+      # Left Option = Alt/Meta (for tmux M-<key> bindings)
+      # Right Option = special characters (@, #, etc.)
+      macos_option_as_alt left
+
+      # Let Cmd+F fall through to the shell (fzf, fish, etc.)
+      # instead of opening kitty's scrollback search.
+      map cmd+f no_op
+
       # Fonts
       font_family Iosevka Kitty Extended
       bold_font Iosevka Kitty Bold Extended
