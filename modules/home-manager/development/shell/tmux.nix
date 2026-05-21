@@ -105,8 +105,8 @@ in {
       bind -n M-v split-window -h -c "#{pane_current_path}"
 
       # Pane management
-      bind -n M-z resize-pane -Z          # zoom/maximize toggle
-      bind -n M-x kill-pane               # close current pane
+      bind -n M-z resize-pane -Z
+      bind -n M-x confirm-before -p "kill-pane #P? (y/n)" kill-pane
 
       # Window management
       bind -n M-t new-window -c "#{pane_current_path}"
