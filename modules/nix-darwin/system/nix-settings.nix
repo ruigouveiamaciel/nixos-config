@@ -10,9 +10,15 @@
         "https://nix-community.cachix.org"
       ];
       substituters = trusted-substituters;
-      auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
       warn-dirty = false;
     };
+    # TODO: Added in 26.05, time of writting is 25.11
+    # optimise = {
+    #   automatic = true;
+    #   persistent = true;
+    #   randomizedDelaySec = "300";
+    #   dates = ["6:05"];
+    # };
   };
 }
