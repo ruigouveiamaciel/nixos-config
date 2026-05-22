@@ -7,7 +7,7 @@
   config = lib.mkMerge ([
       {
         programs.fish.shellAliases = {
-          "pi" = "pnpx @earendil-works/pi-coding-agent@0.74.0";
+          "pi" = "pnpx @earendil-works/pi-coding-agent@0.75.4";
         };
         home = {
           activation = {

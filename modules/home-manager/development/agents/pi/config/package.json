@@ -2,7 +2,7 @@
   "name": "pi-agent",
   "private": true,
   "dependencies": {
-    "@earendil-works/pi-coding-agent": "0.74.0",
+    "@earendil-works/pi-coding-agent": "0.75.4",
     "@types/node": "25.6.0",
     "matcher": "6.0.0",
     "minimatch": "10.2.5",
