@@ -57,9 +57,10 @@
     text = ''
       set -euo pipefail
 
-      session=$(tmux list-sessions -F "#{session_last_attached}\t#{session_name}" \
+      session=$(tmux list-sessions -F "#{session_last_attached}|#{session_name}" \
         | sort -rn \
-        | cut -f2 \
+        | cut -d'|' -f2 \
+        | grep -Ev '^[0-9]+$' \
         | fzf --tmux center,80%,60%) || exit 0
 
       [ -z "''${session:-}" ] && exit 0
