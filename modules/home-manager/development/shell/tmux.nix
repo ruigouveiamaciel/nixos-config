@@ -103,6 +103,10 @@ in {
     mouse = true;
     keyMode = "vi";
     extraConfig = ''
+      # Extended keys (CSI u) for disambiguated modifier+key sequences
+      set -s extended-keys on
+      set -as terminal-features 'xterm*:extkeys'
+
       # Status bar
       set -g status-left-length 35
       set -g status-left "[#{=/30/…:session_name}]  "
