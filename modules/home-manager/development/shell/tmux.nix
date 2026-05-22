@@ -41,7 +41,8 @@
 
       DIR="$HOME/repositories"
 
-      path=$(fd -H -t d '^\.git$' "$DIR/" -x dirname {} \
+      path=$(fd -H -t d '^\.git$' "$DIR/" --max-depth 3 -x dirname {} \
+        | sort \
         | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2) || exit 0
 
       [ -z "''${path:-}" ] && exit 0
@@ -80,6 +81,7 @@
       DIR="$HOME/projects"
 
       path=$(fd -t d . "$DIR/" --max-depth 1 \
+        | sort \
         | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2) || exit 0
 
       [ -z "''${path:-}" ] && exit 0
