@@ -51,6 +51,26 @@
     '';
   };
 
+  tmux-recent = pkgs.writeShellApplication {
+    name = "tmux-recent";
+    text = ''
+      set -euo pipefail
+
+      session=$(tmux list-sessions -F "#{session_last_attached}\t#{session_name}" \
+        | sort -rn \
+        | cut -f2 \
+        | fzf --tmux center,80%,60%) || exit 0
+
+      [ -z "''${session:-}" ] && exit 0
+
+      if [ -n "''${TMUX:-}" ]; then
+        tmux switch-client -t "$session"
+      else
+        tmux attach-session -t "$session"
+      fi
+    '';
+  };
+
   tmux-proj = pkgs.writeShellApplication {
     name = "tmux-proj";
     runtimeInputs = [tmux-dev];
@@ -70,7 +90,7 @@
     '';
   };
 in {
-  home.packages = [tmux-dev tmux-repo tmux-proj];
+  home.packages = [tmux-dev tmux-repo tmux-proj tmux-recent];
 
   programs.tmux = {
     enable = true;
@@ -80,7 +100,7 @@ in {
     mouse = true;
     keyMode = "vi";
     extraConfig = ''
-      # --- Status bar ---
+      # Status bar
       set -g status-left-length 35
       set -g status-left "[#{=/30/…:session_name}]  "
       set -g status-right ""
@@ -130,8 +150,9 @@ in {
       # Session / misc
       bind -n M-i run-shell tmux-proj
       bind -n M-o run-shell tmux-repo
+      bind -n M-r run-shell tmux-recent
       bind -n M-d detach-client
-      bind -n M-r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded"
+      bind -n M-c source-file ~/.config/tmux/tmux.conf \; display "Config reloaded"
     '';
   };
 }
