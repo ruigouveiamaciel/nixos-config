@@ -7,9 +7,10 @@
   config = lib.mkMerge ([
       {
         programs.fish.shellAliases = {
-          "pi" = "pnpx @earendil-works/pi-coding-agent@0.75.4";
+          # "pi" = "pnpx @earendil-works/pi-coding-agent@0.75.4";
         };
         home = {
+          packages = with pkgs; [myPi];
           activation = {
             piPackageActivation = lib.hm.dag.entryAfter ["writeBoundary"] ''
               mkdir -p $HOME/.pi/agent
