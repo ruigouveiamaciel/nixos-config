@@ -103,11 +103,8 @@ in {
     mouse = true;
     keyMode = "vi";
     extraConfig = ''
-      # Extended keys (CSI u) for disambiguated modifier+key sequences
-      # (e.g. Ctrl+. , Ctrl+Shift+letter). `always` forwards them to inner
-      # apps even when they don't explicitly request the protocol.
-      set -as terminal-features 'xterm*:extkeys'
-      set -s extended-keys always
+      set -g extended-keys on
+      set -as terminal-features 'xterm-kitty:extkeys'
       set -g extended-keys-format csi-u
 
       # Status bar
