@@ -600,7 +600,7 @@
     autocomplete.blink-cmp = {
       enable = true;
       mappings = {
-        complete = "<C-.>";
+        complete = "<C-Space>";
         close = "<C-e>";
         confirm = "<CR>";
         next = "<C-n>";
