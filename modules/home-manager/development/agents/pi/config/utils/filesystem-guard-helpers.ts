@@ -73,7 +73,7 @@ const FILESYSTEM_PERMISSION_RULES: FilesystemPermissionRule[] = (
         "pi agent configuration is now stored in the NixOS configuration on: ~/projects/nixos-config/modules/home-manager/development/agents/pi/config/",
     },
     {
-      globs: ["~/projects/**"],
+      globs: ["~/projects/**", "~/repositories/**"],
       access: "readwrite",
       action: "allow",
     },
