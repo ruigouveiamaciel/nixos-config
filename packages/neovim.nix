@@ -293,6 +293,21 @@
         desc = "Toggle undo tree";
       }
       {
+        key = "<leader>tw";
+        mode = "n";
+        lua = true;
+        action =
+          /*
+          lua
+          */
+          ''
+            function()
+              vim.wo.wrap = not vim.wo.wrap
+            end
+          '';
+        desc = "Toggle line wrapping";
+      }
+      {
         key = "<leader>tl";
         mode = "n";
         lua = true;
