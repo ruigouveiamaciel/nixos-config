@@ -36,8 +36,11 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence = {
         "/persist" = {
-          files = [
-            ".ssh/known_hosts"
+          directories = [
+            {
+              directory = ".ssh";
+              mode = "0700";
+            }
           ];
         };
       };

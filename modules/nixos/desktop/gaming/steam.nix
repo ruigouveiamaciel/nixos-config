@@ -24,6 +24,10 @@
                   mode = "0700";
                 }
                 {
+                  directory = ".local/share/vulkan";
+                  mode = "0700";
+                }
+                {
                   directory = ".factorio";
                   mode = "0700";
                 }

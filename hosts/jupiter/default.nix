@@ -26,6 +26,11 @@
     useDHCP = true;
   };
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+
   boot = {
     plymouth.enable = true;
     loader.systemd-boot = {
