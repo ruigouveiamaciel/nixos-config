@@ -5,7 +5,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/linuxserver/qbittorrent:5.2.1";
+      image = "docker.io/linuxserver/qbittorrent:5.1.4";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
