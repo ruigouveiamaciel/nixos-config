@@ -9,7 +9,7 @@
         programs.ssh = {
           enable = true;
           enableDefaultConfig = false;
-          matchBlocks = {
+          settings = {
             jupiter = {
               host = "10.0.0.42";
               forwardAgent = true;
@@ -26,10 +26,10 @@
         };
 
         programs.fish.shellAbbrs = {
-          "jupiter" = "ssh smokewow@${programs.ssh.matchBlocks.jupiter.host}";
-          "unlock-jupiter" = "ssh root@${programs.ssh.matchBlocks.jupiter.host} -p 2222";
-          "saturn" = "ssh smokewow@${programs.ssh.matchBlocks.saturn.host}";
-          "unlock-saturn" = "ssh root@${programs.ssh.matchBlocks.saturn.host} -p 2222";
+          "jupiter" = "kitty +kitten ssh smokewow@${programs.ssh.settings.jupiter.host}";
+          "unlock-jupiter" = "ssh root@${programs.ssh.settings.jupiter.host} -p 2222";
+          "saturn" = "kitty +kitten ssh smokewow@${programs.ssh.settings.saturn.host}";
+          "unlock-saturn" = "ssh root@${programs.ssh.settings.saturn.host} -p 2222";
         };
       }
     ]
