@@ -9,17 +9,18 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "ghcr.io/home-assistant/home-assistant:2026.2";
+      image = "ghcr.io/home-assistant/home-assistant:2026.6";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
       };
+      capabilities = {
+        CAP_NET_RAW = true;
+        CAP_NET_ADMIN = true;
+      };
       extraOptions = [
-        "--network=${serviceName}"
-      ];
-      ports = [
-        "10.0.50.42:8123:8123/tcp"
+        "--network=host"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
@@ -36,6 +37,9 @@ in {
       extraOptions = [
         "--network=${serviceName}"
       ];
+      ports = [
+        "127.0.0.1:1883:1883/tcp"
+      ];
       volumes = let
         config = pkgs.writeText "mosquitto.conf" ''
           listener 1883
@@ -49,7 +53,7 @@ in {
     };
     "${serviceName}-zigbee2mqtt" = {
       autoStart = true;
-      image = "ghcr.io/koenkk/zigbee2mqtt:2.8";
+      image = "ghcr.io/koenkk/zigbee2mqtt:2.11";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -73,30 +77,13 @@ in {
       ];
       dependsOn = ["${serviceName}-mosquitto"];
     };
-    "${serviceName}-cloudflared" = {
-      autoStart = true;
-      image = "docker.io/cloudflare/cloudflared:latest";
-      pull = "newer";
-      podman = {
-        sdnotify = "conmon";
-        user = serviceName;
-      };
-      extraOptions = [
-        "--cap-drop=ALL"
-        "--network=${serviceName}"
-      ];
-      environmentFiles = [
-        "/persist/services/${serviceName}/secrets.env"
-      ];
-      cmd = ["tunnel" "run"];
-    };
   };
 
   users.groups."${serviceName}".gid = serviceId;
   users.users."${serviceName}" = {
     isNormalUser = true;
     linger = true;
-    packages = [config.virtualisation.podman.package];
+    packages = [config.virtualisation.podman.package pkgs.passt];
     uid = serviceId;
     group = serviceName;
     extraGroups = ["dialout"];
@@ -115,12 +102,17 @@ in {
       }
     ];
   };
-
-  networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
-    8123
-    8124
-    8125
-  ];
+  networking.firewall.interfaces.enp90s0 = {
+    allowedUDPPorts = [
+      5353
+    ];
+    allowedTCPPorts = [
+      8123
+      8124
+      8125
+      21064
+    ];
+  };
 
   boot.postBootCommands = let
     uid = builtins.toString config.users.users."${serviceName}".uid;
@@ -131,11 +123,9 @@ in {
     chmod 750 /var/lib/${serviceName}
     mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt,node-red}
     mkdir -p /persist/services/${serviceName}/mosquitto/{data,log}
-    touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
     chmod 750 -R /persist/services/${serviceName}/{config,zigbee2mqtt,node-red,mosquitto}
-    chmod 600 /persist/services/${serviceName}/secrets.env
   '';
 
   systemd.services = {
@@ -163,10 +153,6 @@ in {
       after = ["${serviceName}-network.service"];
     };
     "${config.virtualisation.oci-containers.containers."${serviceName}-zigbee2mqtt".serviceName}" = {
-      requires = ["${serviceName}-network.service"];
-      after = ["${serviceName}-network.service"];
-    };
-    "${config.virtualisation.oci-containers.containers."${serviceName}-cloudflared".serviceName}" = {
       requires = ["${serviceName}-network.service"];
       after = ["${serviceName}-network.service"];
     };
