@@ -20,6 +20,7 @@ in {
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
+        "/persist/forced/media/music:/media/music:ro"
       ];
     };
     "${serviceName}-mosquitto" = {
