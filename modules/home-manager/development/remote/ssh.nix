@@ -29,7 +29,7 @@
           "jupiter" = "kitty +kitten ssh smokewow@10.0.0.42";
           "unlock-jupiter" = "ssh root@10.0.0.42 -p 2222";
           "saturn" = "kitty +kitten ssh smokewow@10.0.50.42";
-          "unlock-saturn" = "ssh root@$10.0.50.42 -p 2222";
+          "unlock-saturn" = "ssh root@10.0.50.42 -p 2222";
         };
       }
     ]
