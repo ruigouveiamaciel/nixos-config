@@ -103,6 +103,7 @@ in {
     mouse = true;
     keyMode = "vi";
     extraConfig = ''
+      set -g allow-passthrough on
       set -g extended-keys on
       set -as terminal-features 'xterm-kitty:extkeys'
       set -g extended-keys-format csi-u

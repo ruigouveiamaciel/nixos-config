@@ -3,16 +3,16 @@
   lib,
   ...
 }: let
-  version = "0.75.5";
+  version = "0.78.0";
 
   # pi-coding-agent ships a prebuilt `dist/` and an `npm-shrinkwrap.json`,
   # but its shrinkwrap is missing `integrity` for the sibling
   # @earendil-works/pi-* tarballs. We patch them in before letting
   # `fetchNpmDeps` populate the offline cache.
   integrityFixups = {
-    "node_modules/@earendil-works/pi-agent-core" = "sha512-LHygOgsW2pgXKb3IkXkOAeZPovHr9VF+EixgXVsDNuB4jmhEOXgshy/zksZ7slkUAx10OQ9W1Ed/2jsnhd1NqA==";
-    "node_modules/@earendil-works/pi-ai" = "sha512-zf1F5kXk1pqZeFShXOqq9ibUk8QdtRoLCDPAjO+hj44e3EUs9/GFO2qnhTC5+JA2uwVCx+WCNe1PiCjlBYWm5w==";
-    "node_modules/@earendil-works/pi-tui" = "sha512-LkXUM1/49pvzzeI39Y5wjBMlgafcCf67HCLhB9Z7yuXHy4XgT+VqxWcZVW5hBdhQsHZd0znjJotfGH1BzxMfiA==";
+    "node_modules/@earendil-works/pi-agent-core" = "sha512-xhWd59Qzd8yO88gYQw2S4dEQstJJEiUtxRP01//YzVJ61jCtUASMfcyAmYhgGYR4Onp7GmwEAbBBGOiV6Iwk9g==";
+    "node_modules/@earendil-works/pi-ai" = "sha512-q0hUrvT6ngT6cgBX0oIbzfQfmzztgdkZobP8OTL+sCOOBlnG6+1YRt8g7zO9CC/4NdeYEqa7uGqWdQhH0fjCLA==";
+    "node_modules/@earendil-works/pi-tui" = "sha512-3a705FnsVVUhAyceShNB3kS2rpxcxLcx+hqB0u6MMMpHwQGbW+m++MqA6r7eOzq/8FLx5e3vDh38h/SVTk2qzw==";
   };
 
   patchScript = pkgs.writeText "patch-pi-coding-agent.py" ''
@@ -48,12 +48,12 @@ in
 
     src = pkgs.fetchurl {
       url = "https://registry.npmjs.org/@earendil-works/pi-coding-agent/-/pi-coding-agent-${version}.tgz";
-      hash = "sha256-iP/3TR/MkzQ+g5qoherLNeiM2quX2sJjaxG+zDskmfw=";
+      hash = "sha256-oEfadYAdkTXjaKRxHQbQyktqtwiAGrgv0TZt3h7t0O4=";
     };
 
     postPatch = patchShrinkwrap;
 
-    npmDepsHash = "sha256-YcgMqgduPUnF8uve5EQ2Hh3ubIxhG0l6+cdVKU7jUcE=";
+    npmDepsHash = "sha256-ZkjJKdGLklcisgmIuZ2XPhBNLmRKhukpsaVjIjqQ8/I=";
     npmDepsFetcherVersion = 2;
     makeCacheWritable = true;
 
