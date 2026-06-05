@@ -15,10 +15,6 @@ in {
         sdnotify = "conmon";
         user = serviceName;
       };
-      capabilities = {
-        CAP_NET_RAW = true;
-        CAP_NET_ADMIN = true;
-      };
       extraOptions = [
         "--network=host"
       ];

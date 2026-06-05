@@ -18,8 +18,6 @@
 
   home-manager.users.smokewow.imports = [./home.nix];
 
-  virtualisation.docker.enable = true;
-
   networking = {
     hostName = "jupiter";
     hostId = "397d7c75";

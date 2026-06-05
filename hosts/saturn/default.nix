@@ -1,9 +1,4 @@
-{
-  myModulesPath,
-  lib,
-  config,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/users/smokewow"
@@ -59,29 +54,18 @@
       configurationLimit = 7;
     };
 
-    # Don't hang boot because of network timeout
     initrd.systemd.network.wait-online.enable = false;
   };
 
-  time.timeZone = "Etc/UTC";
   systemd.network.wait-online.enable = false;
+
+  time.timeZone = "Etc/UTC";
 
   services.journald.extraConfig = ''
     SystemMaxUse=2G
     SystemKeepFree=1G
     MaxRetentionSec=2592000
   '';
-
-  systemd.services = lib.attrsets.mapAttrs' (_: {serviceName, ...}:
-    lib.attrsets.nameValuePair serviceName {
-      serviceConfig = {
-        # Required to for rootless containers to work with sdnotify=conmon
-        # Already been fixed for 26.05, merge for backport to 25.11 was not
-        # merged
-        Delegate = true;
-      };
-    })
-  config.virtualisation.oci-containers.containers;
 
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";
