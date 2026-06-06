@@ -20,7 +20,6 @@ in {
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
-        "/persist/forced/media/music:/media/music:ro"
       ];
     };
     "${serviceName}-mosquitto" = {
@@ -74,6 +73,29 @@ in {
       ];
       dependsOn = ["${serviceName}-mosquitto"];
     };
+    "${serviceName}-music-assistant" = {
+      autoStart = true;
+      image = "ghcr.io/music-assistant/server:2.8";
+      pull = "newer";
+      extraOptions = [
+        "--network=${serviceName}_macvlan"
+        "--ip"
+        "10.0.50.95"
+        "--sysctl"
+        "net.ipv6.conf.all.disable_ipv6=1"
+        "--sysctl"
+        "net.ipv6.conf.default.disable_ipv6=1"
+        "--sysctl"
+        "net.ipv6.conf.lo.disable_ipv6=1"
+      ];
+      environment = {
+        LOG_LEVEL = "info";
+      };
+      volumes = [
+        "/persist/services/${serviceName}/music-assistant:/data:U"
+        "/persist/forced/media/music:/media:ro"
+      ];
+    };
   };
 
   users.groups."${serviceName}".gid = serviceId;
@@ -118,7 +140,7 @@ in {
     mkdir -p /var/lib/${serviceName}
     chown ${uid}:${gid} /var/lib/${serviceName}
     chmod 750 /var/lib/${serviceName}
-    mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt,node-red}
+    mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt,music-assistant}
     mkdir -p /persist/services/${serviceName}/mosquitto/{data,log}
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
@@ -126,6 +148,33 @@ in {
   '';
 
   systemd.services = {
+    "${serviceName}-network-root" = {
+      requires = ["user-runtime-dir@${builtins.toString config.users.users.root.uid}.service"];
+      after = ["user-runtime-dir@${builtins.toString config.users.users.root.uid}.service"];
+      script = let
+        podman = "${config.virtualisation.podman.package}/bin/podman";
+      in ''
+        ${podman} network exists ${serviceName} || \
+        ${podman} network create \
+          -d macvlan \
+          --subnet=10.0.50.0/24 \
+          --gateway=10.0.50.1 \
+          -o parent=enp90s0 \
+          ${serviceName}_macvlan
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+    };
+    "${config.virtualisation.oci-containers.containers."${serviceName}".serviceName}" = {
+      requires = ["${serviceName}-network-root.service"];
+      after = ["${serviceName}-network-root.service"];
+    };
+    "${config.virtualisation.oci-containers.containers."${serviceName}-music-assistant".serviceName}" = {
+      requires = ["${serviceName}-network-root.service"];
+      after = ["${serviceName}-network-root.service"];
+    };
     "${serviceName}-network" = {
       requires = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
       after = ["user-runtime-dir@${builtins.toString config.users.users."${serviceName}".uid}.service"];
@@ -140,10 +189,6 @@ in {
         User = serviceName;
         RemainAfterExit = true;
       };
-    };
-    "${config.virtualisation.oci-containers.containers."${serviceName}".serviceName}" = {
-      requires = ["${serviceName}-network.service"];
-      after = ["${serviceName}-network.service"];
     };
     "${config.virtualisation.oci-containers.containers."${serviceName}-mosquitto".serviceName}" = {
       requires = ["${serviceName}-network.service"];
