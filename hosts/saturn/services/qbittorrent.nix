@@ -19,9 +19,9 @@ in {
         TORRENTING_PORT = "6881";
       };
       ports = [
-        "10.0.50.42:1338:1338/tcp"
-        "10.0.50.42:6881:6881/tcp"
-        "10.0.50.42:6881:6881/udp"
+        "1338:1338/tcp"
+        "6881:6881/tcp"
+        "6881:6881/udp"
       ];
       volumes = [
         "/persist/services/${serviceName}/data:/config:U"

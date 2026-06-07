@@ -17,7 +17,7 @@ in {
         PGID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "10.0.50.42:8191:8191/tcp"
+        "8191:8191/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"

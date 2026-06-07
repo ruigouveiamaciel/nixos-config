@@ -16,7 +16,7 @@ in {
         PORT = "5055";
       };
       ports = [
-        "10.0.50.42:5055:5055/tcp"
+        "5055:5055/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/app/config:U"

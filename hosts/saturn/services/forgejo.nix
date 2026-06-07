@@ -20,8 +20,8 @@ in {
         USER_GID = builtins.toString config.users.groups."${serviceName}".gid;
       };
       ports = [
-        "10.0.50.42:2015:3000/tcp"
-        "10.0.50.42:2222:2222/tcp"
+        "2015:3000/tcp"
+        "2222:2222/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/data:/var/lib/gitea:U"

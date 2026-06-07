@@ -15,8 +15,7 @@ in {
         "--device=/dev/dri:/dev/dri"
       ];
       ports = [
-        "10.0.50.10:8096:8096/tcp"
-        "10.0.50.42:8096:8096/tcp"
+        "8096:8096/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"

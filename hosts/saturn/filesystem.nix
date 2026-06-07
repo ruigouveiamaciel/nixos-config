@@ -206,6 +206,12 @@
         group = "root";
         mode = "0755";
       }
+      {
+        directory = "/var/lib/containers";
+        user = "root";
+        group = "root";
+        mode = "0755";
+      }
     ];
     files = [
       {

@@ -43,7 +43,7 @@ in {
         "--cap-drop=ALL"
       ];
       ports = [
-        "10.0.50.42:1601:5000/tcp"
+        "1601:5000/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/data:/data:U"

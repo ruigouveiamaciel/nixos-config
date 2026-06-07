@@ -18,7 +18,7 @@ in {
         SEARXNG_BASE_URL = "http://10.0.50.42:8888/";
       };
       ports = [
-        "10.0.50.42:8888:8080/tcp"
+        "8888:8080/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/etc/searxng:U"

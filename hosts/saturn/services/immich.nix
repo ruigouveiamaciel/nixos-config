@@ -19,7 +19,7 @@ in {
         "--device=/dev/dri:/dev/dri"
       ];
       ports = [
-        "10.0.50.42:2283:2283/tcp"
+        "2283:2283/tcp"
       ];
       volumes = [
         "/persist/services/${serviceName}/upload:/data:U"
