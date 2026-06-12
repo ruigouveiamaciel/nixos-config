@@ -11,15 +11,13 @@ in {
         sdnotify = "conmon";
         user = serviceName;
       };
+      extraOptions = ["--network=host"];
       environment = {
         PUID = builtins.toString config.users.users."${serviceName}".uid;
         PGID = builtins.toString config.users.groups."${serviceName}".gid;
         HOMEPAGE_ALLOWED_HOSTS = "10.0.50.42:8080";
         PORT = "8080";
       };
-      ports = [
-        "8080:8080/tcp"
-      ];
       volumes = [
         "/persist/services/${serviceName}/config:/app/config"
       ];
