@@ -157,6 +157,15 @@
     ];
 
     configFile = {
+      "kwalletrc" = {
+        "Wallet" = {
+          "Enabled" = false;
+          "First Use" = false;
+        };
+        "Auto Allow" = {
+          "kwalletd5" = "";
+        };
+      };
       baloofilerc."Basic Settings"."Indexing-Enabled" = false;
       kwinrc = {
         "Effect-overview"."BorderActivate".value = 9;

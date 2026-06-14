@@ -12,6 +12,7 @@
         programs.firefox = {
           enable = true;
           package = pkgs.librewolf;
+          configPath = ".mozilla/firefox";
           profiles.smokewow = {
             id = 0;
             isDefault = true;
@@ -33,6 +34,10 @@
     ++ (lib.optional (options.home ? "persistence") {
       home.persistence."/persist" = {
         directories = [
+          {
+            directory = ".mozila/firefox";
+            mode = "0700";
+          }
           {
             directory = ".librewolf";
             mode = "0700";

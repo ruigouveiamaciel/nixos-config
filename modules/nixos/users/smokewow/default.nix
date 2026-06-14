@@ -27,9 +27,10 @@ in {
               "docker"
               "podman"
               "dialout"
+              "plugdev"
             ];
             shell = config.programs.fish.package;
-            hashedPassword = "";
+            password = "123456";
           };
         };
       }
