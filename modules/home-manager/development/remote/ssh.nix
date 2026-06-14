@@ -14,10 +14,10 @@
           enable = true;
           enableDefaultConfig = false;
           settings = {
-            "*" = {
-              # IdentitiesOnly = "yes";
-              # IdentityAgent = "none";
-            };
+            # "*" = {
+            #   IdentitiesOnly = "yes";
+            #   IdentityAgent = "none";
+            # };
             jupiter = {
               header = "Match Host 10.0.0.42";
               forwardAgent = true;
