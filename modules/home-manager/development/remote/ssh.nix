@@ -6,10 +6,18 @@
 }: {
   config = lib.mkMerge ([
       {
+        # services.ssh-agent = {
+        #   enable = true;
+        # };
+
         programs.ssh = {
           enable = true;
           enableDefaultConfig = false;
           settings = {
+            "*" = {
+              # IdentitiesOnly = "yes";
+              # IdentityAgent = "none";
+            };
             jupiter = {
               header = "Match Host 10.0.0.42";
               forwardAgent = true;
