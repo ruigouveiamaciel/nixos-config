@@ -9,8 +9,6 @@
     "${myModulesPath}/desktop/apps/kitty.nix"
   ];
 
-  services.gpg-agent.enable = lib.mkForce false;
-
   programs = {
     git.settings.user = {
       email = lib.mkForce "rum@axogroup.com";
