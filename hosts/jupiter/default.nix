@@ -13,7 +13,8 @@
 
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
-    "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+    # "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+    "${myModulesPath}/security/pam-u2f-auth.nix"
   ];
 
   home-manager.users.smokewow.imports = [./home.nix];

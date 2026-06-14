@@ -12,8 +12,6 @@
       execWheelOnly = true;
       extraConfig = ''
         Defaults env_keep+=SSH_AUTH_SOCK
-        Defaults env_keep+=SSH_CLIENT
-        Defaults env_keep+=SSH_TTY
       '';
     };
   };
