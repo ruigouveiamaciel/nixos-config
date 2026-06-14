@@ -30,7 +30,7 @@ in {
               "plugdev"
             ];
             shell = config.programs.fish.package;
-            password = "123456";
+            hashedPassword = "";
           };
         };
       }
