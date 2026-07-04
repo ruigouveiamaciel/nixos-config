@@ -25,6 +25,7 @@
     cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = true;
     bluetooth.enable = true;
+    amdgpu.opencl.enable = true;
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

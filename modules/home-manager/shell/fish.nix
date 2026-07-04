@@ -11,7 +11,7 @@ in {
       {
         programs.fish = {
           enable = true;
-          package = pkgs.unstable.fish;
+          package = pkgs.fish;
           shellAbbrs = {
             ls = lib.mkIf (hasPackage "eza") "eza";
             ll = lib.mkIf (hasPackage "eza") "eza -lh";

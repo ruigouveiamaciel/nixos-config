@@ -11,6 +11,7 @@
           packages = with pkgs; [
             vlc
             rawtherapee
+            unstable.davinci-resolve
           ];
 
           file.".config/RawTherapee/clutsdir".source = pkgs.fetchzip {
