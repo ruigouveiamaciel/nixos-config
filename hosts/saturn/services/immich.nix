@@ -1,7 +1,7 @@
 {config, ...}: let
   serviceName = "immich";
   serviceId = 1016;
-  version = "v2";
+  version = "v3";
 in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
@@ -65,7 +65,7 @@ in {
     "${serviceName}-redis" = {
       hostname = "redis";
       autoStart = true;
-      image = "docker.io/valkey/valkey:9@sha256:546304417feac0874c3dd576e0952c6bb8f06bb4093ea0c9ca303c73cf458f63";
+      image = "docker.io/valkey/valkey:9";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -86,7 +86,7 @@ in {
     "${serviceName}-database" = {
       hostname = "database";
       autoStart = true;
-      image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23";
+      image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
