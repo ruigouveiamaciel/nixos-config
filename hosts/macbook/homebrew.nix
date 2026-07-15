@@ -2,7 +2,6 @@
   homebrew = {
     casks = [
       "raycast"
-      "slack"
       "notunes"
       "scroll-reverser"
       "waterfox"
@@ -10,7 +9,6 @@
       "microsoft-teams"
       "microsoft-outlook"
       "capslocknodelay"
-      "keymapp"
       "google-chrome"
       "wezterm"
       "kitty"

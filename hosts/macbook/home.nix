@@ -22,8 +22,8 @@
         end
       '';
       shellAbbrs = {
-        "rebuild" = "cd ~/projects/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
-        "build" = "cd ~/projects/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
+        "rebuild" = "cd ~/repositories/nixos-config && sudo darwin-rebuild switch --print-build-logs --flake .#work-macbook";
+        "build" = "cd ~/repositories/nixos-config && darwin-rebuild build --print-build-logs --flake .#work-macbook &| nom";
         "reviews" = "cd ~/projects/frontend-monorepo && glab mr list --reviewer=@me --output=json --not-draft | jq -r \".[] | \\\"\\(.iid) - \\(.title)\\n\\(.web_url)\\n\\\"\";";
       };
     };
