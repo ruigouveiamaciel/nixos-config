@@ -10,7 +10,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_7_0;
+    kernelPackages = pkgs.unstable.linuxPackages_7_1;
     initrd.availableKernelModules = ["igc" "xhci_pci" "thunderbolt" "nvme" "usb_storage" "usbhid" "sd_mod"];
     initrd.kernelModules = ["dm-snapshot"];
     kernelModules = ["kvm-intel"];

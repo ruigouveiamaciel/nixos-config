@@ -31,6 +31,10 @@
                   directory = ".factorio";
                   mode = "0700";
                 }
+                {
+                  directory = ".cache/mesa_shader_cache";
+                  mode = "0700";
+                }
               ];
             };
           });

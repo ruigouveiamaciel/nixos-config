@@ -19,6 +19,7 @@
     ./restic.nix
     ./paperless.nix
     ./searxng.nix
+    ./ttrss.nix
   ];
 
   security.apparmor.enable = true;

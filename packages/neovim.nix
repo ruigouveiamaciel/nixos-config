@@ -610,6 +610,7 @@
       enable = true;
       formatOnSave = true;
       otter-nvim.enable = true;
+      presets.tailwindcss-language-server.enable = true;
     };
 
     autocomplete.blink-cmp = {
@@ -725,6 +726,11 @@
       python.enable = true;
       sql.enable = true;
       json.enable = true;
+      # svelte.enable = true;
+      vue = {
+        enable = true;
+        format.type = ["biome" "biome-check" "biome-organize-imports" "prettier"];
+      };
     };
   };
 }

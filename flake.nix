@@ -56,8 +56,15 @@
         work-macbook = mkDarwinSystem ./hosts/macbook;
       };
 
-      packages = pkgsForAllSystems ({pkgs, ...}: (import ./packages {
+      packages = pkgsForAllSystems ({
+        # system,
+        pkgs,
+        ...
+      }: (import ./packages {
         inherit inputs pkgs;
+        # pkgs = import inputs.nixpkgs-unstable {
+        #   inherit system;
+        # };
       }));
 
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);

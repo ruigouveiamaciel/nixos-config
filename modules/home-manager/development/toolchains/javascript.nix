@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    nodejs_24
+    nodejs_26
     pnpm
     bun
   ];

@@ -11,6 +11,9 @@
           packages = with pkgs; [
             vlc
             rawtherapee
+            picard
+            ffmpeg
+            gimp
             # Davinci Resolve Photo - still doesn't support .ORF raws
             # unstable.davinci-resolve
           ];
