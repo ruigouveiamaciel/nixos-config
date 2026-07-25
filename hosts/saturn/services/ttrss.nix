@@ -4,29 +4,36 @@
 in {
   virtualisation.oci-containers.containers = {
     "${serviceName}-app" = {
+      hostname = "app";
       autoStart = true;
-      image = "supahgreg/tt-rss:latest";
+      image = "ghcr.io/tt-rss/tt-rss:latest";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
       };
-      user = "${builtins.toString config.users.users."${serviceName}".uid}:${builtins.toString config.users.groups."${serviceName}".gid}";
       extraOptions = [
         "--network=${serviceName}"
+        "--group-add"
+        "keep-groups"
       ];
       environmentFiles = [
         "/persist/services/${serviceName}/secrets.env"
       ];
+      environment = {
+        OWNER_UID = builtins.toString config.users.users."${serviceName}".uid;
+        OWNER_GID = builtins.toString config.users.groups."${serviceName}".gid;
+      };
       volumes = [
-        "/persist/services/${serviceName}/app:/var/www/html:U"
-        "/persist/services/${serviceName}/config.d:/opt/tt-rss/config.d:ro,U"
+        "/persist/services/${serviceName}/app:/var/www/html"
+        "/persist/services/${serviceName}/config.d:/opt/tt-rss/config.d:ro"
       ];
       dependsOn = [
         "${serviceName}-db"
       ];
     };
     "${serviceName}-db" = {
+      hostname = "db";
       autoStart = true;
       image = "postgres:17-alpine";
       pull = "newer";
@@ -37,11 +44,6 @@ in {
       extraOptions = [
         "--network=${serviceName}"
       ];
-      environment = {
-        POSTGRES_USER = "\${TTRSS_DB_USER}";
-        POSTGRES_PASSWORD = "\${TTRSS_DB_PASS}";
-        POSTGRES_DB = "\${TTRSS_DB_NAME}";
-      };
       environmentFiles = [
         "/persist/services/${serviceName}/secrets.env"
       ];
@@ -50,8 +52,9 @@ in {
       ];
     };
     "${serviceName}-updater" = {
+      hostname = "updater";
       autoStart = true;
-      image = "supahgreg/tt-rss:latest";
+      image = "ghcr.io/tt-rss/tt-rss:latest";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -59,13 +62,19 @@ in {
       };
       extraOptions = [
         "--network=${serviceName}"
+        "--group-add"
+        "keep-groups"
       ];
       environmentFiles = [
         "/persist/services/${serviceName}/secrets.env"
       ];
+      environment = {
+        OWNER_UID = builtins.toString config.users.users."${serviceName}".uid;
+        OWNER_GID = builtins.toString config.users.groups."${serviceName}".gid;
+      };
       volumes = [
-        "/persist/services/${serviceName}/app:/var/www/html:U"
-        "/persist/services/${serviceName}/config.d:/opt/tt-rss/config.d:ro,U"
+        "/persist/services/${serviceName}/app:/var/www/html"
+        "/persist/services/${serviceName}/config.d:/opt/tt-rss/config.d:ro"
       ];
       dependsOn = [
         "${serviceName}-app"
@@ -73,8 +82,9 @@ in {
       cmd = ["/opt/tt-rss/updater.sh"];
     };
     "${serviceName}-web" = {
+      hostname = "web-nginx";
       autoStart = true;
-      image = "supahgreg/tt-rss-web-nginx:latest";
+      image = "ghcr.io/tt-rss/tt-rss-web-nginx:latest";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -82,18 +92,25 @@ in {
       };
       extraOptions = [
         "--network=${serviceName}"
+        "--group-add"
+        "keep-groups"
       ];
       environmentFiles = [
         "/persist/services/${serviceName}/secrets.env"
       ];
+      environment = {
+        OWNER_UID = builtins.toString config.users.users."${serviceName}".uid;
+        OWNER_GID = builtins.toString config.users.groups."${serviceName}".gid;
+        RESOLVER = "10.89.0.1";
+      };
       volumes = [
-        "/persist/services/${serviceName}/app:/var/www/html:U,ro"
+        "/persist/services/${serviceName}/app:/var/www/html:ro"
       ];
       dependsOn = [
         "${serviceName}-app"
       ];
       ports = [
-        "8280:8280"
+        "8280:80/tcp"
       ];
     };
   };
@@ -136,7 +153,8 @@ in {
     touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
-    chmod 750 -R /persist/services/${serviceName}/{postgres,app,config.d}
+    chmod 750 -R /persist/services/${serviceName}/{postgres,config.d}
+    chmod 755 -R /persist/services/${serviceName}/app
     chmod 600 /persist/services/${serviceName}/secrets.env
   '';
 
