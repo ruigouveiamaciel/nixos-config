@@ -9,7 +9,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "ghcr.io/home-assistant/home-assistant:2026.6";
+      image = "ghcr.io/home-assistant/home-assistant:stable";
       pull = "newer";
       extraOptions = [
         "--network=${serviceName}-macvlan"
@@ -24,29 +24,6 @@ in {
       ];
       volumes = [
         "/persist/services/${serviceName}/config:/config:U"
-      ];
-    };
-    "${serviceName}-music-assistant" = {
-      autoStart = true;
-      image = "ghcr.io/music-assistant/server:2.8";
-      pull = "newer";
-      extraOptions = [
-        "--network=${serviceName}-macvlan"
-        "--ip"
-        "10.0.50.95"
-        "--sysctl"
-        "net.ipv6.conf.all.disable_ipv6=1"
-        "--sysctl"
-        "net.ipv6.conf.default.disable_ipv6=1"
-        "--sysctl"
-        "net.ipv6.conf.lo.disable_ipv6=1"
-      ];
-      environment = {
-        LOG_LEVEL = "info";
-      };
-      volumes = [
-        "/persist/services/${serviceName}/music-assistant:/data:U"
-        "/persist/forced/media/music:/media:ro"
       ];
     };
     "${serviceName}-mosquitto" = {
@@ -79,7 +56,7 @@ in {
     };
     "${serviceName}-zigbee2mqtt" = {
       autoStart = true;
-      image = "ghcr.io/koenkk/zigbee2mqtt:2.11";
+      image = "ghcr.io/koenkk/zigbee2mqtt:2";
       pull = "newer";
       extraOptions = [
         "--network=${serviceName}-macvlan"
@@ -137,12 +114,12 @@ in {
     mkdir -p /var/lib/${serviceName}
     chown ${uid}:${gid} /var/lib/${serviceName}
     chmod 750 /var/lib/${serviceName}
-    mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt,music-assistant}
+    mkdir -p /persist/services/${serviceName}/{config,zigbee2mqtt}
     mkdir -p /persist/services/${serviceName}/mosquitto/{data,log}
     touch /persist/services/${serviceName}/mosquitto/passwd
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
-    chmod 750 -R /persist/services/${serviceName}/{config,zigbee2mqtt,mosquitto,music-assistant}
+    chmod 750 -R /persist/services/${serviceName}/{config,zigbee2mqtt,mosquitto}
     chmod 700 /persist/services/${serviceName}/mosquitto/passwd
     chown 1883:1883 /persist/services/${serviceName}/mosquitto/passwd
   '';
@@ -168,10 +145,6 @@ in {
       };
     };
     "${config.virtualisation.oci-containers.containers."${serviceName}".serviceName}" = {
-      requires = ["${serviceName}-network.service"];
-      after = ["${serviceName}-network.service"];
-    };
-    "${config.virtualisation.oci-containers.containers."${serviceName}-music-assistant".serviceName}" = {
       requires = ["${serviceName}-network.service"];
       after = ["${serviceName}-network.service"];
     };

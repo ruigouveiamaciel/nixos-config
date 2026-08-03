@@ -59,7 +59,6 @@ in {
       "/persist/services/*/cache"
       "/persist/services/bazarr/config/backup"
       "/persist/services/bazarr/config/cache"
-      "/persist/services/forgejo/data/git/repositories/mirrors"
       "/persist/services/flaresolverr"
       "/persist/services/immich/upload/encoded-video"
       "/persist/services/immich/upload/backups"

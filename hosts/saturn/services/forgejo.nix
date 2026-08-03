@@ -5,7 +5,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "codeberg.org/forgejo/forgejo:14-rootless";
+      image = "codeberg.org/forgejo/forgejo:15-rootless";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -25,7 +25,6 @@ in {
       ];
       volumes = [
         "/persist/services/${serviceName}/data:/var/lib/gitea:U"
-        "/persist/services/${serviceName}/conf:/etc/gitea:U"
         "/etc/localtime:/etc/localtime:ro"
       ];
     };
@@ -83,11 +82,11 @@ in {
     mkdir -p /var/lib/${serviceName}
     chown ${uid}:${gid} /var/lib/${serviceName}
     chmod 750 /var/lib/${serviceName}
-    mkdir -p /persist/services/${serviceName}/{data,conf}
+    mkdir -p /persist/services/${serviceName}/data
     touch /persist/services/${serviceName}/secrets.env
     chown ${uid}:${gid} -R /persist/services/${serviceName}
     chmod 750 /persist/services/${serviceName}
-    chmod 750 -R /persist/services/${serviceName}/{data,conf}
+    chmod 750 -R /persist/services/${serviceName}/data
     chmod 600 /persist/services/${serviceName}/secrets.env
   '';
 

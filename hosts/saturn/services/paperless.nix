@@ -5,7 +5,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "ghcr.io/paperless-ngx/paperless-ngx:2.20";
+      image = "ghcr.io/paperless-ngx/paperless-ngx:3.0";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
@@ -24,6 +24,9 @@ in {
         USERMAP_UID = "${builtins.toString config.users.users."${serviceName}".uid}";
         USERMAP_GID = "${builtins.toString config.users.groups."${serviceName}".gid}";
       };
+      environmentFiles = [
+        "/persist/services/${serviceName}/secrets.env"
+      ];
       ports = [
         "10.0.50.42:1619:8000/tcp"
       ];
