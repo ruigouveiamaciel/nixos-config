@@ -55,7 +55,7 @@ in {
       "/persist/nixos-config"
     ];
     exclude = [
-      "/persist/services/*/*.env"
+      # "/persist/services/*/*.env"
       "/persist/services/*/cache"
       "/persist/services/bazarr/config/backup"
       "/persist/services/bazarr/config/cache"
@@ -69,6 +69,7 @@ in {
       "/persist/services/prowlarr/config/Backups"
       "/persist/services/radarr/config/Backups"
       "/persist/services/sonarr/config/Backups"
+      "/persist/services/restic"
     ];
     pruneOpts = [
       "--keep-daily 7"
