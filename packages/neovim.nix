@@ -172,109 +172,6 @@
         desc = "Find git stashes";
       }
       {
-        key = "<leader>gm";
-        mode = "n";
-        unique = true;
-        lua = true;
-        action =
-          /*
-          lua
-          */
-          ''
-            function()
-              -- Detect the default base branch, preferring the remote-tracking
-              -- ref so we don't include commits others pushed after a stale
-              -- local main/master.
-              local function ref_exists(name)
-                vim.fn.system("git rev-parse --verify --quiet " .. name)
-                return vim.v.shell_error == 0
-              end
-
-              local candidates = {
-                "origin/main",
-                "origin/master",
-                "main",
-                "master",
-              }
-              local base
-              for _, ref in ipairs(candidates) do
-                if ref_exists(ref) then
-                  base = ref
-                  break
-                end
-              end
-              if not base then
-                vim.notify("Could not find a main/master branch", vim.log.levels.WARN)
-                return
-              end
-
-              local cwd = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-              if not cwd or cwd == "" then
-                vim.notify("Not in a git repository", vim.log.levels.WARN)
-                return
-              end
-
-              -- Refresh the remote ref so the merge-base reflects the
-              -- actual current tip of the base branch (only if base is a
-              -- remote-tracking ref).
-              local remote, remote_branch = base:match("^([^/]+)/(.+)$")
-              if remote and remote_branch then
-                vim.fn.system(
-                  "git -C " .. vim.fn.shellescape(cwd)
-                  .. " fetch --quiet " .. remote .. " " .. remote_branch
-                )
-              end
-
-              -- Files actually touched by commits unique to this branch.
-              -- Using `git log --name-only base..HEAD` (two-dot) limits us
-              -- strictly to commits in HEAD but not in base, which matches
-              -- what a merge/pull request diff shows. We exclude merge
-              -- commits so files brought in by merging base back in don't
-              -- pollute the list.
-              local changed = vim.fn.systemlist(
-                "git -C " .. vim.fn.shellescape(cwd)
-                .. " log --no-merges --name-only --pretty=format: "
-                .. base .. "..HEAD"
-              )
-
-              -- Also include local changes that haven't been committed yet:
-              --   * staged + unstaged tracked changes (`git diff HEAD`)
-              --   * untracked, non-ignored files (`ls-files --others
-              --     --exclude-standard`)
-              local uncommitted = vim.fn.systemlist(
-                "git -C " .. vim.fn.shellescape(cwd)
-                .. " diff --name-only HEAD"
-              )
-              local untracked = vim.fn.systemlist(
-                "git -C " .. vim.fn.shellescape(cwd)
-                .. " ls-files --others --exclude-standard"
-              )
-
-              local seen = {}
-              local items = {}
-              local function add(file)
-                if file ~= "" and not seen[file] then
-                  seen[file] = true
-                  table.insert(items, { file = file, text = file })
-                end
-              end
-              for _, file in ipairs(uncommitted) do add(file) end
-              for _, file in ipairs(untracked) do add(file) end
-              for _, file in ipairs(changed) do add(file) end
-
-              Snacks.picker.pick({
-                title = "Modified vs " .. base,
-                cwd = cwd,
-                items = items,
-                format = "file",
-                preview = "file",
-                confirm = "edit",
-              })
-            end
-          '';
-        desc = "Find files modified vs main";
-      }
-      {
         key = "-";
         mode = "n";
         action = "<CMD>Oil<CR>";
@@ -726,7 +623,6 @@
       python.enable = true;
       sql.enable = true;
       json.enable = true;
-      # svelte.enable = true;
       vue = {
         enable = true;
         format.type = ["biome" "biome-check" "biome-organize-imports" "prettier"];

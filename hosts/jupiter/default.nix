@@ -23,6 +23,9 @@
     hostName = "jupiter";
     hostId = "397d7c75";
     useDHCP = true;
+    firewall.allowedUDPPorts = [
+      34197
+    ];
   };
 
   services.avahi = {

@@ -9,13 +9,12 @@
       {
         home = {
           packages = with pkgs; [
+            imagemagick
             vlc
             rawtherapee
             picard
             ffmpeg
             gimp
-            # Davinci Resolve Photo - still doesn't support .ORF raws
-            # unstable.davinci-resolve
           ];
 
           file.".config/RawTherapee/clutsdir".source = pkgs.fetchzip {

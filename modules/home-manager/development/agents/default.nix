@@ -5,16 +5,17 @@
   ...
 }: {
   imports = [
-    ./claude
-    ./pi
+    # ./claude
+    # ./pi
   ];
 
   config = lib.mkMerge ([
       {
         home = {
           packages = with pkgs.unstable; [
-            mcp-nixos
-            mcporter
+            # mcp-nixos
+            # mcporter
+            lmstudio
           ];
         };
       }
@@ -26,6 +27,7 @@
           "/persist" = {
             directories = [
               ".mcporter"
+              ".lmstudio"
             ];
           };
         };
