@@ -15,8 +15,8 @@ in {
       environment = {
         PUID = builtins.toString config.users.users."${serviceName}".uid;
         PGID = builtins.toString config.users.groups."${serviceName}".gid;
-        HOMEPAGE_ALLOWED_HOSTS = "10.0.50.42:8080";
-        PORT = "8080";
+        HOMEPAGE_ALLOWED_HOSTS = "10.0.50.42:8069";
+        PORT = "8069";
       };
       volumes = [
         "/persist/services/${serviceName}/config:/app/config"
@@ -51,7 +51,7 @@ in {
   };
 
   networking.firewall.interfaces.enp90s0.allowedTCPPorts = [
-    8080
+    8069
   ];
 
   boot.postBootCommands = let
