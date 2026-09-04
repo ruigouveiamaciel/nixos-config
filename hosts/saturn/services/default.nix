@@ -20,6 +20,7 @@
     ./paperless.nix
     ./searxng.nix
     ./ttrss.nix
+    ./unifi.nix
   ];
 
   security.apparmor.enable = true;

@@ -32,6 +32,10 @@
                   mode = "0700";
                 }
                 {
+                  directory = ".config/unity3d";
+                  mode = "0700";
+                }
+                {
                   directory = ".cache/mesa_shader_cache";
                   mode = "0700";
                 }
