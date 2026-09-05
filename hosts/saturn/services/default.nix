@@ -21,6 +21,7 @@
     ./searxng.nix
     ./ttrss.nix
     ./unifi.nix
+    ./openspeedtest.nix
   ];
 
   security.apparmor.enable = true;

@@ -14,8 +14,15 @@ in {
 
   config = lib.mkMerge ([
       {
+        boot.postBootCommands = ''
+          mkdir -p /home/smokewow
+          chown 1069:users /home/smokewow
+          chmod 750 /home/smokewow
+        '';
+
         users = {
           users.smokewow = {
+            uid = 1069;
             description = "SmOkEwOw";
             openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
             isNormalUser = true;
