@@ -5,14 +5,14 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/openspeedtest:latest";
+      image = "docker.io/openspeedtest/latest:latest";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
         user = serviceName;
       };
       ports = [
-        "8337:80/tcp"
+        "8337:3000/tcp"
       ];
     };
   };
