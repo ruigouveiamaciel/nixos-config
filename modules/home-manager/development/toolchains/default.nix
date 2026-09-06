@@ -9,5 +9,6 @@
     ./nix.nix
     ./python.nix
     ./embedded-systems.nix
+    ./networking.nix
   ];
 }
