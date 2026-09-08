@@ -480,26 +480,26 @@
       lualine = {
         enable = true;
         theme = "auto";
-        extraActiveSection = {
-          c = [
-            /*
-            lua
-            */
-            ''
-              {
-                function()
-                  local macro_reg = vim.fn.reg_recording()
-                  if macro_reg ~= "" then
-                    return "Recording Macro: @" .. macro_reg
-                  else
-                    return ""
-                  end
-                end,
-                cond = function() return vim.fn.reg_recording() ~= "" end,
-              }
-            ''
-          ];
-        };
+        # extraActiveSection = {
+        #   c = [
+        #     /*
+        #     lua
+        #     */
+        #     ''
+        #       {
+        #         function()
+        #           local macro_reg = vim.fn.reg_recording()
+        #           if macro_reg ~= "" then
+        #             return "Recording Macro: @" .. macro_reg
+        #           else
+        #             return ""
+        #           end
+        #         end,
+        #         cond = function() return vim.fn.reg_recording() ~= "" end,
+        #       }
+        #     ''
+        #   ];
+        # };
       };
     };
 

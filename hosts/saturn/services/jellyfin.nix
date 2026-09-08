@@ -5,7 +5,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "docker.io/jellyfin/jellyfin:latest";
+      image = "docker.io/jellyfin/jellyfin:12";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
