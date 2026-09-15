@@ -407,7 +407,6 @@
     ui = {
       noice.enable = true;
       colorizer.enable = true;
-      breadcrumbs.enable = true;
     };
 
     utility = {
@@ -479,7 +478,18 @@
     statusline = {
       lualine = {
         enable = true;
-        theme = "auto";
+        setupOpts = {
+          options = {
+            theme = "auto";
+          };
+        };
+        integrations = {
+          breadcrumbs = {
+            nvim-navic = {
+              enable = true;
+            };
+          };
+        };
         # extraActiveSection = {
         #   c = [
         #     /*

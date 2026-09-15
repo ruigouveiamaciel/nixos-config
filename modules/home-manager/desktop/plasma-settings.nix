@@ -262,7 +262,7 @@
         "ExposeClass" = "none";
         "ExposeClassCurrentDesktop" = "none";
         "Grid View" = "none";
-        "Kill Window" = "Meta+W";
+        "Kill Window" = "Meta+Alt+W";
         "MoveMouseToCenter" = "none";
         "MoveMouseToFocus" = "none";
         "Overview" = "none";
