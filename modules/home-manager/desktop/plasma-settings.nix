@@ -328,6 +328,8 @@
       {
         location = "bottom";
         hiding = "autohide";
+        floating = true;
+        opacity = "opaque";
         widgets = [
           {
             kickoff = {
@@ -376,7 +378,9 @@
                 "org.kde.plasma.networkmanagement"
                 "org.kde.plasma.volume"
               ];
-              hidden = [];
+              hidden = [
+                "kded6"
+              ];
             };
           }
           {
