@@ -15,6 +15,4 @@
       }).neovim;
 
   iosevka-kitty = import ./iosevka-kitty.nix args;
-
-  myPi = pkgs.callPackage ./pi.nix {};
 }

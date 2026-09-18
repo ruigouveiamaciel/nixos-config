@@ -6,7 +6,6 @@
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
-    "${myModulesPath}/system/nix-remote-builder.nix"
 
     ./filesystem.nix
     ./hardware-configuration.nix

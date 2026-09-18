@@ -433,10 +433,10 @@
             };
             sources = {
               files = {
-                exclude = ["specs" "ai" "releases" "code-guidelines"];
+                exclude = ["specs"];
               };
               grep = {
-                exclude = ["specs" "ai" "releases" "code-guidelines"];
+                exclude = ["specs"];
               };
             };
           };
@@ -635,8 +635,9 @@
       json.enable = true;
       vue = {
         enable = true;
-        format.type = ["biome" "biome-check" "biome-organize-imports" "prettier"];
+        format.type = ["prettier"];
       };
+      openscad.enable = true;
     };
   };
 }

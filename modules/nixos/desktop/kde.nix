@@ -31,6 +31,25 @@
     ++ (lib.optional (options ? "home-manager") {
       home-manager.sharedModules = [
         inputs.plasma-manager.homeModules.plasma-manager
+        ({
+          lib,
+          options,
+          ...
+        }: {
+          config = lib.mkMerge (
+            lib.optional (options.home ? "persistence") {
+              home.persistence."/persist" = {
+                directories = [
+                  {
+                    # Remember permissions given to applications
+                    directory = ".local/share/flatpak";
+                    mode = "0700";
+                  }
+                ];
+              };
+            }
+          );
+        })
       ];
     })
   );

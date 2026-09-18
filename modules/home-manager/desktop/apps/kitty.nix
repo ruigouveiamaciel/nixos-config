@@ -21,35 +21,45 @@
       shell = "${config.programs.fish.package}/bin/fish";
     };
     extraConfig = ''
-      # Left Option = Alt/Meta (for tmux M-<key> bindings)
+      # Clear all default shortcuts
+      clear_all_shortcuts yes
+
+      # Left Option = tmux bindings
       # Right Option = special characters (@, #, etc.)
       macos_option_as_alt left
 
-      # Let Cmd+F fall through to the shell (fzf, fish, etc.)
-      # instead of opening kitty's scrollback search.
-      map cmd+f no_op
+      # Clipboard
+      map --allow-fallback=shifted,ascii ctrl+shift+c copy_to_clipboard
+      map --allow-fallback=shifted,ascii cmd+c copy_or_noop
+      map --allow-fallback=shifted,ascii ctrl+c copy_or_interrupt
+
+      map --allow-fallback=shifted,ascii ctrl+shift+v paste_from_clipboard
+      map --allow-fallback=shifted,ascii cmd+v paste_from_clipboard
+      map --allow-fallback=shifted,ascii ctrl+v paste_from_clipboard
+
+      # Font size
+      map ctrl+shift+plus change_font_size all +2.0
+      map ctrl+shift+kp_add change_font_size all +2.0
+      map ctrl+shift+minus change_font_size all -2.0
+      map ctrl+shift+kp_subtract change_font_size all -2.0
+      map ctrl+shift+0 change_font_size all 0
 
       # Fonts
-      font_family Iosevka Kitty Extended
-      bold_font Iosevka Kitty Bold Extended
-      italic_font Iosevka Kitty Extended Italic
-      bold_italic_font Iosevka Kitty Bold Extended Italic
+      font_family Iosevka Kitty
+      bold_font Iosevka Kitty Bold
+      italic_font Iosevka Kitty Italic
+      bold_italic_font Iosevka Kitty Bold Italic
       font_size ${
         if pkgs.stdenv.isDarwin
         then "16.0"
         else "14.0"
       }
 
-      ## Source: https://github.com/catppuccin/kitty/blob/b14e8385c827f2d41660b71c7fec1e92bdcf2676/themes/macchiato.conf
-      # vim:ft=kitty
-
       ## name:     Catppuccin Kitty Macchiato
       ## author:   Catppuccin Org
       ## license:  MIT
       ## upstream: https://github.com/catppuccin/kitty/blob/main/themes/macchiato.conf
       ## blurb:    Soothing pastel theme for the high-spirited!
-
-
 
       # The basic colors
       foreground              #cad3f5
@@ -61,7 +71,11 @@
       cursor                  #f4dbd6
       cursor_text_color       #24273a
 
-      # URL underline color when hovering with mouse
+      # Scrollbar colors
+      scrollbar_handle_color  #939ab7
+      scrollbar_track_color   #494d64
+
+      # URL color when hovering with mouse
       url_color               #f4dbd6
 
       # Kitty window border colors

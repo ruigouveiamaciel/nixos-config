@@ -57,8 +57,5 @@
         ];
       };
     })
-    ++ (lib.optional (options ? "stylix") {
-      stylix.targets.firefox.profileNames = ["smokewow"];
-    })
   );
 }

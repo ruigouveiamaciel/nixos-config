@@ -9,7 +9,6 @@
         home.packages = with pkgs; [
           orca-slicer
           openscad-unstable
-          clang-tools
         ];
       }
     ]

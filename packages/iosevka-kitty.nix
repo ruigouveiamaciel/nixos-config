@@ -27,6 +27,11 @@ pkgs.iosevka.override {
     menu = 700
     css = 700
 
+    [buildPlans.IosevkaKitty.widths.Normal]
+    shape = 600
+    menu = 5
+    css = "normal"
+
     [buildPlans.IosevkaKitty.slopes.Upright]
     angle = 0
     shape = "upright"

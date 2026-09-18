@@ -1,5 +1,4 @@
 {
-  # Rules to allow flashing ZSA keyboards
   services.udev = {
     enable = true;
     extraRules = ''

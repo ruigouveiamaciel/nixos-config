@@ -14,18 +14,17 @@
       experimental-features = ["nix-command" "flakes"];
       warn-dirty = false;
     };
-    # TODO: Added in 26.05, time of writting is 25.11
-    # optimise = {
-    #   automatic = true;
-    #   persistent = true;
-    #   dates = ["6:05"];
-    #   randomizedDelaySec = "300";
-    # };
-    # gc = {
-    #   automatic = true;
-    #   persistent = true;
-    #   dates = ["4:05"];
-    #   options = "--delete-older-than +7";
-    # };
+    optimise = {
+      automatic = true;
+      persistent = true;
+      dates = ["6:05"];
+      randomizedDelaySec = "300";
+    };
+    gc = {
+      automatic = true;
+      persistent = true;
+      dates = ["4:05"];
+      options = "--delete-older-than +7";
+    };
   };
 }

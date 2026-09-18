@@ -159,14 +159,14 @@
     configFile = {
       "kwalletrc" = {
         "Wallet" = {
-          "Enabled" = false;
-          "First Use" = false;
+          "Enabled".value = false;
+          "First Use".value = false;
         };
         "Auto Allow" = {
-          "kwalletd5" = "";
+          "kwalletd5".value = "";
         };
       };
-      baloofilerc."Basic Settings"."Indexing-Enabled" = false;
+      baloofilerc."Basic Settings"."Indexing-Enabled".value = false;
       kwinrc = {
         "Effect-overview"."BorderActivate".value = 9;
         "Desktops" = {
@@ -185,10 +185,10 @@
       };
       kdeglobals = {
         "KDE"."AnimationDurationFactor".value = 0;
-        "Shortcuts" = {
-          "Copy".value = "Ctrl+C; Meta+C";
-          "Cut".value = "Ctrl+X; Meta+X";
-          "Paste".value = "Ctrl+V; Meta+V";
+      };
+      krunnerrc = {
+        "General" = {
+          "FreeFloating".value = true;
         };
       };
     };
@@ -208,6 +208,18 @@
         "_launch" = "none";
       };
       "services/org.kde.plasma.emojier.desktop" = {
+        "_launch" = "none";
+      };
+      "services/org.kde.spectacle.desktop" = {
+        "ActiveWindowScreenShot" = "none";
+        "CurrentMonitorScreenShot" = "none";
+        "FullScreenScreenShot" = "none";
+        "OpenWithoutScreenshot" = "none";
+        "RecordRegion" = "none";
+        "RecordScreen" = "none";
+        "RecordWindow" = "none";
+        "RectangularRegionScreenShot" = "none";
+        "WindowUnderCursorScreenShot" = "none";
         "_launch" = "none";
       };
       plasmashell = {
@@ -307,15 +319,27 @@
         "Lock Session" = "none";
         "Log Out" = "none";
       };
+      "services/systemsettings.desktop" = {
+        "_launch" = "none";
+      };
     };
 
     panels = [
       {
         location = "bottom";
+        hiding = "autohide";
         widgets = [
           {
             kickoff = {
               sortAlphabetically = true;
+              settings = {
+                General = {
+                  icon = "nix-snowflake-white";
+                };
+                Shortcuts = {
+                  global = "Meta+A";
+                };
+              };
             };
           }
           {

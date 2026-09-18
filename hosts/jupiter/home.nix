@@ -7,7 +7,7 @@
   programs.fish.shellAbbrs = {
     "rebuild" = "cd ~/projects/nixos-config && sudo nixos-rebuild switch --log-format internal-json -v --flake .#jupiter &| nom --json";
     "build" = "cd ~/projects/nixos-config && nixos-rebuild build --log-format internal-json -v --flake .#jupiter &| nom --json";
-    "root-diff" = "sudo zfs diff zroot/encrypted/root@blank";
+    "root-diff" = "sudo zfs diff zroot/encrypted/root@blank | nvim";
   };
 
   home.stateVersion = "24.11";
