@@ -5,7 +5,7 @@ in {
   virtualisation.oci-containers.containers = {
     "${serviceName}" = {
       autoStart = true;
-      image = "codeberg.org/forgejo/forgejo:15-rootless";
+      image = "codeberg.org/forgejo/forgejo:16-rootless";
       pull = "newer";
       podman = {
         sdnotify = "conmon";
