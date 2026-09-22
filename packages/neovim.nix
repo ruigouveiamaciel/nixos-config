@@ -374,9 +374,9 @@
     };
 
     augroups = [
-      {
-        name = "nvf_nvim_lint";
-      }
+      # {
+      #   name = "nvf_nvim_lint";
+      # }
     ];
 
     autocmds = [
@@ -397,6 +397,21 @@
         event = ["VimResized"];
         pattern = ["*"];
         command = "wincmd =";
+      }
+      {
+        # https://github.com/folke/snacks.nvim/issues/1155#issuecomment-2658383937
+        event = ["FileType"];
+        pattern = ["oil"];
+        callback =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function()
+              vim.b.snacks_main = true
+            end
+          '';
       }
     ];
 
@@ -469,7 +484,7 @@
             "g." = "actions.toggle_hidden";
           };
           view_options = {
-            show_hidden = false;
+            show_hidden = true;
           };
         };
       };

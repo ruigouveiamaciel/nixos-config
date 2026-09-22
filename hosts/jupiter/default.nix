@@ -24,7 +24,7 @@
     hostId = "397d7c75";
     useDHCP = true;
     firewall.allowedUDPPorts = [
-      34197
+      34197 # Factorio
     ];
   };
 
@@ -40,6 +40,8 @@
       configurationLimit = 7;
     };
   };
+
+  virtualisation.docker.enable = true;
 
   # Don't hang boot because of network timeout
   boot.initrd.systemd.network.wait-online.enable = false;

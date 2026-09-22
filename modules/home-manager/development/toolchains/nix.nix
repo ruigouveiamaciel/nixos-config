@@ -2,5 +2,6 @@
   home.packages = with pkgs; [
     alejandra
     nix-output-monitor
+    nix-inspect
   ];
 }

@@ -1,4 +1,4 @@
-{
+{inputs, ...}: {
   programs.command-not-found.enable = false;
 
   nix = {
@@ -26,5 +26,9 @@
       dates = ["4:05"];
       options = "--delete-older-than +7";
     };
+    registry =
+      builtins.mapAttrs
+      (_: flake: {inherit flake;})
+      inputs;
   };
 }

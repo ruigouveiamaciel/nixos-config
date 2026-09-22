@@ -199,7 +199,7 @@
         "_launch" = "Meta+Space";
       };
       "services/org.kde.kscreen.desktop" = {
-        "ShowOSD" = "none";
+        "ShowOSD" = "Meta+P";
       };
       "services/org.kde.plasma-systemmonitor.desktop" = {
         "_launch" = "Ctrl+Shift+Esc";
@@ -321,6 +321,7 @@
       };
       "services/systemsettings.desktop" = {
         "_launch" = "none";
+        "kcm-kscreen" = "Meta+Shift+P";
       };
     };
 

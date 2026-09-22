@@ -39,11 +39,13 @@
           config = lib.mkMerge (
             lib.optional (options.home ? "persistence") {
               home.persistence."/persist" = {
-                directories = [
+                files = [
                   {
-                    # Remember permissions given to applications
-                    directory = ".local/share/flatpak";
-                    mode = "0700";
+                    # Remember monitor settings
+                    file = ".config/kwinoutputconfig.json";
+                    parentDirectory = {
+                      mode = "0700";
+                    };
                   }
                 ];
               };
