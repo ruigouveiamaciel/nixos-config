@@ -4,5 +4,6 @@
     "${myModulesPath}/development/shell/git.nix"
     "${myModulesPath}/development/shell/tmux.nix"
     "${myModulesPath}/development/toolchains"
+    "${myModulesPath}/development/agents"
   ];
 }

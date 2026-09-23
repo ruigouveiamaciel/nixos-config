@@ -7,6 +7,10 @@
     [
       {
         programs.steam.enable = true;
+
+        networking.firewall.allowedUDPPorts = [
+          34197 # Factorio
+        ];
       }
     ]
     ++ (lib.optional (options ? "home-manager") {

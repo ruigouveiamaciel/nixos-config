@@ -103,10 +103,13 @@ in {
     mouse = true;
     keyMode = "vi";
     extraConfig = ''
+      set -g default-terminal "tmux-256color"
       set -g allow-passthrough on
-      set -g extended-keys on
-      set -as terminal-features 'xterm-kitty:extkeys'
+      set -s extended-keys on
       set -g extended-keys-format csi-u
+      set -as terminal-features 'xterm*:extkeys'
+      set -as terminal-features ",xterm-kitty:RGB"
+      set -as terminal-features ",tmux-256color:RGB"
 
       # Status bar
       set -g status-left-length 35
@@ -160,7 +163,6 @@ in {
       bind -n M-o run-shell tmux-repo
       bind -n M-r run-shell tmux-recent
       bind -n M-d detach-client
-      bind -n M-c source-file ~/.config/tmux/tmux.conf \; display "Config reloaded"
     '';
   };
 }

@@ -27,6 +27,7 @@
       home-manager.sharedModules = [
         ({
           options,
+          config,
           lib,
           ...
         }: {
@@ -34,10 +35,12 @@
             lib.mkMerge
             ([
                 {
-                  programs.fish.shellAbbrs = {
-                    "jupiter" = "kitty +kitten ssh smokewow@10.0.0.42";
+                  programs.fish.shellAbbrs = let
+                    kitten = lib.optionalString (config.programs.kitty.enable or false) "kitty +kitten ";
+                  in {
+                    "jupiter" = "${kitten}ssh smokewow@10.0.0.42";
                     "unlock-jupiter" = "ssh root@10.0.0.42 -p 2222";
-                    "saturn" = "kitty +kitten ssh smokewow@10.0.50.42";
+                    "saturn" = "${kitten}ssh smokewow@10.0.50.42";
                     "unlock-saturn" = "ssh root@10.0.50.42 -p 2222";
                   };
                 }

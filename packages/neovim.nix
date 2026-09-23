@@ -373,26 +373,7 @@
       };
     };
 
-    augroups = [
-      # {
-      #   name = "nvf_nvim_lint";
-      # }
-    ];
-
     autocmds = [
-      {
-        event = ["BufWritePost" "BufEnter" "TextChanged"];
-        callback =
-          lib.mkLuaInline
-          /*
-          lua
-          */
-          ''
-            function(args)
-               nvf_lint(args.buf)
-             end
-          '';
-      }
       {
         event = ["VimResized"];
         pattern = ["*"];
@@ -456,7 +437,6 @@
             };
           };
           input.enable = true;
-          terminal.enable = true;
           gitbrowse.enable = true;
           notify.enable = true;
           notifier.enable = true;
@@ -505,26 +485,6 @@
             };
           };
         };
-        # extraActiveSection = {
-        #   c = [
-        #     /*
-        #     lua
-        #     */
-        #     ''
-        #       {
-        #         function()
-        #           local macro_reg = vim.fn.reg_recording()
-        #           if macro_reg ~= "" then
-        #             return "Recording Macro: @" .. macro_reg
-        #           else
-        #             return ""
-        #           end
-        #         end,
-        #         cond = function() return vim.fn.reg_recording() ~= "" end,
-        #       }
-        #     ''
-        #   ];
-        # };
       };
     };
 
@@ -564,54 +524,7 @@
       };
       nvim-lint = {
         enable = true;
-        lint_after_save = false; # We do this in our custom autocmd
-        lint_function =
-          lib.mkLuaInline
-          /*
-          lua
-          */
-          ''
-            function(buf)
-              local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
-              local linters = require("lint").linters
-              local linters_from_ft = require("lint").linters_by_ft[ft]
-
-              -- if no linter is configured for this filetype, stops linting
-              if linters_from_ft == nil then return end
-
-              for _, name in ipairs(linters_from_ft) do
-                local linter = linters[name]
-                assert(linter, 'Linter with name `' .. name .. '` not available')
-
-                if type(linter) == "function" then
-                  linter = linter()
-                end
-                -- for require("lint").lint() to work, linter.name must be set
-                linter.name = linter.name or name
-
-                -- if no configuration files are configured, lint
-                if linter.required_files == nil then
-                  require("lint").lint(linter)
-                else
-                  -- if configuration files are configured and present in the project, lint
-                  local linter_config_path = vim.fs.find(
-                    linter.required_files,
-                    {
-                      upward = true,
-                      path = vim.fs.dirname(vim.api.nvim_buf_get_name(buf))
-                    }
-                  )[1]
-
-                  if (linter_config_path) then
-                    require("lint").lint(
-                      linter,
-                      { cwd = vim.fs.dirname(linter_config_path) }
-                    )
-                  end
-                end
-              end
-            end
-          '';
+        lint_after_save = true;
       };
     };
 
@@ -621,7 +534,7 @@
         setupOpts = {
           format_on_save = {
             lsp_format = "fallback";
-            timeout_ms = 500;
+            timeout_ms = 1000;
           };
         };
       };

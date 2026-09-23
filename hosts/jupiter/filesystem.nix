@@ -7,7 +7,7 @@
   imports = [
     inputs.disko.nixosModules.default
 
-    "${myModulesPath}/profiles/impermanence.nix"
+    "${myModulesPath}/system/impermanence.nix"
   ];
 
   boot = {
@@ -152,12 +152,6 @@
         user = "root";
         group = "root";
         mode = "0755";
-      }
-      {
-        directory = "/etc/NetworkManager/system-connections";
-        user = "root";
-        group = "root";
-        mode = "0700";
       }
     ];
     files = [

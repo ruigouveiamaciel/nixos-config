@@ -3,6 +3,5 @@
     unrar
     zip
     unzip
-    qrencode
   ];
 }

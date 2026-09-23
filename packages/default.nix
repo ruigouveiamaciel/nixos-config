@@ -5,7 +5,7 @@
 } @ args: {
   # example = pkgs.callPackage ./example { };
 
-  myNeovim =
+  neovim =
     (inputs.nvf.lib.neovimConfiguration
       {
         inherit pkgs;

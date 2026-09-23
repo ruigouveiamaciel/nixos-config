@@ -4,6 +4,7 @@
     ripgrep
     fzf
     fd
+    tree
   ];
 
   programs.zoxide = {

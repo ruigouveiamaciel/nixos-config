@@ -4,7 +4,7 @@
   options,
   ...
 }: let
-  neovimPackage = pkgs.myNeovim;
+  neovimPackage = pkgs.myPackages.neovim;
 in {
   config = lib.mkMerge ([
       {
@@ -29,10 +29,10 @@ in {
         home.persistence = {
           "/persist" = {
             directories = [
-              {
-                directory = ".local/share/nvf/site/spell";
-                mode = "0700";
-              }
+              # {
+              #   directory = ".local/share/nvf/site/spell";
+              #   mode = "0700";
+              # }
             ];
           };
         };

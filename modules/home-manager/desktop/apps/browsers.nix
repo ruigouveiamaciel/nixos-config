@@ -9,9 +9,8 @@
       {
         home.packages = with pkgs; [ungoogled-chromium];
 
-        programs.firefox = {
+        programs.librewolf = {
           enable = true;
-          package = pkgs.librewolf;
           configPath = ".mozilla/firefox";
           profiles.smokewow = {
             id = 0;

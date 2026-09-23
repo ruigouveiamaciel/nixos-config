@@ -5,7 +5,7 @@
       rssh.enable = true;
       services.sudo = {
         rssh = true;
-        rules.auth.unix.enable = lib.mkForce false;
+        unixAuth = lib.mkForce false;
       };
     };
     sudo = {

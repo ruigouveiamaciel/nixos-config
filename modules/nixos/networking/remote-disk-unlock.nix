@@ -26,9 +26,11 @@ in {
       if [[ ! -f "${KEY_PATH}" ]]; then
         ${lib.getExe' config.services.openssh.package "ssh-keygen"} -t ${KEY_TYPE} -f "${KEY_PATH}" -N "" -C ""
       fi
-      chmod 600 "$KEY_PATH"
+      chmod 600 "${KEY_PATH}"
+      chown root:root "${KEY_PATH}"
       if [[ -f "${KEY_PATH}.pub" ]]; then
-          chmod 644 "${KEY_PATH}.pub"
+        chmod 644 "${KEY_PATH}.pub"
+        chown root:root "${KEY_PATH}.pub"
       fi
     '';
   };

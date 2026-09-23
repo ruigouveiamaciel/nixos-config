@@ -10,19 +10,26 @@ in {
   imports = [
     "${myModulesPath}/shell/fish.nix"
     "${myModulesPath}/system/home-manager.nix"
+    "${myModulesPath}/desktop/voyager.nix"
   ];
 
   config = lib.mkMerge ([
       {
-        boot.postBootCommands = ''
-          mkdir -p /home/smokewow
-          chown 1069:users /home/smokewow
-          chmod 750 /home/smokewow
+        boot.postBootCommands = let
+          uid = builtins.toString config.users.users.smokewow.uid;
+          gid = builtins.toString config.users.groups."${config.users.users.smokewow.group}".gid;
+        in ''
+          mkdir -p ${config.users.users.smokewow.home}
+          chown -R ${uid}:${gid} ${config.users.users.smokewow.home}
+          chmod 750 ${config.users.users.smokewow.home}
+          chmod -R g-w,o-rwx ${config.users.users.smokewow.home}
         '';
 
         users = {
           users.smokewow = {
             uid = 1069;
+            group = "users";
+            home = "/home/smokewow";
             description = "SmOkEwOw";
             openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
             isNormalUser = true;
@@ -35,6 +42,7 @@ in {
               "podman"
               "dialout"
               "plugdev"
+              "networkmanager"
             ];
             shell = config.programs.fish.package;
             hashedPassword = "";

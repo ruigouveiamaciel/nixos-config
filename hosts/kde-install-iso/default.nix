@@ -8,6 +8,7 @@
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix"
 
+    "${myModulesPath}/locales/pt-pt.nix"
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/desktop/kde.nix"
     "${myModulesPath}/users/smokewow"

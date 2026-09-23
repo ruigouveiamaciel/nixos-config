@@ -1,8 +1,4 @@
-{
-  myModulesPath,
-  pkgs,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     "${myModulesPath}/desktop/apps"
     "${myModulesPath}/desktop/plasma-settings.nix"
@@ -13,10 +9,6 @@
     "build" = "cd ~/projects/nixos-config && nixos-rebuild build --log-format internal-json -v --flake .#jupiter &| nom --json";
     "root-diff" = "sudo zfs diff zroot/encrypted/root@blank | nvim";
   };
-
-  home.packages = with pkgs; [
-    docker-sbx
-  ];
 
   home.stateVersion = "24.11";
 }

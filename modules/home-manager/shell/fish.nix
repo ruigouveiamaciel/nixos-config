@@ -14,7 +14,7 @@ in {
           package = pkgs.fish;
           shellAbbrs = {
             ls = lib.mkIf (hasPackage "eza") "eza";
-            ll = lib.mkIf (hasPackage "eza") "eza -lh";
+            ll = lib.mkIf (hasPackage "eza") "eza -lhg";
           };
           functions = {
             fish_greeting = "";

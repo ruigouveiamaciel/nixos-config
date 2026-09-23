@@ -28,6 +28,18 @@
         };
       }
     ]
+    ++ (lib.optional (options.environment ? "persistence") {
+      environment.persistence."/persist" = {
+        directories = [
+          # {
+          #   directory = "/etc/cups";
+          #   user = "root";
+          #   group = "root";
+          #   mode = "0700";
+          # }
+        ];
+      };
+    })
     ++ (lib.optional (options ? "home-manager") {
       home-manager.sharedModules = [
         inputs.plasma-manager.homeModules.plasma-manager

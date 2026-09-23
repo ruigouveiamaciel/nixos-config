@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   ...
 }: {
@@ -7,18 +8,14 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-    iosevka-kitty
+    myPackages.iosevka-kitty
   ];
 
   programs.kitty = {
     enable = true;
-    package =
-      if pkgs.stdenv.isDarwin
-      then null
-      else pkgs.kitty;
     shellIntegration.enableFishIntegration = true;
     settings = {
-      shell = "${config.programs.fish.package}/bin/fish";
+      shell = lib.getExe config.programs.fish.package;
     };
     extraConfig = ''
       # Clear all default shortcuts
@@ -49,11 +46,7 @@
       bold_font Iosevka Kitty Bold
       italic_font Iosevka Kitty Italic
       bold_italic_font Iosevka Kitty Bold Italic
-      font_size ${
-        if pkgs.stdenv.isDarwin
-        then "16.0"
-        else "14.0"
-      }
+      font_size 14.0
 
       ## name:     Catppuccin Kitty Macchiato
       ## author:   Catppuccin Org

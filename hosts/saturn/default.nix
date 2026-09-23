@@ -2,6 +2,7 @@
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
     "${myModulesPath}/users/smokewow"
+    "${myModulesPath}/locales/pt-pt.nix"
 
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"

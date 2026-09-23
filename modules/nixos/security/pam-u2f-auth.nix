@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  # Allow sudo and login only via an authorized fido key
+  # Allow sudo and login via an authorized fido key
   services.udev.extraRules = ''
     ACTION=="remove",\
      ENV{ID_BUS}=="usb",\
