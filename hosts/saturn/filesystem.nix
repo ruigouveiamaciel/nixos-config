@@ -7,7 +7,7 @@
   imports = [
     inputs.disko.nixosModules.default
 
-    "${myModulesPath}/profiles/impermanence.nix"
+    "${myModulesPath}/system/impermanence.nix"
   ];
 
   boot = {

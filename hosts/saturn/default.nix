@@ -1,12 +1,15 @@
 {myModulesPath, ...}: {
   imports = [
     "${myModulesPath}/profiles/essentials.nix"
-    "${myModulesPath}/users/smokewow"
+
     "${myModulesPath}/locales/pt-pt.nix"
+    "${myModulesPath}/users/smokewow"
 
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+
+    "${myModulesPath}/boot/systemd-boot.nix"
 
     ./filesystem.nix
     ./hardware-configuration.nix
@@ -44,12 +47,6 @@
 
   boot = {
     kernelParams = ["ip=10.0.50.42::10.0.50.1:255.255.255.0:saturn:enp90s0:off:10.0.50.1::"];
-
-    loader.systemd-boot = {
-      enable = true;
-      configurationLimit = 7;
-    };
-
     initrd.systemd.network.wait-online.enable = false;
   };
 
