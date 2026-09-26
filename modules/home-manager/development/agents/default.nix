@@ -6,8 +6,9 @@
 }: {
   config = lib.mkMerge ([
       {
-        home.packages = with pkgs; [
-          unstable.pi-coding-agent
+        home.packages = with pkgs.unstable; [
+          pi-coding-agent
+          qemu
         ];
       }
     ]

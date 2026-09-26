@@ -2,17 +2,17 @@
   lib,
   modulesPath,
   myModulesPath,
-  pkgs,
   ...
 }: {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix"
 
-    "${myModulesPath}/locales/pt-pt.nix"
     "${myModulesPath}/profiles/essentials.nix"
-    "${myModulesPath}/desktop/kde.nix"
+    "${myModulesPath}/desktop/plasma6.nix"
+    "${myModulesPath}/locales/pt-pt.nix"
     "${myModulesPath}/users/smokewow"
     "${myModulesPath}/networking/openssh.nix"
+    "${myModulesPath}/networking/networkmanager.nix"
   ];
 
   home-manager.users.smokewow.imports = [./home.nix];
@@ -30,14 +30,9 @@
   };
 
   services.displayManager.autoLogin.user = lib.mkForce "smokewow";
-  services.openssh.settings = {
-    PasswordAuthentication = lib.mkForce true;
-    PermitRootLogin = lib.mkForce "yes";
-  };
 
   networking = {
     hostName = lib.mkForce "pluto";
-    useDHCP = lib.mkForce true;
   };
 
   systemd.oomd.enable = false;

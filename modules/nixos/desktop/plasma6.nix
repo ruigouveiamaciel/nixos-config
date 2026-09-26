@@ -4,7 +4,9 @@
   options,
   inputs,
   ...
-}: {
+}: let
+  clipboardPkg = pkgs.wl-clipboard;
+in {
   imports = [
     ./pipewire.nix
   ];
@@ -24,7 +26,7 @@
         xdg.portal.enable = true;
 
         environment = {
-          systemPackages = with pkgs; [wl-clipboard];
+          systemPackages = [clipboardPkg];
         };
       }
     ]
@@ -48,21 +50,29 @@
           options,
           ...
         }: {
-          config = lib.mkMerge (
-            lib.optional (options.home ? "persistence") {
-              home.persistence."/persist" = {
-                files = [
-                  {
-                    # Remember monitor settings
-                    file = ".config/kwinoutputconfig.json";
-                    parentDirectory = {
-                      mode = "0700";
-                    };
-                  }
-                ];
-              };
-            }
-          );
+          config = lib.mkMerge ([
+              {
+                programs.fish.shellAliases = {
+                  "copy" = lib.getExe' clipboardPkg "wl-copy";
+                  "paste" = lib.getExe' clipboardPkg "wl-paste";
+                };
+              }
+            ]
+            ++ (
+              lib.optional (options.home ? "persistence") {
+                home.persistence."/persist" = {
+                  files = [
+                    {
+                      # Remember monitor settings
+                      file = ".config/kwinoutputconfig.json";
+                      parentDirectory = {
+                        mode = "0700";
+                      };
+                    }
+                  ];
+                };
+              }
+            ));
         })
       ];
     })

@@ -3,5 +3,6 @@
     unrar
     zip
     unzip
+    libarchive
   ];
 }

@@ -1,6 +1,6 @@
 {inputs, ...}: {
   # Bring the custom packages from the 'packages' directory
-  packages = final: _prev: {
+  myPackages = final: _prev: {
     myPackages = import ../packages {
       inherit inputs;
       pkgs = import inputs.nixpkgs-unstable {

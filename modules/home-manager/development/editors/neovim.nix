@@ -29,10 +29,18 @@ in {
         home.persistence = {
           "/persist" = {
             directories = [
-              # {
-              #   directory = ".local/share/nvf/site/spell";
-              #   mode = "0700";
-              # }
+              {
+                directory = ".cache/nvf";
+                mode = "0700";
+              }
+              {
+                directory = ".local/share/nvf";
+                mode = "0700";
+              }
+              {
+                directory = ".local/state/nvf";
+                mode = "0700";
+              }
             ];
           };
         };

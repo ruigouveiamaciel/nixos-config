@@ -14,7 +14,7 @@ in {
           package = pkgs.fish;
           shellAbbrs = {
             ls = lib.mkIf (hasPackage "eza") "eza";
-            ll = lib.mkIf (hasPackage "eza") "eza -lhg";
+            ll = lib.mkIf (hasPackage "eza") "eza -lhga";
           };
           functions = {
             fish_greeting = "";
@@ -60,6 +60,7 @@ in {
           "/persist" = {
             directories = [
               ".cache/fish"
+              ".local/share/fish"
             ];
           };
         };

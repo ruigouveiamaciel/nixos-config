@@ -43,6 +43,7 @@ in {
               "dialout"
               "plugdev"
               "networkmanager"
+              "kvm"
             ];
             shell = config.programs.fish.package;
             hashedPassword = "";

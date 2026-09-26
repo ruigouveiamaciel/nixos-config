@@ -11,6 +11,7 @@
           packages = with pkgs; [
             imagemagick
             vlc
+            unstable.grayjay
             rawtherapee
             picard
             ffmpeg
@@ -29,6 +30,10 @@
         directories = [
           {
             directory = ".config/RawTherapee";
+            mode = "0700";
+          }
+          {
+            directory = ".local/share/Grayjay";
             mode = "0700";
           }
         ];

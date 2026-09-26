@@ -5,6 +5,7 @@
     fzf
     fd
     tree
+    dust
   ];
 
   programs.zoxide = {

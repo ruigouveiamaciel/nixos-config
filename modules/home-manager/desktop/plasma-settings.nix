@@ -48,6 +48,7 @@
         vendorId = "3297";
       }
       {
+        # Device for Logitech PRO X 2 for kernels < 7.0
         enable = true;
         acceleration = 0;
         accelerationProfile = "none";
@@ -56,6 +57,18 @@
         name = "Logitech USB Receiver";
         naturalScroll = false;
         productId = "c54d";
+        scrollSpeed = 1;
+        vendorId = "046d";
+      }
+      {
+        enable = true;
+        acceleration = 0;
+        accelerationProfile = "none";
+        leftHanded = false;
+        middleButtonEmulation = false;
+        name = "Logitech PRO X 2";
+        naturalScroll = false;
+        productId = "40a9";
         scrollSpeed = 1;
         vendorId = "046d";
       }
@@ -149,6 +162,33 @@
             apply = "initially";
           };
           maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+        };
+      }
+      {
+        description = "Grayjay on workspace 5 maximized & above others";
+        match = {
+          window-class = {
+            value = "dotcefnative cef";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "27f88eb5-e254-4a91-85c0-7faf617b2c2f";
+            apply = "initially";
+          };
+          maximizehoriz = {
+            value = true;
+            apply = "initially";
+          };
+          maximizevert = {
+            value = true;
+            apply = "initially";
+          };
+          above = {
             value = true;
             apply = "initially";
           };
