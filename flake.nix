@@ -50,7 +50,7 @@
         jupiter = mkSystem ./hosts/jupiter;
         saturn = mkSystem ./hosts/saturn;
         kde-install-iso = mkSystem ./hosts/kde-install-iso;
-        microvm = mkSystem ./hosts/microvm;
+        sandbox = mkSystem ./hosts/sandbox;
       };
 
       darwinConfigurations = {

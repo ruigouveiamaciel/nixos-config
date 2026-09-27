@@ -4,11 +4,14 @@
   options,
   ...
 }: {
+  imports = [
+    ./sandbox.nix
+  ];
+
   config = lib.mkMerge ([
       {
         home.packages = with pkgs.unstable; [
           pi-coding-agent
-          qemu
         ];
       }
     ]
