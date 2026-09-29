@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ./sandbox.nix
+    ./sandbox
   ];
 
   config = lib.mkMerge ([

@@ -6,5 +6,6 @@
     ./kitty.nix
     ./flameshot.nix
     ./media.nix
+    ./bottles.nix
   ];
 }

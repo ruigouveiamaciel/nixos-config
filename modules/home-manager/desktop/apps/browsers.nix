@@ -34,6 +34,7 @@
               "privacy.clearOnShutdown_v2.formdata" = true;
               "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
               "privacy.clearOnShutdown_v2.siteSettings" = false;
+              "browser.translations.automaticallyPopup" = false;
             };
           };
         };

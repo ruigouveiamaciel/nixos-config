@@ -4,21 +4,9 @@
 
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
-
-    nix-darwin = {
-      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager-darwin = {
-      url = "github:nix-community/home-manager/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
     disko = {
@@ -54,18 +42,14 @@
       };
 
       darwinConfigurations = {
-        work-macbook = mkDarwinSystem ./hosts/macbook;
+        # example = mkDarwinSystem ./hosts/example;
       };
 
-      packages = pkgsForAllSystems ({
-        # system,
-        pkgs,
-        ...
-      }: (import ./packages {
-        inherit inputs pkgs;
-        # pkgs = import inputs.nixpkgs-unstable {
-        #   inherit system;
-        # };
+      packages = pkgsForAllSystems ({system, ...}: (import ./packages {
+        inherit inputs;
+        pkgs = import inputs.nixpkgs-unstable {
+          inherit system;
+        };
       }));
 
       formatter = pkgsForAllSystems ({pkgs, ...}: pkgs.alejandra);

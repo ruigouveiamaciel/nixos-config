@@ -1,12 +1,9 @@
 {
-  config,
   myModulesPath,
   lib,
   options,
   ...
-}: let
-  filterUnexistentGroups = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
-in {
+}: {
   imports = [
     "${myModulesPath}/system/home-manager.nix"
   ];
@@ -15,16 +12,11 @@ in {
       {
         users = {
           users.sandbox = {
-            uid = 1070;
+            uid = 1069;
             group = "users";
             home = "/home/sandbox";
             description = "Sandbox User";
-            # openssh.authorizedKeys.keys = config.myConstants.users.smokewow.authorized-keys;
             isNormalUser = true;
-            extraGroups =
-              filterUnexistentGroups [
-              ];
-            password = "";
           };
         };
       }
