@@ -17,7 +17,7 @@
     allowNoPasswordLogin = true;
   };
 
-  services.getty.autologinUser = "sandbox";
+  services.getty.autologinUser = "smokewow";
 
   virtualisation = {
     cores = 4;
@@ -33,11 +33,13 @@
       };
     };
   };
+
   networking = {
     hostName = "sandbox";
     firewall.enable = false;
   };
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   system.stateVersion = "26.05";
-  home-manager.users.sandbox.home.stateVersion = "26.05";
+  home-manager.users.smokewow.home.stateVersion = "26.05";
 }

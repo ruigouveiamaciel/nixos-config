@@ -11,18 +11,18 @@
   config = lib.mkMerge ([
       {
         users = {
-          users.sandbox = {
+          users.smokewow = {
             uid = 1069;
             group = "users";
-            home = "/home/sandbox";
-            description = "Sandbox User";
+            home = "/home/smokewow";
+            description = "SmOkEwOw";
             isNormalUser = true;
           };
         };
       }
     ]
     ++ (lib.optional (options ? "home-manager") {
-      home-manager.users.sandbox.imports = [
+      home-manager.users.smokewow.imports = [
         ./home.nix
       ];
     }));

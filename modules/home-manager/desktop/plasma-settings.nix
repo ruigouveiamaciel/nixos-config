@@ -400,6 +400,7 @@
               behavior = {
                 middleClickAction = "newInstance";
                 minimizeActiveTaskOnClick = false;
+                unhideOnAttentionNeeded = false;
                 showTasks = {
                   onlyInCurrentScreen = false;
                   onlyInCurrentDesktop = false;

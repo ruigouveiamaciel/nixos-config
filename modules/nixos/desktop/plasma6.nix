@@ -21,6 +21,10 @@ in {
             enable = true;
             wayland.enable = true;
           };
+          logind.settings.Login = {
+            IdleAction = "ignore";
+            IdleActionSec = "0";
+          };
         };
 
         xdg.portal.enable = true;
