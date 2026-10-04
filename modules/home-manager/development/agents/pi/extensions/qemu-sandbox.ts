@@ -7,15 +7,21 @@ import {
   EditOperations,
   WriteOperations,
   type ExtensionAPI,
-  type ExtensionCommandContext,
   type ReadOperations,
   type ToolDefinition,
 } from "@earendil-works/pi-coding-agent";
-
+import { parseColor } from "@earendil-works/pi-tui";
 import { userInfo } from "node:os";
 import { Sandbox, SandboxStatus } from "../utils/sandbox/sandbox";
 import { type TSchema } from "typebox/type";
 import { shellQuote } from "../utils/sandbox/shell-quote";
+
+/** Status label colors (palette mirrors permission-gate's mode colors). */
+const STATUS_COLOR: Record<SandboxStatus, string> = {
+  [SandboxStatus.STARTING]: "#eab308", // in progress
+  [SandboxStatus.READY]: "#4ade4f", // good
+  [SandboxStatus.CLOSED]: "#ef4444", // bad
+};
 
 const IMAGE_MIME_TYPES = new Set([
   "image/jpeg",
@@ -185,22 +191,13 @@ export default function (pi: ExtensionAPI) {
     });
 
     sb.on("status", function updateStatusLabel(status: SandboxStatus) {
-      let statusText: string;
-      switch (status) {
-        case SandboxStatus.STARTING:
-          statusText = "STARTING";
-          break;
-        case SandboxStatus.READY:
-          statusText = "READY";
-          break;
-        case SandboxStatus.CLOSED:
-          statusText = "CLOSED";
-          break;
-        default:
-          statusText = "UNKOWN";
-      }
+      const theme = ctx.ui.theme;
+      const label = SandboxStatus[status].toLowerCase();
+      const statusText = theme.style(label, {
+        fg: parseColor(STATUS_COLOR[status]),
+      });
 
-      ctx.ui.setStatus("sandbox", `Sandbox: ${statusText}`);
+      ctx.ui.setStatus("sandbox", `sandbox: ${statusText}`);
     });
 
     sb.once("error", (error) => {
@@ -228,19 +225,5 @@ export default function (pi: ExtensionAPI) {
       await sandbox.destroy();
       sandbox.removeAllListeners();
     }
-  });
-
-  pi.registerCommand("qga", {
-    handler: async function (
-      args: string,
-      ctx: ExtensionCommandContext,
-    ): Promise<void> {
-      try {
-        const result = await sb?.debugQga(JSON.parse(args));
-        ctx.ui.notify(JSON.stringify(result, undefined, 4), "warning");
-      } catch (e) {
-        ctx.ui.notify(String(e), "error");
-      }
-    },
   });
 }

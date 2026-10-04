@@ -28,6 +28,8 @@
         home-manager.follows = "home-manager";
       };
     };
+
+    pi.url = "github:earendil-works/pi/stable";
   };
 
   outputs = inputs: let

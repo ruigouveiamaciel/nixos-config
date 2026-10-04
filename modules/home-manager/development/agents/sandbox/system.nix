@@ -23,7 +23,7 @@
     cores = 4;
     memorySize = 4 * 1024;
     diskSize = 32 * 1024;
-    writableStoreUseTmpfs = true;
+    writableStoreUseTmpfs = false;
     graphics = false;
     sharedDirectories = {
       workspace = {

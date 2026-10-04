@@ -170,8 +170,8 @@
       {
         description = "Grayjay on workspace 5 maximized & above others";
         match = {
-          window-class = {
-            value = "dotcefnative cef";
+          title = {
+            value = "Grayjay";
             type = "exact";
           };
         };

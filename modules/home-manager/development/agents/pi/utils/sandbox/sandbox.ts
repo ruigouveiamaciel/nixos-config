@@ -103,7 +103,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
                 "/workspace",
                 this.cwd,
               ],
-              timeout: 5_000,
+              timeout: 30_000,
             });
 
             this.status = SandboxStatus.READY;
@@ -194,7 +194,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
       const bufB64 = Buffer.from(chunk).toString("base64");
 
       const { exitCode, stdout } = await this.execCommand({
-        command: `echo ${JSON.stringify(bufB64)} | base64 -d ${offset === 0 ? ">" : ">>"} ${JSON.stringify(filePath)}`,
+        command: `echo ${shellQuote(bufB64)} | base64 -d ${offset === 0 ? ">" : ">>"} ${shellQuote(filePath)}`,
         timeout: 5_000,
       });
 
@@ -362,7 +362,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
               execute: "guest-exec",
               arguments: {
                 path: "bash",
-                arg: ["-c", "kill", String(args.pid)],
+                arg: ["-c", "kill", "-9", String(args.pid)],
                 "capture-output": "merged",
                 env: [PATH],
               },
@@ -378,7 +378,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
               execute: "guest-exec",
               arguments: {
                 path: "bash",
-                arg: ["-c", "kill", String(args.pid)],
+                arg: ["-c", "kill", "-9", String(args.pid)],
                 "capture-output": "merged",
                 env: [PATH],
               },
@@ -401,7 +401,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
 
       if (status instanceof Object && "exited" in status) {
         if (!status.exited) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 10));
           continue;
         } else {
           exited = true;
@@ -457,7 +457,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
     const script = `
       __pi_out=$(mktemp 2>/dev/null)
       (
-        cd -- "$0" && exec runuser -u "$1" -- bash -c "$2"
+        cd -- "$0" && exec runuser -u "$1" -- bash -lc "$2"
       ) >"$__pi_out" 2>&1
       __pi_rc=$?
       echo "$__pi_out"

@@ -11,6 +11,7 @@
           packages = with pkgs; [
             imagemagick
             vlc
+            mpv
             unstable.grayjay
             rawtherapee
             picard

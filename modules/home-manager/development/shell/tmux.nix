@@ -20,8 +20,8 @@
       if ! tmux has-session -t="$session" 2>/dev/null; then
         tmux new-session -d -s "$session" -c "$cwd" -n editor
         tmux send-keys  -t "$session:editor" "$EDITOR ." Enter
-        tmux new-window -t "$session:" -c "$cwd" -n cmd
-        tmux new-window -t "$session:" -c "$cwd" -n agent
+        tmux new-window -t "$session:" -c "$cwd"
+        tmux new-window -t "$session:" -c "$cwd"
         tmux select-window -t "$session:editor"
       fi
 
