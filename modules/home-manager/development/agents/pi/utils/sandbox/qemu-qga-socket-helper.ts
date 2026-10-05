@@ -128,7 +128,7 @@ export class QemuQgaSocket extends EventEmitter<QemuQgaSocketEvents> {
     const release = await this.lock.acquire();
 
     this.socket?.write(JSON.stringify(args.payload) + "\n");
-    const result = await this.read({ timeout: args.timeout ?? 5_000 });
+    const result = await this.read({ timeout: args.timeout ?? 15_000 });
 
     release();
 

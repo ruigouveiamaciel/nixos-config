@@ -21,8 +21,8 @@
 
   virtualisation = {
     cores = 4;
-    memorySize = 4 * 1024;
-    diskSize = 32 * 1024;
+    memorySize = 8 * 1024;
+    diskSize = 64 * 1024;
     writableStoreUseTmpfs = false;
     graphics = false;
     sharedDirectories = {

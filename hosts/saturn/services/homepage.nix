@@ -6,9 +6,6 @@
   serviceName = "homepage";
   serviceId = 1006;
 
-  # Host address of this machine, most services are reachable on it
-  host = "10.0.50.42";
-
   settingsYaml = pkgs.writeText "settings.yaml" ''
     title: Saturn
     theme: dark
@@ -26,55 +23,55 @@
   servicesYaml = pkgs.writeText "services.yaml" ''
     - Media:
         - Jellyfin:
-            href: http://${host}:8096
+            href: http://10.0.50.42:8096
             description: Media streaming server
             icon: jellyfin.png
         - Immich:
-            href: http://${host}:2283
+            href: http://10.0.50.42:2283
             description: Photos and videos backup
             icon: immich.png
         - Navidrome:
-            href: http://${host}:4533
+            href: http://10.0.50.42:4533
             description: Music streaming server
             icon: navidrome.png
         - Seerr:
-            href: http://${host}:5055
+            href: http://10.0.50.42:5055
             description: Movie and TV requests
             icon: seerr.png
 
     - Media Automation:
         - Sonarr:
-            href: http://${host}:8989
+            href: http://10.0.50.42:8989
             description: TV show automation
             icon: sonarr.png
         - Radarr:
-            href: http://${host}:7878
+            href: http://10.0.50.42:7878
             description: Movie automation
             icon: radarr.png
         - Lidarr:
-            href: http://${host}:8686
+            href: http://10.0.50.42:8686
             description: Music automation
             icon: lidarr.png
         - Bazarr:
-            href: http://${host}:6767
+            href: http://10.0.50.42:6767
             description: Subtitles automation
             icon: bazarr.png
         - Prowlarr:
-            href: http://${host}:9696
+            href: http://10.0.50.42:9696
             description: Indexer manager
             icon: prowlarr.png
 
     - Downloads:
         - qBittorrent:
-            href: http://${host}:1338
+            href: http://10.0.50.42:1338
             description: BitTorrent client
             icon: qbittorrent.png
         - Flood:
-            href: http://${host}:1337
+            href: http://10.0.50.42:1337
             description: rTorrent web UI
             icon: flood.png
         - FlareSolverr:
-            href: http://${host}:8191
+            href: http://10.0.50.42:8191
             description: Cloudflare bypass proxy
             icon: flaresolverr.png
 
@@ -88,40 +85,34 @@
             description: Zigbee gateway
             icon: zigbee2mqtt.png
         - Paperless:
-            href: http://${host}:1619
+            href: http://10.0.50.42:1619
             description: Document management
             icon: paperless-ngx.png
         - Tiny Tiny RSS:
-            href: http://${host}:8280
+            href: http://10.0.50.42:8280
             description: RSS reader
             icon: tinytinyrss.png
         - Fava:
-            href: http://${host}:1601
+            href: http://10.0.50.42:1601
             description: Beancount double-entry accounting
 
     - Network:
         - UniFi:
-            href: https://${host}:8443
+            href: https://10.0.50.42:8443
             description: Network controller
             icon: unifi.png
         - SearXNG:
-            href: http://${host}:8888
+            href: http://10.0.50.42:8888
             description: Meta search engine
             icon: searxng.png
         - OpenSpeedTest:
-            href: http://${host}:8337
+            href: http://10.0.50.42:8337
             description: Network speed test
             icon: openspeedtest.png
         - Forgejo:
-            href: http://${host}:2015
+            href: https://git.iuseneovim.fyi
             description: Git hosting
             icon: forgejo.png
-  '';
-
-  configDir = pkgs.runCommand "homepage-config" {} ''
-    mkdir -p $out
-    cp ${settingsYaml} $out/settings.yaml
-    cp ${servicesYaml} $out/services.yaml
   '';
 in {
   virtualisation.oci-containers.containers = {
@@ -135,13 +126,12 @@ in {
       };
       extraOptions = ["--network=host"];
       environment = {
-        # PUID/PGID are intentionally not set so the entrypoint skips
-        # ownership changes on the read-only /app/config mount
-        HOMEPAGE_ALLOWED_HOSTS = "${host}:8069";
+        HOMEPAGE_ALLOWED_HOSTS = "10.0.50.42:8069";
         PORT = "8069";
       };
       volumes = [
-        "${configDir}:/app/config:ro"
+        "${settingsYaml}:/app/config/settings.yaml:ro"
+        "${servicesYaml}:/app/config/services.yaml:ro"
       ];
       environmentFiles = [
         "/persist/services/${serviceName}/secrets.env"

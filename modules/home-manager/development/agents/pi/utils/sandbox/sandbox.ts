@@ -195,7 +195,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
 
       const { exitCode, stdout } = await this.execCommand({
         command: `echo ${shellQuote(bufB64)} | base64 -d ${offset === 0 ? ">" : ">>"} ${shellQuote(filePath)}`,
-        timeout: 5_000,
+        timeout: 15_000,
       });
 
       if (exitCode !== 0) {
@@ -401,7 +401,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
 
       if (status instanceof Object && "exited" in status) {
         if (!status.exited) {
-          await new Promise((resolve) => setTimeout(resolve, 10));
+          await new Promise((resolve) => setTimeout(resolve, 100));
           continue;
         } else {
           exited = true;
