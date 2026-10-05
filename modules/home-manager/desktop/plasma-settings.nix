@@ -356,7 +356,7 @@
         "Toggle Screen Reader On and Off" = "none";
       };
       ksmserver = {
-        "Lock Session" = "none";
+        "Lock Session" = "Meta+L";
         "Log Out" = "none";
       };
       "services/systemsettings.desktop" = {

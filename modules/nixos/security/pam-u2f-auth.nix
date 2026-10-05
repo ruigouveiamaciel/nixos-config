@@ -1,9 +1,10 @@
 {
+  config,
   pkgs,
   lib,
   ...
 }: {
-  # Allow sudo and login via an authorized fido key
+  # Shutdown computer if YubiKey is removed
   services.udev.extraRules = ''
     ACTION=="remove",\
      ENV{ID_BUS}=="usb",\
@@ -12,6 +13,8 @@
      ENV{ID_VENDOR}=="Yubico",\
      RUN+="${pkgs.systemd}/bin/systemctl poweroff -i"
   '';
+
+  # Allow sudo and login via an authorized fido key
   security = {
     pam = {
       u2f = {
@@ -29,9 +32,13 @@
         sudo = {
           u2fAuth = true;
           unixAuth = lib.mkForce false;
+          # If rssh is enabled, make sure u2f takes priority
+          rules.auth.rssh.order =
+            config.security.pam.services.sudo.rules.auth.u2f.order + 10;
         };
       };
     };
+
     sudo = {
       execWheelOnly = true;
       extraConfig = ''

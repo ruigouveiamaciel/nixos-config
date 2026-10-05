@@ -18,11 +18,12 @@
       fi
 
       if ! tmux has-session -t="$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$cwd" -n editor
-        tmux send-keys  -t "$session:editor" "$EDITOR ." Enter
+        tmux new-session -d -s "$session" -c "$cwd"
+        tmux send-keys  -t "$session:1" "$EDITOR ." Enter
         tmux new-window -t "$session:" -c "$cwd"
         tmux new-window -t "$session:" -c "$cwd"
-        tmux select-window -t "$session:editor"
+        tmux new-window -t "$session:" -c "$cwd"
+        tmux select-window -t "$session:1"
       fi
 
       if [ -n "''${TMUX:-}" ]; then
@@ -113,10 +114,10 @@ in {
 
       # Status bar
       set -g status-left-length 35
-      set -g status-left "[#{=/30/…:session_name}]  "
+      set -g status-left "[#{=/30/…:session_name}]"
       set -g status-right ""
-      set -g window-status-format " #I:#W "
-      set -g window-status-current-format " #I:#W*"
+      set -g window-status-format "   #I:#W"
+      set -g window-status-current-format " ->#I:#W"
       set -g renumber-windows on
 
       # Pane navigation (hjkl)
@@ -141,7 +142,7 @@ in {
 
       # Window management
       bind -n M-t new-window -c "#{pane_current_path}"
-      bind -n M-w kill-window
+      bind -n M-w confirm-before -p "kill-window #I:#W? (y/n)" kill-window
       bind -n M-n next-window
       bind -n M-p previous-window
       bind -n M-u command-prompt -I "#W" "rename-window '%%'"
