@@ -35,6 +35,13 @@
               "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
               "privacy.clearOnShutdown_v2.siteSettings" = false;
               "browser.translations.automaticallyPopup" = false;
+              "browser.translations.enable" = false;
+              "middlemouse.paste" = false;
+              "middlemouse.contentLoadURL" = false;
+              "signon.rememberSignons" = false;
+              "signon.management.page.breach-alerts.enabled" = false;
+              "privacy.userContext.enabled" = false;
+              "privacy.userContext.ui.enabled" = false;
             };
           };
         };

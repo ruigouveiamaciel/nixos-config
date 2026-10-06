@@ -96,6 +96,10 @@
             value = true;
             apply = "initially";
           };
+          noborder = {
+            value = true;
+            apply = "initially";
+          };
         };
       }
       {

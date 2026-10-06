@@ -127,11 +127,13 @@ export default function searxngExtension(pi: ExtensionAPI) {
     parameters: Params,
     renderCall(args: Static<typeof Params>, theme) {
       let text = theme.fg("toolTitle", theme.bold("web_search "));
-      text += theme.fg("accent", `"${args.query}"`);
+      text += theme.fg("accent", args.query);
       const extras = [
         args.categories,
-        args.language ? `lang=${args.language}` : undefined,
-        args.pageNumber ? `page=${args.pageNumber}` : undefined,
+        args.language ? theme.fg("dim", `lang=${args.language}`) : undefined,
+        args.pageNumber
+          ? theme.fg("dim", `page=${args.pageNumber}`)
+          : undefined,
       ].filter(Boolean);
       if (extras.length) text += theme.fg("muted", ` ${extras.join(" ")}`);
       text += "\n";
