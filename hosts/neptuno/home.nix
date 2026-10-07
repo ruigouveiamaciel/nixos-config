@@ -18,9 +18,9 @@
   programs.plasma.powerdevil = let
     action = "nothing";
   in {
-    AC = lib.mkForce action;
+    AC.powerButtonAction = lib.mkForce action;
     battery.powerButtonAction = lib.mkForce action;
-    lowBattery = lib.mkForce action;
+    lowBattery.powerButtonAction = lib.mkForce action;
   };
 
   home.stateVersion = "26.05";
