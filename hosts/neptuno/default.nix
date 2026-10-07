@@ -13,8 +13,6 @@
 
     "${myModulesPath}/networking/networkmanager.nix"
     "${myModulesPath}/networking/openssh.nix"
-    # TODO: probably need a different script for unlocking
-    "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
     # TODO: Might want to use password instead so I don't get locked out
     # "${myModulesPath}/security/pam-u2f-auth.nix"
@@ -24,16 +22,14 @@
   ];
 
   home-manager.users.smokewow.imports = [./home.nix];
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "smokewow";
+  };
 
   networking = {
     hostName = "neptuno";
     hostId = "9f5194e4";
-  };
-
-  services.logind.settings.Login = {
-    HandleLidSwitch = "lock";
-    HandleLidSwitchExternalPower = "lock";
-    HandleLidSwitchDocked = "ignore";
   };
 
   # Don't hang boot because of network timeout

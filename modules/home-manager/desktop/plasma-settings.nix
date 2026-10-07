@@ -10,28 +10,47 @@
 
     kscreenlocker = {
       autoLock = false;
-      lockOnResume = false;
+      lockOnResume = true;
     };
 
-    powerdevil = {
+    powerdevil = rec {
       AC = {
         powerButtonAction = "shutDown";
-        autoSuspend.action = "nothing";
-        turnOffDisplay.idleTimeout = "never";
-        dimDisplay.enable = false;
+        autoSuspend = {
+          action = "sleep";
+          idleTimeout = 300;
+        };
+        turnOffDisplay = {
+          idleTimeout = 300 - 10;
+          idleTimeoutWhenLocked = 20;
+        };
+        dimDisplay = {
+          enable = true;
+          idleTimeout = 300 - 70;
+        };
+        whenLaptopLidClosed = "sleep";
+        inhibitLidActionWhenExternalMonitorConnected = true;
+        powerProfile = "performance";
       };
       battery = {
         powerButtonAction = "shutDown";
-        autoSuspend.action = "nothing";
-        turnOffDisplay.idleTimeout = "never";
-        dimDisplay.enable = false;
+        autoSuspend = {
+          action = "sleep";
+          idleTimeout = 300;
+        };
+        turnOffDisplay = {
+          idleTimeout = 300 - 10;
+          idleTimeoutWhenLocked = 20;
+        };
+        dimDisplay = {
+          enable = true;
+          idleTimeout = 300 - 70;
+        };
+        whenLaptopLidClosed = "sleep";
+        inhibitLidActionWhenExternalMonitorConnected = true;
+        powerProfile = "balanced";
       };
-      lowBattery = {
-        powerButtonAction = "shutDown";
-        autoSuspend.action = "nothing";
-        turnOffDisplay.idleTimeout = "never";
-        dimDisplay.enable = false;
-      };
+      lowBattery = battery;
     };
     input = {
       touchpads = [
@@ -43,12 +62,12 @@
           rightClickMethod = "twoFingers";
           name = "PIXA3854:00 093A:0239 Touchpad";
           naturalScroll = true;
-          pointerSpeed = 0;
+          pointerSpeed = 0.25;
           scrollSpeed = 0.3;
           scrollMethod = "twoFingers";
           vendorId = "093A";
           productId = "0239";
-          tapToClick = true;
+          tapToClick = false;
           tapAndDrag = false;
         }
       ];

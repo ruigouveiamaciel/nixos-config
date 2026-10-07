@@ -28,11 +28,6 @@
     hostId = "397d7c75";
   };
 
-  services.logind.settings.Login = {
-    IdleAction = "ignore";
-    IdleActionSec = "0";
-  };
-
   # Don't hang boot because of network timeout
   boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;

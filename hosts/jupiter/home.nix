@@ -1,4 +1,8 @@
-{myModulesPath, ...}: {
+{
+  myModulesPath,
+  lib,
+  ...
+}: {
   imports = [
     "${myModulesPath}/desktop/apps"
     "${myModulesPath}/desktop/plasma-settings.nix"
@@ -9,6 +13,8 @@
     "build" = "cd ~/projects/nixos-config && nixos-rebuild build --log-format internal-json -v --flake .#jupiter &| nom --json";
     "root-diff" = "sudo zfs diff zroot/encrypted/root@blank | nvim";
   };
+
+  programs.plasma.powerdevil.AC.autoSuspend.action = lib.mkForce "nothing";
 
   home.stateVersion = "24.11";
 }

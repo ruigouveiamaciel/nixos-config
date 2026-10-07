@@ -14,19 +14,13 @@
     "root-diff" = "sudo find / -xdev | nvim";
   };
 
-  programs.plasma.powerdevil = {
-    AC = {
-      powerButtonAction = lib.mkForce "nothing";
-      powerProfile = lib.mkDefault "performance";
-    };
-    battery = {
-      powerButtonAction = lib.mkForce "nothing";
-      powerProfile = lib.mkDefault "powerSaving";
-    };
-    lowBattery = {
-      powerButtonAction = lib.mkForce "nothing";
-      powerProfile = lib.mkDefault "powerSaving";
-    };
+  # Disable power button as it easy to accidently press during transport
+  programs.plasma.powerdevil = let
+    action = "nothing";
+  in {
+    AC = lib.mkForce action;
+    battery.powerButtonAction = lib.mkForce action;
+    lowBattery = lib.mkForce action;
   };
 
   home.stateVersion = "26.05";
