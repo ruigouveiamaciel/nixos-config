@@ -21,10 +21,6 @@ in {
             enable = true;
             wayland.enable = true;
           };
-          logind.settings.Login = {
-            IdleAction = "ignore";
-            IdleActionSec = "0";
-          };
         };
 
         xdg.portal.enable = true;
@@ -38,7 +34,7 @@ in {
       environment.persistence."/persist" = {
         directories = [
           # {
-          #   directory = "/etc/cups";
+          #   directory = "/example";
           #   user = "root";
           #   group = "root";
           #   mode = "0700";

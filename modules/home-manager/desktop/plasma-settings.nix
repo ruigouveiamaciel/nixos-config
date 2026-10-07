@@ -33,46 +33,65 @@
         dimDisplay.enable = false;
       };
     };
-
-    input.mice = [
-      {
-        enable = true;
-        acceleration = 0;
-        accelerationProfile = "none";
-        leftHanded = false;
-        middleButtonEmulation = false;
-        name = "ZSA Technology Labs Voyager";
-        naturalScroll = false;
-        productId = "1977";
-        scrollSpeed = 1;
-        vendorId = "3297";
-      }
-      {
-        # Device for Logitech PRO X 2 for kernels < 7.0
-        enable = true;
-        acceleration = 0;
-        accelerationProfile = "none";
-        leftHanded = false;
-        middleButtonEmulation = false;
-        name = "Logitech USB Receiver";
-        naturalScroll = false;
-        productId = "c54d";
-        scrollSpeed = 1;
-        vendorId = "046d";
-      }
-      {
-        enable = true;
-        acceleration = 0;
-        accelerationProfile = "none";
-        leftHanded = false;
-        middleButtonEmulation = false;
-        name = "Logitech PRO X 2";
-        naturalScroll = false;
-        productId = "40a9";
-        scrollSpeed = 1;
-        vendorId = "046d";
-      }
-    ];
+    input = {
+      touchpads = [
+        {
+          enable = true;
+          accelerationProfile = "none";
+          disableWhileTyping = false;
+          middleButtonEmulation = false;
+          rightClickMethod = "twoFingers";
+          name = "PIXA3854:00 093A:0239 Touchpad";
+          naturalScroll = true;
+          pointerSpeed = 0;
+          scrollSpeed = 0.3;
+          scrollMethod = "twoFingers";
+          vendorId = "093A";
+          productId = "0239";
+          tapToClick = true;
+          tapAndDrag = false;
+        }
+      ];
+      mice = [
+        {
+          enable = true;
+          acceleration = 0;
+          accelerationProfile = "none";
+          leftHanded = false;
+          middleButtonEmulation = false;
+          name = "ZSA Technology Labs Voyager";
+          naturalScroll = false;
+          productId = "1977";
+          scrollSpeed = 1;
+          vendorId = "3297";
+        }
+        {
+          # Device for Logitech PRO X 2 for kernels < 7.0
+          enable = true;
+          acceleration = 0;
+          accelerationProfile = "none";
+          leftHanded = false;
+          middleButtonEmulation = false;
+          name = "Logitech USB Receiver";
+          naturalScroll = false;
+          productId = "c54d";
+          scrollSpeed = 1;
+          vendorId = "046d";
+        }
+        {
+          enable = true;
+          acceleration = 0;
+          accelerationProfile = "none";
+          leftHanded = false;
+          middleButtonEmulation = false;
+          name = "Logitech PRO X 2";
+          naturalScroll = false;
+          productId = "40a9";
+          scrollSpeed = 1;
+          vendorId = "046d";
+        }
+      ];
+    };
 
     window-rules = [
       {

@@ -30,6 +30,12 @@
     hostId = "9f5194e4";
   };
 
+  services.logind.settings.Login = {
+    HandleLidSwitch = "lock";
+    HandleLidSwitchExternalPower = "lock";
+    HandleLidSwitchDocked = "ignore";
+  };
+
   # Don't hang boot because of network timeout
   boot.initrd.systemd.network.wait-online.enable = false;
   systemd.network.wait-online.enable = false;

@@ -362,7 +362,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
               execute: "guest-exec",
               arguments: {
                 path: "bash",
-                arg: ["-c", "kill", "-9", String(args.pid)],
+                arg: ["-c", "kill -9 $0", String(args.pid)],
                 "capture-output": "merged",
                 env: [PATH],
               },
@@ -378,14 +378,14 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
               execute: "guest-exec",
               arguments: {
                 path: "bash",
-                arg: ["-c", "kill", "-9", String(args.pid)],
+                arg: ["-c", "kill -9 $0", String(args.pid)],
                 "capture-output": "merged",
                 env: [PATH],
               },
             },
           }),
         );
-        throw new Error(`Command timed out after ${args.timeout}ms`);
+        throw new Error("Command timed out");
       }
 
       const status = this.sanitizeQgaResponse(

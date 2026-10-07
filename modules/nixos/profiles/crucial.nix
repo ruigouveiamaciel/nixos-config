@@ -3,5 +3,6 @@
     "${myModulesPath}/security/disable-lecture.nix"
     "${myModulesPath}/system/nix-settings.nix"
     "${myModulesPath}/system/nixpkgs.nix"
+    "${myModulesPath}/system/no-hibernate.nix"
   ];
 }
