@@ -6,7 +6,6 @@
 }: {
   imports = [
     inputs.disko.nixosModules.default
-
     "${myModulesPath}/system/impermanence.nix"
   ];
 
@@ -105,8 +104,6 @@
     };
   };
 
-  fileSystems."/persist".neededForBoot = true;
-
   boot.initrd.systemd = {
     enable = true;
     services.rollback = {
@@ -124,45 +121,5 @@
         zfs rollback -r zroot/encrypted/root@blank
       '';
     };
-  };
-
-  environment.persistence."/persist" = {
-    hideMounts = true;
-    directories = [
-      {
-        directory = "/var/log";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-      {
-        directory = "/var/lib/bluetooth";
-        user = "root";
-        group = "root";
-        mode = "0700";
-      }
-      {
-        directory = "/var/lib/nixos";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-      {
-        directory = "/var/lib/systemd/coredump";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-    ];
-    files = [
-      {
-        file = "/etc/machine-id";
-        parentDirectory = {
-          user = "root";
-          group = "root";
-          mode = "0755";
-        };
-      }
-    ];
   };
 }

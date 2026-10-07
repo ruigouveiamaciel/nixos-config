@@ -1,12 +1,10 @@
 {
   inputs,
   myModulesPath,
-  lib,
   ...
 }: {
   imports = [
     inputs.disko.nixosModules.default
-
     "${myModulesPath}/system/impermanence.nix"
   ];
 
@@ -61,15 +59,6 @@
                     mountOptions = ["compress=zstd" "noatime"];
                   };
                 };
-
-                # Snapshot the pristine @root subvolume to @root-blank,
-                # so that boot can roll back to it every time
-                # postCreateHook = ''
-                #   MNTPOINT=$(mktemp -d)
-                #   mount -t btrfs -o subvol=/ "$device" "$MNTPOINT"
-                #   trap 'umount "$MNTPOINT"; rm -rf "$MNTPOINT"' EXIT
-                #   btrfs subvolume snapshot "$MNTPOINT/@root" "$MNTPOINT/@root-blank"
-                # '';
               };
             };
           };
@@ -85,113 +74,36 @@
       };
     };
   };
+  boot.initrd.systemd = {
+    enable = true;
+    services.rollback = {
+      description = "Rollback root to an empty state";
+      wantedBy = ["initrd.target"];
+      after = [
+        "initrd-root-device.target"
+        "cryptsetup.target"
+      ];
+      before = ["sysroot.mount"];
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig.Type = "oneshot";
+      script = ''
+        set -e
 
-  fileSystems."/persist".neededForBoot = true;
+        mkdir -p /mnt
+        mount -t btrfs /dev/mapper/cryptroot /mnt
 
-  boot.initrd.systemd.services.rollback-root = {
-    description = "Rollback root Btrfs subvolume";
+        # Recursively delete all nested subvolumes inside /mnt/root
+        btrfs subvolume list -o /mnt/root |
+          cut -f9 -d' ' |
+          while read -r subvolume; do
+            btrfs subvolume delete "/mnt/$subvolume"
+          done
 
-    wantedBy = ["initrd.target"];
+        btrfs subvolume delete /mnt/root
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
 
-    after = [
-      "cryptroot.target"
-    ];
-
-    before = [
-      "initrd-root-fs.target"
-    ];
-
-    unitConfig = {
-      DefaultDependencies = false;
+        umount /mnt
+      '';
     };
-
-    serviceConfig = {
-      Type = "oneshot";
-    };
-
-    script = ''
-      set -e
-
-      mkdir -p /mnt
-      echo "Rollback running" > /mnt/rollback.log
-
-      mount -t btrfs /dev/mapper/cryptroot /mnt
-
-      # Recursively delete all nested subvolumes inside /mnt/root
-      btrfs subvolume list -o /mnt/root |
-        cut -f9 -d' ' |
-        while read -r subvolume; do
-          echo "Deleting /$subvolume subvolume..." >> /mnt/rollback.log
-          btrfs subvolume delete "/mnt/$subvolume"
-        done
-
-      echo "Deleting /root subvolume..." >> /mnt/rollback.log
-      btrfs subvolume delete /mnt/root
-
-      echo "Restoring blank /root subvolume..." >> /mnt/rollback.log
-      btrfs subvolume snapshot /mnt/root-blank /mnt/root
-
-      umount /mnt
-    '';
-  };
-
-  # boot.initrd.postDeviceCommands = lib.mkAfter ''
-  #   echo "Rollback running" > /mnt/rollback.log
-  #   mkdir -p /mnt
-  #   mount -t btrfs /dev/mapper/cryptroot /mnt
-  #
-  #   # Recursively delete all nested subvolumes inside /mnt/root
-  #   btrfs subvolume list -o /mnt/root | cut -f9 -d' ' | while read subvolume; do
-  #     echo "Deleting /$subvolume subvolume..." >> /mnt/rollback.log
-  #     btrfs subvolume delete "/mnt/$subvolume"
-  #   done
-  #
-  #   echo "Deleting /root subvolume..." >> /mnt/rollback.log
-  #   btrfs subvolume delete /mnt/root
-  #
-  #   echo "Restoring blank /root subvolume..." >> /mnt/rollback.log
-  #   btrfs subvolume snapshot /mnt/root-blank /mnt/root
-  #
-  #   umount /mnt
-  # '';
-
-  environment.persistence."/persist" = {
-    hideMounts = true;
-    directories = [
-      {
-        directory = "/var/log";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-      {
-        directory = "/var/lib/bluetooth";
-        user = "root";
-        group = "root";
-        mode = "0700";
-      }
-      {
-        directory = "/var/lib/nixos";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-      {
-        directory = "/var/lib/systemd/coredump";
-        user = "root";
-        group = "root";
-        mode = "0755";
-      }
-    ];
-    files = [
-      {
-        file = "/etc/machine-id";
-        parentDirectory = {
-          user = "root";
-          group = "root";
-          mode = "0755";
-        };
-      }
-    ];
   };
 }

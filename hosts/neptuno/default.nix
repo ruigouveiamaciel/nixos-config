@@ -14,7 +14,7 @@
     "${myModulesPath}/networking/networkmanager.nix"
     "${myModulesPath}/networking/openssh.nix"
     # TODO: probably need a different script for unlocking
-    # "${myModulesPath}/networking/remote-disk-unlock.nix"
+    "${myModulesPath}/networking/remote-disk-unlock.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
     # TODO: Might want to use password instead so I don't get locked out
     # "${myModulesPath}/security/pam-u2f-auth.nix"
