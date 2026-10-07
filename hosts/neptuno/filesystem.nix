@@ -1,8 +1,7 @@
 {
   inputs,
   myModulesPath,
-  config,
-  pkgs,
+  lib,
   ...
 }: {
   imports = [
@@ -15,15 +14,12 @@
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";
-    fileSystems = ["/persist"];
   };
 
   disko.devices = {
-    # TODO: replace with the actual NVMe disk of this machine
-    # (ls /dev/disk/by-id/ | grep -v -E 'part|wwn')
     disk.main-nvme = {
       type = "disk";
-      device = "/dev/disk/by-id/nvme-FRAMEWORK_NVMe_-XXXX_XXXX_XXXX_XXXX";
+      device = "/dev/disk/by-id/nvme-WD_BLACK_SN770M_500GB_26025T800272";
       content = {
         type = "gpt";
         partitions = {
@@ -39,7 +35,6 @@
             };
           };
           luks = {
-            name = "nixos-crypt";
             size = "100%";
             content = {
               type = "luks";
@@ -52,16 +47,16 @@
                 extraArgs = ["-f"];
 
                 subvolumes = {
-                  "@root" = {
+                  "/root" = {
                     mountpoint = "/";
                     mountOptions = ["compress=zstd" "noatime"];
                   };
-                  "@root-blank" = {};
-                  "@nix" = {
+                  "/root-blank" = {};
+                  "/nix" = {
                     mountpoint = "/nix";
                     mountOptions = ["compress=zstd" "noatime"];
                   };
-                  "@persist" = {
+                  "/persist" = {
                     mountpoint = "/persist";
                     mountOptions = ["compress=zstd" "noatime"];
                   };
@@ -69,12 +64,12 @@
 
                 # Snapshot the pristine @root subvolume to @root-blank,
                 # so that boot can roll back to it every time
-                postCreateHook = ''
-                  MNTPOINT=$(mktemp -d)
-                  mount -t btrfs -o subvol=/ "$device" "$MNTPOINT"
-                  trap 'umount "$MNTPOINT"; rm -rf "$MNTPOINT"' EXIT
-                  btrfs subvolume snapshot "$MNTPOINT/@root" "$MNTPOINT/@root-blank"
-                '';
+                # postCreateHook = ''
+                #   MNTPOINT=$(mktemp -d)
+                #   mount -t btrfs -o subvol=/ "$device" "$MNTPOINT"
+                #   trap 'umount "$MNTPOINT"; rm -rf "$MNTPOINT"' EXIT
+                #   btrfs subvolume snapshot "$MNTPOINT/@root" "$MNTPOINT/@root-blank"
+                # '';
               };
             };
           };
@@ -93,32 +88,72 @@
 
   fileSystems."/persist".neededForBoot = true;
 
-  boot.initrd.systemd = {
-    enable = true;
-    services.rollback = {
-      description = "Rollback @root subvolume to its blank state";
-      wantedBy = ["initrd.target"];
-      after = ["systemd-cryptsetup@cryptroot.service"];
-      before = ["sysroot.mount"];
-      path = [pkgs.btrfs-progs];
-      unitConfig.DefaultDependencies = "no";
-      serviceConfig.Type = "oneshot";
-      script = ''
-        MNTPOINT=$(mktemp -d)
-        mount -t btrfs -o subvol=/ /dev/mapper/cryptroot "$MNTPOINT"
+  boot.initrd.systemd.services.rollback-root = {
+    description = "Rollback root Btrfs subvolume";
 
-        if [ -e "$MNTPOINT/@root-blank" ]; then
-          if btrfs subvolume show "$MNTPOINT/@root" > /dev/null 2>&1; then
-            btrfs subvolume delete "$MNTPOINT/@root"
-          fi
-          btrfs subvolume snapshot "$MNTPOINT/@root-blank" "$MNTPOINT/@root"
-        fi
+    wantedBy = ["initrd.target"];
 
-        umount "$MNTPOINT"
-        rm -rf "$MNTPOINT"
-      '';
+    after = [
+      "cryptroot.target"
+    ];
+
+    before = [
+      "initrd-root-fs.target"
+    ];
+
+    unitConfig = {
+      DefaultDependencies = false;
     };
+
+    serviceConfig = {
+      Type = "oneshot";
+    };
+
+    script = ''
+      set -e
+
+      mkdir -p /mnt
+      echo "Rollback running" > /mnt/rollback.log
+
+      mount -t btrfs /dev/mapper/cryptroot /mnt
+
+      # Recursively delete all nested subvolumes inside /mnt/root
+      btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read -r subvolume; do
+          echo "Deleting /$subvolume subvolume..." >> /mnt/rollback.log
+          btrfs subvolume delete "/mnt/$subvolume"
+        done
+
+      echo "Deleting /root subvolume..." >> /mnt/rollback.log
+      btrfs subvolume delete /mnt/root
+
+      echo "Restoring blank /root subvolume..." >> /mnt/rollback.log
+      btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+      umount /mnt
+    '';
   };
+
+  # boot.initrd.postDeviceCommands = lib.mkAfter ''
+  #   echo "Rollback running" > /mnt/rollback.log
+  #   mkdir -p /mnt
+  #   mount -t btrfs /dev/mapper/cryptroot /mnt
+  #
+  #   # Recursively delete all nested subvolumes inside /mnt/root
+  #   btrfs subvolume list -o /mnt/root | cut -f9 -d' ' | while read subvolume; do
+  #     echo "Deleting /$subvolume subvolume..." >> /mnt/rollback.log
+  #     btrfs subvolume delete "/mnt/$subvolume"
+  #   done
+  #
+  #   echo "Deleting /root subvolume..." >> /mnt/rollback.log
+  #   btrfs subvolume delete /mnt/root
+  #
+  #   echo "Restoring blank /root subvolume..." >> /mnt/rollback.log
+  #   btrfs subvolume snapshot /mnt/root-blank /mnt/root
+  #
+  #   umount /mnt
+  # '';
 
   environment.persistence."/persist" = {
     hideMounts = true;
