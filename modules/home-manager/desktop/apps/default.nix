@@ -7,5 +7,6 @@
     ./flameshot.nix
     ./media.nix
     ./bottles.nix
+    ./stylus.nix
   ];
 }

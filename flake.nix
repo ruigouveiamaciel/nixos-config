@@ -16,6 +16,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -38,6 +43,7 @@
     with myLib; {
       nixosConfigurations = {
         jupiter = mkSystem ./hosts/jupiter;
+        neptuno = mkSystem ./hosts/neptuno;
         saturn = mkSystem ./hosts/saturn;
         kde-install-iso = mkSystem ./hosts/kde-install-iso;
       };
