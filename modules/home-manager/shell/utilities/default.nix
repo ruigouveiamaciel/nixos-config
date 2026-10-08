@@ -10,5 +10,6 @@
     parallel
     qrencode
     zbar
+    yubikey-manager
   ];
 }
