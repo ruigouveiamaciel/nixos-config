@@ -1,18 +1,12 @@
-{lib, ...}: {
+{
   # Allow sudo only via an authorized ssh agent
   security = {
     pam = {
       rssh.enable = true;
       services.sudo = {
         rssh = true;
-        unixAuth = lib.mkForce false;
+        unixAuth = false;
       };
-    };
-    sudo = {
-      execWheelOnly = true;
-      extraConfig = ''
-        Defaults env_keep+=SSH_AUTH_SOCK
-      '';
     };
   };
 }

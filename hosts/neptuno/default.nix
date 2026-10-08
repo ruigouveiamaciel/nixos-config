@@ -1,4 +1,8 @@
-{myModulesPath, ...}: {
+{
+  myModulesPath,
+  lib,
+  ...
+}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
@@ -13,9 +17,7 @@
 
     "${myModulesPath}/networking/networkmanager.nix"
     "${myModulesPath}/networking/wireguard.nix"
-    # "${myModulesPath}/security/pam-ssh-agent-auth.nix"
-    # TODO: Use Yubikey 5 Nano as MFA
-    # "${myModulesPath}/security/pam-u2f-auth.nix"
+    "${myModulesPath}/security/pam-u2f-auth.nix"
 
     "${myModulesPath}/boot/plymouth.nix"
     "${myModulesPath}/boot/systemd-boot.nix"
@@ -27,6 +29,12 @@
   services.displayManager.autoLogin = {
     enable = true;
     user = "smokewow";
+  };
+
+  # TODO: Remove this section when Yubikey 5 Nano
+  security.pam.services = {
+    login.u2f.enable = lib.mkForce false;
+    kde.u2f.enable = lib.mkForce false;
   };
 
   networking = {
