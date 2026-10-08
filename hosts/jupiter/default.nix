@@ -22,6 +22,12 @@
   ];
 
   home-manager.users.smokewow.imports = [./home.nix];
+  users.users.smokewow.hashedPassword = "";
+
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "smokewow";
+  };
 
   networking = {
     hostName = "jupiter";

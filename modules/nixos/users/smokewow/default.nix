@@ -46,7 +46,6 @@ in {
               "kvm"
             ];
             shell = config.programs.fish.package;
-            hashedPassword = "";
           };
         };
       }

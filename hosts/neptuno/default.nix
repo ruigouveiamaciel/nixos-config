@@ -22,6 +22,8 @@
   ];
 
   home-manager.users.smokewow.imports = [./home.nix];
+  users.users.smokewow.hashedPasswordFile = "/persist/smokewow-hashed-password-file";
+
   services.displayManager.autoLogin = {
     enable = true;
     user = "smokewow";
