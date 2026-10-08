@@ -12,8 +12,8 @@
     "${myModulesPath}/users/smokewow"
 
     "${myModulesPath}/networking/networkmanager.nix"
-    "${myModulesPath}/networking/openssh.nix"
-    "${myModulesPath}/security/pam-ssh-agent-auth.nix"
+    "${myModulesPath}/networking/wireguard.nix"
+    # "${myModulesPath}/security/pam-ssh-agent-auth.nix"
     # TODO: Use Yubikey 5 Nano as MFA
     # "${myModulesPath}/security/pam-u2f-auth.nix"
 

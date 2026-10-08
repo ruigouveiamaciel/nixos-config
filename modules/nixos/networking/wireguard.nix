@@ -5,10 +5,7 @@
 }: {
   config = lib.mkMerge ([
       {
-        networking.networkmanager = {
-          enable = true;
-          wifi.backend = "iwd";
-        };
+        networking.wireguard.enable = true;
       }
     ]
     ++ (lib.optional (options.environment ? "persistence") {
@@ -20,12 +17,6 @@
           #   group = "root";
           #   mode = "0700";
           # }
-          {
-            directory = "/var/lib/iwd";
-            user = "root";
-            group = "root";
-            mode = "0700";
-          }
         ];
       };
     }));
