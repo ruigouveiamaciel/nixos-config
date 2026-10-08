@@ -12,10 +12,7 @@
     "${myModulesPath}/users/sandbox"
   ];
 
-  users = {
-    mutableUsers = false;
-    allowNoPasswordLogin = true;
-  };
+  users.allowNoPasswordLogin = true;
 
   services.getty.autologinUser = "smokewow";
 

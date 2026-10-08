@@ -14,7 +14,7 @@
     "${myModulesPath}/networking/networkmanager.nix"
     "${myModulesPath}/networking/openssh.nix"
     "${myModulesPath}/security/pam-ssh-agent-auth.nix"
-    # TODO: Might want to use password instead so I don't get locked out
+    # TODO: Use Yubikey 5 Nano as MFA
     # "${myModulesPath}/security/pam-u2f-auth.nix"
 
     "${myModulesPath}/boot/plymouth.nix"

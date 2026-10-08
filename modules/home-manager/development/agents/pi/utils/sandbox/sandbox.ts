@@ -294,7 +294,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
     if (args.command.length === 0) throw new Error("No command provided");
 
     if (args.timeout && args.timeout <= 0) {
-      throw new Error("Timeout must be at least 1 second");
+      throw new Error("Timeout must be positive");
     }
 
     if (args.timeout && !Number.isFinite(args.timeout)) {
@@ -356,35 +356,29 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
 
     while (!exited) {
       if (args.signal?.aborted) {
-        this.sanitizeQgaResponse(
-          await socket.write({
-            payload: {
-              execute: "guest-exec",
-              arguments: {
-                path: "bash",
-                arg: ["-c", "kill -9 $0", String(args.pid)],
-                "capture-output": "merged",
-                env: [PATH],
-              },
-            },
-          }),
-        );
+        const { exitCode, stdout } = await this.execCommandRoot({
+          command: ["bash", "-lc", 'kill -9 "$0"', String(args.pid)],
+        });
+
+        if (exitCode !== 0) {
+          throw new Error(
+            "Failed to kill process after command was aborted!\n" + stdout,
+          );
+        }
+
         throw new Error("Command aborted");
       }
       if (deadline && Date.now() > deadline) {
-        this.sanitizeQgaResponse(
-          await socket.write({
-            payload: {
-              execute: "guest-exec",
-              arguments: {
-                path: "bash",
-                arg: ["-c", "kill -9 $0", String(args.pid)],
-                "capture-output": "merged",
-                env: [PATH],
-              },
-            },
-          }),
-        );
+        const { exitCode, stdout } = await this.execCommandRoot({
+          command: ["bash", "-lc", 'kill -9 "$0"', String(args.pid)],
+        });
+
+        if (exitCode !== 0) {
+          throw new Error(
+            "Failed to kill process after command timed out!\n" + stdout,
+          );
+        }
+
         throw new Error("Command timed out");
       }
 
