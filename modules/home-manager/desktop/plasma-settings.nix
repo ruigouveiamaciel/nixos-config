@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.plasma = {
     enable = true;
 
@@ -114,7 +118,7 @@
 
     window-rules = [
       {
-        description = "Kitty on workspace 1 maximized";
+        description = "Kitty setup";
         match = {
           window-class = {
             value = "kitty kitty";
@@ -126,22 +130,14 @@
             value = "17fa73e5-92c7-474b-9965-9b281f632d9d";
             apply = "initially";
           };
-          maximizehoriz = {
-            value = true;
-            apply = "initially";
-          };
-          maximizevert = {
-            value = true;
-            apply = "initially";
-          };
-          noborder = {
-            value = true;
-            apply = "initially";
+          placement = {
+            value = 9;
+            apply = "force";
           };
         };
       }
       {
-        description = "LibreWolf on workspace 4 maximized";
+        description = "LibreWolf setup";
         match = {
           window-class = {
             value = "librewolf librewolf";
@@ -153,18 +149,14 @@
             value = "88d4ecc2-5849-4254-8295-607759b70c25";
             apply = "initially";
           };
-          maximizehoriz = {
-            value = true;
-            apply = "initially";
-          };
-          maximizevert = {
-            value = true;
-            apply = "initially";
+          placement = {
+            value = 9;
+            apply = "force";
           };
         };
       }
       {
-        description = "Vesktop on workspace 10 maximized";
+        description = "Vesktop setup";
         match = {
           window-class = {
             value = "electron vesktop";
@@ -176,18 +168,14 @@
             value = "fe00c54d-8792-4c79-b8c2-eea7fd033356";
             apply = "initially";
           };
-          maximizehoriz = {
-            value = true;
-            apply = "initially";
-          };
-          maximizevert = {
-            value = true;
-            apply = "initially";
+          placement = {
+            value = 9;
+            apply = "force";
           };
         };
       }
       {
-        description = "Steam on workspace 6 maximized";
+        description = "Steam setup";
         match = {
           window-class = {
             value = "steamwebhelper steam";
@@ -199,18 +187,14 @@
             value = "eacd5a71-392c-472a-8c83-81d536176454";
             apply = "initially";
           };
-          maximizehoriz = {
-            value = true;
-            apply = "initially";
-          };
-          maximizevert = {
-            value = true;
-            apply = "initially";
+          placement = {
+            value = 9;
+            apply = "force";
           };
         };
       }
       {
-        description = "Grayjay on workspace 5 maximized & above others";
+        description = "Grayjay setup";
         match = {
           title = {
             value = "Grayjay";
@@ -222,13 +206,9 @@
             value = "27f88eb5-e254-4a91-85c0-7faf617b2c2f";
             apply = "initially";
           };
-          maximizehoriz = {
-            value = true;
-            apply = "initially";
-          };
-          maximizevert = {
-            value = true;
-            apply = "initially";
+          placement = {
+            value = 9;
+            apply = "force";
           };
           above = {
             value = true;
@@ -251,6 +231,10 @@
       baloofilerc."Basic Settings"."Indexing-Enabled".value = false;
       kwinrc = {
         "Effect-overview"."BorderActivate".value = 9;
+        "Wayland" = {
+          "VirtualKeyboardEnabled".value = true;
+          "InputMethod".value = "${pkgs.kdePackages.plasma-keyboard}/share/applications/org.kde.plasma.keyboard.desktop";
+        };
         "Desktops" = {
           "Number".value = 10;
           "Id_1".value = "17fa73e5-92c7-474b-9965-9b281f632d9d";
@@ -273,6 +257,10 @@
           "FreeFloating".value = true;
         };
       };
+      plasmakeyboardrc."General"."enabledLocales".value = lib.strings.concatStringsSep "," [
+        "en_GB"
+        "pt_PT"
+      ];
     };
 
     shortcuts = {
@@ -410,8 +398,8 @@
     panels = [
       {
         location = "bottom";
-        hiding = "autohide";
-        floating = true;
+        hiding = "none";
+        floating = false;
         opacity = "opaque";
         widgets = [
           {

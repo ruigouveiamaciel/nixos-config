@@ -29,22 +29,13 @@ in {
         xdg.portal.enable = true;
 
         environment = {
-          systemPackages = [clipboardPkg];
+          systemPackages = [
+            clipboardPkg
+            pkgs.kdePackages.plasma-keyboard
+          ];
         };
       }
     ]
-    ++ (lib.optional (options.environment ? "persistence") {
-      environment.persistence."/persist" = {
-        directories = [
-          # {
-          #   directory = "/example";
-          #   user = "root";
-          #   group = "root";
-          #   mode = "0700";
-          # }
-        ];
-      };
-    })
     ++ (lib.optional (options ? "home-manager") {
       home-manager.sharedModules = [
         inputs.plasma-manager.homeModules.plasma-manager
@@ -64,6 +55,12 @@ in {
             ++ (
               lib.optional (options.home ? "persistence") {
                 home.persistence."/persist" = {
+                  directories = [
+                    {
+                      directory = ".local/share/flatpak/db";
+                      mode = "700";
+                    }
+                  ];
                   files = [
                     {
                       # Remember monitor settings
