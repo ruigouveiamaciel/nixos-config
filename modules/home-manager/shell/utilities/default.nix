@@ -3,6 +3,7 @@
     ./compression.nix
     ./file-navigation.nix
     ./network.nix
+    ./rebuild-scripts.nix
     ./system-monitoring.nix
   ];
 

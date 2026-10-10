@@ -46,10 +46,16 @@ in {
         }: {
           config = lib.mkMerge ([
               {
-                programs.fish.shellAliases = {
-                  "copy" = lib.getExe' clipboardPkg "wl-copy";
-                  "paste" = lib.getExe' clipboardPkg "wl-paste";
-                };
+                home.packages = [
+                  (pkgs.writeShellApplication {
+                    name = "copy";
+                    text = ''${lib.getExe' clipboardPkg "wl-copy"} "$@"'';
+                  })
+                  (pkgs.writeShellApplication {
+                    name = "paste";
+                    text = ''${lib.getExe' clipboardPkg "wl-paste"} "$@"'';
+                  })
+                ];
               }
             ]
             ++ (
