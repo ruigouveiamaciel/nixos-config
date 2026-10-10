@@ -1,8 +1,29 @@
 {
   pkgs,
   lib,
+  config,
+  osConfig,
   ...
-}: {
+}: let
+  packages =
+    (config.home.packages or [])
+    ++ (lib.optionals (osConfig != null && osConfig ? environment.systemPackages) osConfig.environment.systemPackages);
+
+  hasPkg = name: lib.any (p: (p.pname or null) == name) packages;
+
+  taskbarApps = [
+    {desktop = "org.kde.dolphin"; installed = hasPkg "dolphin";}
+    {desktop = "kitty"; installed = hasPkg "kitty";}
+    {desktop = "librewolf"; installed = hasPkg "librewolf";}
+    {desktop = "vesktop"; installed = hasPkg "vesktop";}
+    {desktop = "steam"; installed = hasPkg "steam";}
+    {desktop = "com.github.flxzt.rnote"; installed = hasPkg "rnote";}
+  ];
+
+  launchers =
+    map (app: "applications:${app.desktop}.desktop")
+    (lib.filter (app: app.installed) taskbarApps);
+in {
   programs.plasma = {
     enable = true;
 
@@ -420,13 +441,7 @@
           }
           {
             iconTasks = {
-              launchers = [
-                "applications:org.kde.dolphin.desktop"
-                "applications:kitty.desktop"
-                "applications:librewolf.desktop"
-                "applications:vesktop.desktop"
-                "applications:steam.desktop"
-              ];
+              launchers = launchers;
               behavior = {
                 middleClickAction = "newInstance";
                 minimizeActiveTaskOnClick = false;
@@ -449,6 +464,7 @@
                 "org.kde.plasma.bluetooth"
                 "org.kde.plasma.networkmanagement"
                 "org.kde.plasma.volume"
+                "org.kde.plasma.manage-inputmethod"
               ];
               hidden = [
                 "kded6"
