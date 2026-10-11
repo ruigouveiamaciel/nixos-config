@@ -9,9 +9,17 @@
       extraDefCfg = "concurrent-tap-hold yes";
 
       config = ''
+        (defvar
+          tap-hold-timeout 200
+          chord-timeout 75
+          chord-timeout-2 50
+        )
+
         (defchordsv2
-          (w e r) tab  50 first-release ()
-          (s d f) caps 50 first-release ()
+          (e r) tab  $chord-timeout-2 first-release ()
+          (d f) caps $chord-timeout-2 first-release ()
+          (u i) bspc $chord-timeout-2 first-release ()
+          (j k) ret  $chord-timeout-2 first-release ()
         )
 
         (defsrc
@@ -24,15 +32,15 @@
 
         (defalias
           ;; Left hand
-          a (tap-hold 150 150 a lmet)
-          s (tap-hold 150 150 s lalt)
-          d (tap-hold 150 150 d lctl)
-          f (tap-hold 150 150 f lsft)
+          a (tap-hold $tap-hold-timeout $tap-hold-timeout a lmet)
+          s (tap-hold $tap-hold-timeout $tap-hold-timeout s lalt)
+          d (tap-hold $tap-hold-timeout $tap-hold-timeout d lctl)
+          f (tap-hold $tap-hold-timeout $tap-hold-timeout f lsft)
           ;; Right hand
-          j (tap-hold 150 150 j rsft)
-          k (tap-hold 150 150 k rctl)
-          l (tap-hold 150 150 l lalt)
-          scl (tap-hold 150 150 ; rmet)
+          j (tap-hold $tap-hold-timeout $tap-hold-timeout j rsft)
+          k (tap-hold $tap-hold-timeout $tap-hold-timeout k rctl)
+          l (tap-hold $tap-hold-timeout $tap-hold-timeout l lalt)
+          scl (tap-hold $tap-hold-timeout $tap-hold-timeout ; rmet)
         )
 
         (deflayer base
