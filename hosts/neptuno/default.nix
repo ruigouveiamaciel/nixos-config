@@ -10,7 +10,6 @@
     "${myModulesPath}/profiles/essentials.nix"
 
     "${myModulesPath}/desktop/plasma6.nix"
-    "${myModulesPath}/desktop/kanata.nix"
     "${myModulesPath}/desktop/gaming"
 
     "${myModulesPath}/locales/pt-pt.nix"
