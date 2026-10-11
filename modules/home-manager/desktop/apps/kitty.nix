@@ -34,6 +34,10 @@
       map --allow-fallback=shifted,ascii cmd+v paste_from_clipboard
       map --allow-fallback=shifted,ascii ctrl+v paste_from_clipboard
 
+      # URLs: open with ctrl+left click or middle mouse click
+      mouse map ctrl+left click,grabbed,ungrabbed mouse_handle_click selection link prompt
+      mouse map middle click,grabbed,ungrabbed mouse_handle_click link
+
       # Font size
       map ctrl+shift+plus change_font_size all +2.0
       map ctrl+shift+kp_add change_font_size all +2.0
