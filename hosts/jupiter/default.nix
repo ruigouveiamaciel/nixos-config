@@ -33,10 +33,25 @@
     hostName = "jupiter";
     hostId = "397d7c75";
   };
-  boot = {
-    kernelParams = ["ip=10.0.0.42::10.0.0.1:255.255.255.0:jupiter:eno1:off:10.0.0.1::"];
-    initrd.systemd.network.wait-online.enable = false;
+
+  boot.initrd.systemd.network = {
+    networks."10-lan" = {
+      matchConfig.Name = "eno1";
+      address = ["10.0.0.42/24"];
+      routes = [
+        {
+          Gateway = "10.0.0.1";
+          Destination = "0.0.0.0/0";
+        }
+      ];
+      dns = ["10.0.0.1"];
+      networkConfig.IPv6AcceptRA = false;
+      linkConfig.RequiredForOnline = "routable";
+    };
+
+    wait-online.enable = false;
   };
+
   systemd.network.wait-online.enable = false;
 
   system.stateVersion = "25.05";
