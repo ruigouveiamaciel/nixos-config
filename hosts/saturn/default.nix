@@ -45,9 +45,22 @@
     }
   ];
 
-  boot = {
-    kernelParams = ["ip=10.0.50.42::10.0.50.1:255.255.255.0:saturn:enp90s0:off:10.0.50.1::"];
-    initrd.systemd.network.wait-online.enable = false;
+  boot.initrd.systemd.network = {
+    networks."10-lan" = {
+      matchConfig.Name = "enp90s0";
+      address = ["10.0.50.42/24"];
+      routes = [
+        {
+          Gateway = "10.0.50.1";
+          Destination = "0.0.0.0/0";
+        }
+      ];
+      dns = ["10.0.50.1"];
+      networkConfig.IPv6AcceptRA = false;
+      linkConfig.RequiredForOnline = "routable";
+    };
+
+    wait-online.enable = false;
   };
 
   systemd.network.wait-online.enable = false;
