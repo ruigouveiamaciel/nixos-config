@@ -63,7 +63,7 @@
                       }
                       {
                         name = "categories";
-                        value = "general,it";
+                        value = "general";
                       }
                       {
                         name = "safesearch";

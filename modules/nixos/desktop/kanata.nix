@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   environment.systemPackages = let
-    kanataUnit = "kanata-framework-12.service";
+    kanataUnit = "kanata-framework-12-kbd.service";
   in [
     (pkgs.writeShellScriptBin "kanata-kill" ''
       exec sudo systemctl stop "${kanataUnit}"
@@ -22,7 +22,7 @@
 
       config = ''
         (defvar
-          tap-hold-timeout 150
+          tap-hold-timeout 200
           macro-gap 100
 
           tmux1 (macro M-1 $macro-gap A-1)
@@ -76,12 +76,12 @@
         )
 
         (deflayer base
-          esc    f1   f2    f3   f4   f5   f6   f7   f8    f9    f10      f11   f12  del
-          XX     1    2     3    4    5    6    7    8     9     0        XX    XX   bspc
-          tab    @q   w     e    r    t    y    u    i     o     p        XX    XX   ret
-          caps   @a   @s    @d   @f   g    h    @j   @k    @l    @cedilla XX    XX
-          lshift XX   z     x    c    v    b    n    m     comma dot      minus XX
-          lctl   XX   @lalt           @spc           @ralt XX    XX       XX    XX   right
+          esc    f1       f2    f3   f4   f5   f6   f7   f8    f9    f10      f11   f12    del
+          XX     1        2     3    4    5    6    7    8     9     0        XX    XX     bspc
+          tab    @q       w     e    r    t    y    u    i     o     p        XX    XX     ret
+          caps   @a       @s    @d   @f   g    h    @j   @k    @l    @cedilla XX    XX
+          lshift XX       z     x    c    v    b    n    m     comma dot      minus rshift
+          lctl   lmet     @lalt           @spc           @ralt rctl  left     down  up     right
         )
 
         (deflayer sym
