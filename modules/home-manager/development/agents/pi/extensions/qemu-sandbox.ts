@@ -209,12 +209,17 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("before_agent_start", async (event, ctx) => {
-    if (!sandboxEnabled || !sb || ctx.cwd === sb.cwd) return undefined;
-    const localLine = ctx.cwd;
-    const guestLine = sb.cwd;
-    return {
-      systemPrompt: event.systemPrompt.replace(localLine, guestLine),
-    };
+    if (!sandboxEnabled || !sb) return undefined;
+
+    event.systemPromptOptions.sections.sandbox_environment = [
+      "You are running inside a sandboxed QEMU virtual machine, not directly on the host.",
+      "- All tool commands (bash, read, write, edit) execute inside this VM, isolated from the host OS.",
+      `- The ONLY connection to the host is the working directory (\`$PWD\`, currently ${sb.cwd}), which is bind-mounted from the host into the VM. Files you create or modify under \`$PWD\` are visible on the host; everything else in the VM is ephemeral and discarded when the session ends.`,
+      "- Host paths do not exist inside the VM: never try to access files outside `$PWD`, and do not treat `$PWD`'s absolute path as a host path.",
+      "- The VM has its own OS, users, and filesystem. Inspect the actual environment with tools (e.g. `uname -a`, `ls`) instead of assuming host facts.",
+    ].join("\n");
+
+    return undefined;
   });
 
   pi.on("session_shutdown", async (_event, _ctx) => {

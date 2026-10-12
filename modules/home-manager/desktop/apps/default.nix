@@ -8,5 +8,6 @@
     ./media.nix
     ./bottles.nix
     ./stylus.nix
+    ./signal.nix
   ];
 }

@@ -15,7 +15,10 @@
       home.persistence = {
         "/persist" = {
           directories = [
-            ".config/vesktop"
+            {
+              directory = ".config/vesktop";
+              mode = "0700";
+            }
           ];
         };
       };

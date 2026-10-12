@@ -14,6 +14,34 @@ in {
   config = lib.mkMerge (
     [
       {
+        # Declarative printer queue, but tolerant of the printer being
+        # offline (unlike hardware.printers.ensurePrinters, which fails
+        # the whole unit): if the B225 can't be reached right now, this
+        # is a no-op and simply runs again on the next boot/switch.
+        systemd.services.cups-ensure-xerox = {
+          description = "Configure Xerox B225 CUPS printer queue";
+          wantedBy = [ "multi-user.target" ];
+          wants = [ "cups.service" "network-online.target" ];
+          after = [ "cups.service" "network-online.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+          };
+          script = ''
+            set +e
+            ${pkgs.cups}/bin/lpadmin \
+              -p Xerox-B225 -E \
+              -v ipp://10.0.150.42/ipp/print \
+              -m everywhere \
+              -L '10.0.150.42' \
+              -D 'Xerox B225 (monochrome, duplex)' \
+              -o print-color-mode=monochrome \
+              -o Duplex=DuplexNoTumble
+            # Printer offline? Fine, try again next boot/switch.
+            exit 0
+          '';
+        };
+
         services = {
           printing.enable = true;
           desktopManager.plasma6.enable = true;
