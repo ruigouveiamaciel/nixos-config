@@ -12,12 +12,34 @@
   hasPkg = name: lib.any (p: (p.pname or null) == name) packages;
 
   taskbarApps = [
-    {desktop = "org.kde.dolphin"; installed = hasPkg "dolphin";}
-    {desktop = "kitty"; installed = hasPkg "kitty";}
-    {desktop = "librewolf"; installed = hasPkg "librewolf";}
-    {desktop = "vesktop"; installed = hasPkg "vesktop";}
-    {desktop = "steam"; installed = hasPkg "steam";}
-    {desktop = "com.github.flxzt.rnote"; installed = hasPkg "rnote";}
+    {
+      desktop = "org.kde.dolphin";
+      installed = hasPkg "dolphin";
+    }
+    {
+      desktop = "kitty";
+      installed = hasPkg "kitty";
+    }
+    {
+      desktop = "librewolf";
+      installed = hasPkg "librewolf";
+    }
+    {
+      desktop = "vesktop";
+      installed = hasPkg "vesktop";
+    }
+    {
+      desktop = "signal";
+      installed = hasPkg "signal-desktop";
+    }
+    {
+      desktop = "steam";
+      installed = hasPkg "steam";
+    }
+    {
+      desktop = "com.github.flxzt.rnote";
+      installed = hasPkg "rnote";
+    }
   ];
 
   launchers =
