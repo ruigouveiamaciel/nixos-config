@@ -20,9 +20,9 @@ in {
         # is a no-op and simply runs again on the next boot/switch.
         systemd.services.cups-ensure-xerox = {
           description = "Configure Xerox B225 CUPS printer queue";
-          wantedBy = [ "multi-user.target" ];
-          wants = [ "cups.service" "network-online.target" ];
-          after = [ "cups.service" "network-online.target" ];
+          wantedBy = ["multi-user.target"];
+          wants = ["cups.service" "network-online.target"];
+          after = ["cups.service" "network-online.target"];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
@@ -40,6 +40,19 @@ in {
             # Printer offline? Fine, try again next boot/switch.
             exit 0
           '';
+        };
+
+        # KDE recreates ~/Projects at session start (KIO places entry);
+        # delete it shortly after plasmashell comes up. Only runs in
+        # Plasma sessions since plasma-plasmashell.service is Plasma-specific.
+        systemd.user.services.remove-kde-projects-dir = {
+          description = "Remove the ~/Projects folder KDE keeps recreating";
+          after = ["plasma-plasmashell.service"];
+          wantedBy = ["plasma-plasmashell.service"];
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = ''${pkgs.runtimeShell} -c 'sleep 5; rm -rf -- "$HOME/Projects"' '';
+          };
         };
 
         services = {
