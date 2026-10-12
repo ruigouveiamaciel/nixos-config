@@ -33,9 +33,10 @@
     hostName = "jupiter";
     hostId = "397d7c75";
   };
-
-  # Don't hang boot because of network timeout
-  boot.initrd.systemd.network.wait-online.enable = false;
+  boot = {
+    kernelParams = ["ip=10.0.0.42::10.0.0.1:255.255.255.0:jupiter:eno1:off:10.0.0.1::"];
+    initrd.systemd.network.wait-online.enable = false;
+  };
   systemd.network.wait-online.enable = false;
 
   system.stateVersion = "25.05";
