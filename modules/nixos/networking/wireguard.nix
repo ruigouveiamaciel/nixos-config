@@ -45,6 +45,11 @@
                 fi
               }
 
+              if [[ -z "$ssid" ]]; then
+                logger -t nm-wg-dispatch "empty ssid, ignoring"
+                exit 0
+              fi
+
               case "$ssid" in
                 "$wg_iface")
                   exit 0
@@ -56,13 +61,20 @@
                   fi
                   ;;
                 *)
-                  if is_up; then
-                    stop_tun 2>/dev/null || true
-                  fi
-                  if [[ "$action" == "up" ]]; then
-                    logger -t nm-wg-dispatch "starting tunnel"
-                    start_tun & disown
-                  fi
+                  case "$action" in
+                    up)
+                      if is_up; then
+                        stop_tun 2>/dev/null || true
+                      fi
+                      logger -t nm-wg-dispatch "starting tunnel"
+                      start_tun & disown
+                      ;;
+                    down)
+                      if is_up; then
+                        stop_tun 2>/dev/null || true
+                      fi
+                      ;;
+                  esac
                   ;;
               esac
             '';
