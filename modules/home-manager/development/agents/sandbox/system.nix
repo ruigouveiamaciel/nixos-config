@@ -31,7 +31,10 @@
     };
   };
 
-  networking.firewall.enable = false;
+  networking = {
+    hostName = "sandbox";
+    firewall.enable = false;
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   system.stateVersion = "26.05";
