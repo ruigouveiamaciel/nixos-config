@@ -42,6 +42,10 @@
               "signon.management.page.breach-alerts.enabled" = false;
               "privacy.userContext.enabled" = false;
               "privacy.userContext.ui.enabled" = false;
+              "browser.startup.page" = 1;
+              "browser.startup.homepage" = "http://10.0.50.42:8069";
+              "browser.newtabpage.enabled" = false;
+              "browser.newtab.url" = "http://10.0.50.42:8069";
             };
           };
         };
