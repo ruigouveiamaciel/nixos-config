@@ -7,6 +7,7 @@
     ./lua.nix
     ./nix.nix
     ./python.nix
+    ./rust.nix
     ./embedded-systems.nix
     ./networking.nix
   ];
