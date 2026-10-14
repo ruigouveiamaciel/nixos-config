@@ -14,37 +14,6 @@ in {
   config = lib.mkMerge (
     [
       {
-        # Declarative printer queue, but tolerant of the printer being
-        # offline (unlike hardware.printers.ensurePrinters, which fails
-        # the whole unit): if the B225 can't be reached right now, this
-        # is a no-op and simply runs again on the next boot/switch.
-        systemd.services.cups-ensure-xerox = {
-          description = "Configure Xerox B225 CUPS printer queue";
-          wantedBy = ["multi-user.target"];
-          wants = ["cups.service" "network-online.target"];
-          after = ["cups.service" "network-online.target"];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-          };
-          script = ''
-            set +e
-            ${pkgs.cups}/bin/lpadmin \
-              -p Xerox-B225 -E \
-              -v ipp://10.0.150.42/ipp/print \
-              -m everywhere \
-              -L '10.0.150.42' \
-              -D 'Xerox B225 (monochrome, duplex)' \
-              -o print-color-mode=monochrome \
-              -o Duplex=DuplexNoTumble
-            # Printer offline? Fine, try again next boot/switch.
-            exit 0
-          '';
-        };
-
-        # KDE recreates ~/Projects at session start (KIO places entry);
-        # delete it shortly after plasmashell comes up. Only runs in
-        # Plasma sessions since plasma-plasmashell.service is Plasma-specific.
         systemd.user.services.remove-kde-projects-dir = {
           description = "Remove the ~/Projects folder KDE keeps recreating";
           after = ["plasma-plasmashell.service"];
@@ -73,6 +42,27 @@ in {
           systemPackages = [
             clipboardPkg
             pkgs.kdePackages.plasma-keyboard
+            (pkgs.writeShellApplication {
+              name = "setup-xerox-b225";
+              runtimeInputs = [pkgs.coreutils];
+              text = ''
+                lpstat=${lib.getExe' pkgs.cups "lpstat"}
+                lpadmin=${lib.getExe' pkgs.cups "lpadmin"}
+                systemctl=${lib.getExe' pkgs.systemd "systemctl"}
+
+                if ! "$lpstat" -p Xerox-B225 >/dev/null 2>&1; then
+                  sudo "$systemctl" start cups.service
+                  "$lpadmin" \
+                    -p Xerox-B225 -E \
+                    -v ipp://10.0.150.42/ipp/print \
+                    -m everywhere \
+                    -L '10.0.150.42' \
+                    -D 'Xerox B225 (monochrome, duplex)' \
+                    -o print-color-mode=monochrome \
+                    -o Duplex=DuplexNoTumble
+                fi
+              '';
+            })
           ];
         };
       }
