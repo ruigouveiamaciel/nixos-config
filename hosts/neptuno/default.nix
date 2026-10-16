@@ -32,12 +32,6 @@
     user = "smokewow";
   };
 
-  # TODO: Remove this section when Yubikey 5 Nano
-  security.pam.services = {
-    login.u2f.enable = lib.mkForce false;
-    kde.u2f.enable = lib.mkForce false;
-  };
-
   networking = {
     hostName = "neptuno";
     hostId = "9f5194e4";

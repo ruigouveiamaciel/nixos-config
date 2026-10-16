@@ -76,30 +76,30 @@
         )
 
         (deflayer base
-          esc    f1       f2    f3   f4   f5   f6   f7   f8    f9    f10      f11   f12    del
-          XX     1        2     3    4    5    6    7    8     9     0        XX    XX     bspc
-          tab    @q       w     e    r    t    y    u    i     o     p        XX    XX     ret
-          caps   @a       @s    @d   @f   g    h    @j   @k    @l    @cedilla XX    XX
-          lshift XX       z     x    c    v    b    n    m     comma dot      minus rshift
-          lctl   lmet     @lalt           @spc           @ralt rctl  left     down  up     right
+          esc    f1       f2    f3   f4   f5   f6   f7   f8    f9    f10      f11        f12       del
+          bslash 1        2     3    4    5    6    7    8     9     0        apostrophe guillemet bspc
+          tab    @q       w     e    r    t    y    u    i     o     p        plus       acute     ret
+          caps   @a       @s    @d   @f   g    h    @j   @k    @l    @cedilla ordinal    tilde
+          lshift abracket z     x    c    v    b    n    m     comma dot      minus      rshift
+          lctl   lmet     @lalt           @spc           @ralt rctl  left     down       up        right
         )
 
         (deflayer sym
-          XX   XX       XX       XX         XX      XX      XX        XX      XX   XX   XX         XX           XX   XX
-          XX   XX       XX       XX         XX      XX      XX        XX      XX   XX   XX         XX           XX   XX
-          XX   S-1      AG-2     AG-e       bslash  S-5     S-6       S-7     S-8  S-9  S-0        XX           XX   XX
-          XX   S-bslash S-2      S-4        S-acute S-tilde tilde     acute   AG-7 AG-0 apostrophe XX           XX
-          XX   XX       abracket S-abracket S-3     S-plus  S-ordinal ordinal plus AG-8 AG-9       S-apostrophe XX
-          XX   XX       XX                          XX                        XX   XX   XX         XX           XX   XX
+          _    _        _        _          _       _       _         _       _    _    _          _            _    _
+          _    _        _        _          _       _       _         _       _    _    _          _            _    _
+          _    S-1      AG-2     AG-e       bslash  S-5     S-6       S-7     S-8  S-9  S-0        _            _    _
+          _    S-bslash S-2      S-4        S-acute S-tilde tilde     acute   AG-7 AG-0 apostrophe _            _
+          _    _        abracket S-abracket S-3     S-plus  S-ordinal ordinal plus AG-8 AG-9       S-apostrophe _
+          _    _        _                           XX                        _    _    _          _            _    _
         )
 
         (deflayer switch
-          XX   XX   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX   XX   XX
-          XX   XX   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX   XX   XX
-          XX   XX   M-2    M-3    M-4    M-5    M-6    M-7    M-8    M-9    M-0    XX   XX   XX
-          XX   XX   $tmux1 $tmux2 $tmux3 $tmux4 $tmux5 $tmux6 $tmux7 $tmux8 $tmux9 XX   XX
-          XX   XX   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX   XX
-          XX   XX   XX                   XX                   XX     XX     XX     XX   XX   XX
+          _    _    _      _      _      _      _      _      _      _      _      _    _    _
+          _    _    _      _      _      _      _      _      _      _      _      _    _    _
+          _    _    M-2    M-3    M-4    M-5    M-6    M-7    M-8    M-9    M-0    _    _    _
+          _    _    $tmux1 $tmux2 $tmux3 $tmux4 $tmux5 $tmux6 $tmux7 $tmux8 $tmux9 _    _
+          _    _    _      _      _      _      _      _      _      _      _      _    _
+          _    _    _                    _                    _      _      _      _    _    _
         )
 
         (deflayer num
