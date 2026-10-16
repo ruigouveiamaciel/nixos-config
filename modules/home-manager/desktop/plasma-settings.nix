@@ -259,6 +259,25 @@ in {
           };
         };
       }
+      {
+        description = "Rnote setup";
+        match = {
+          window-class = {
+            value = "rnote com.github.flxzt.rnote";
+            type = "exact";
+          };
+        };
+        apply = {
+          desktops = {
+            value = "27f88eb5-e254-4a91-85c0-7faf617b2c2f";
+            apply = "initially";
+          };
+          placement = {
+            value = 9;
+            apply = "force";
+          };
+        };
+      }
     ];
 
     configFile = {
