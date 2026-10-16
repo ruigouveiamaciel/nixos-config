@@ -1,8 +1,4 @@
-{
-  myModulesPath,
-  lib,
-  ...
-}: {
+{myModulesPath, ...}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
