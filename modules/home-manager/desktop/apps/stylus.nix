@@ -41,7 +41,7 @@
           shaper-width-2 = 6.0;
           shaper-width-3 = 12.0;
           block-pinch-zoom = true;
-          inertial-scrolling = false;
+          inertial-scrolling = true;
           sidebar-show = false;
         };
       }
