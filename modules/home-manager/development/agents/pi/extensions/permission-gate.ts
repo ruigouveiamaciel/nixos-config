@@ -46,20 +46,17 @@ const MODE_COLOR: Record<Mode, string> = {
   relaxed: "#ef4444",
 };
 
-/** Quiet time (ms) in the prompt window after typing before showing a prompt. */
+/** Quiet time (ms) in the prompt editor after typing before showing a prompt. */
 const TYPE_IDLE_MS = 3000;
 
 /** Quiet time (ms) after a prompt was submitted before showing a prompt. */
 const SUBMIT_IDLE_MS = 1000;
 
-/** Human-readable description of what requires permission in a mode. */
-function gatedLabel(mode: Mode): string {
-  const gated = GATED[mode];
-  if (gated === "*") return "everything needs permission";
-  return gated.length > 0
-    ? `only ${gated.join(", ")} need${gated.length === 1 ? "s" : ""} permission`
-    : "nothing needs permission";
-}
+/** How often the editor is polled for typing activity. */
+const ACTIVITY_POLL_MS = 100;
+
+const isMode = (value: string | undefined): value is Mode =>
+  MODES.includes(value as Mode);
 
 function settingsPath(): string {
   return join(homedir(), ".pi", "agent", "permissions.json");
@@ -67,10 +64,10 @@ function settingsPath(): string {
 
 function loadMode(): Mode {
   try {
-    const raw = readFileSync(settingsPath(), "utf8");
-    const parsed = JSON.parse(raw) as { mode?: string };
-    const m = parsed.mode as Mode | undefined;
-    if (m && MODES.includes(m)) return m;
+    const parsed = JSON.parse(readFileSync(settingsPath(), "utf8")) as {
+      mode?: string;
+    };
+    if (isMode(parsed.mode)) return parsed.mode;
   } catch {
     // missing or unreadable file -> default
   }
@@ -85,26 +82,27 @@ function saveMode(mode: Mode): void {
   }
 }
 
+/** Human-readable description of what needs permission in a mode. */
+function gatedLabel(mode: Mode): string {
+  if (GATED[mode] === "*") return "needs permission: everything";
+  const gated = GATED[mode];
+  if (gated.length === 0) return "needs permission: nothing";
+  return `needs permission: ${gated.join(", ")}`;
+}
+
+// -- Prompt rendering --------------------------------------------------------
+
 /** Argument keys whose value is the file path a tool call targets. */
 const PATH_KEYS = ["path", "file_path", "filepath", "file"];
 
-/** The file path a tool call targets, if any. */
-function filePath(input: Record<string, unknown>): string | undefined {
-  for (const key of PATH_KEYS) {
-    const value = input[key];
+/** First non-empty string value among the given keys of a tool input. */
+function firstString(input: unknown, keys: string[]): string {
+  const record = (input ?? {}) as Record<string, unknown>;
+  for (const key of keys) {
+    const value = record[key];
     if (typeof value === "string" && value.trim()) return value.trim();
   }
-  return undefined;
-}
-
-/**
- * Build the title of the tool permission prompt:
- * "Accept tool?" with the file path (if any) appended in dim gray.
- */
-function promptTitle(name: string, input: unknown, theme: Theme): string {
-  const path = filePath((input ?? {}) as Record<string, unknown>);
-  const label = `Accept ${name}?`;
-  return path ? `${label} ${theme.fg("dim", path)}` : label;
+  return "";
 }
 
 /** Max visible lines for rendered text before truncation. */
@@ -118,18 +116,19 @@ const MAX_CHARS = 1024;
  * remainder is reported in a warning-colored notice line.
  */
 function truncateText(text: string, theme: Theme): string {
-  const lines = text.split("\n");
+  const allLines = text.split("\n");
+  const lines = allLines.slice(0, MAX_LINES);
 
   const kept: string[] = [];
-  let used = 0;
-  for (let i = 0; i < Math.min(lines.length, MAX_LINES); i++) {
-    if (used + lines[i].length > MAX_CHARS) break;
-    kept.push(lines[i]);
-    used += lines[i].length + 1; // +1 for the newline between lines
+  let used = 0; // chars kept, +1 per line for the join separator
+  for (const line of lines) {
+    if (used + line.length > MAX_CHARS) break;
+    kept.push(line);
+    used += line.length + 1;
   }
 
   const keptText = kept.join("\n");
-  const omittedLines = lines.length - kept.length;
+  const omittedLines = allLines.length - kept.length;
   const omittedChars = text.length - keptText.length;
 
   if (omittedLines === 0 && omittedChars === 0) {
@@ -141,49 +140,58 @@ function truncateText(text: string, theme: Theme): string {
     parts.push(`+${omittedLines} line${omittedLines === 1 ? "" : "s"}`);
   if (omittedChars > 0)
     parts.push(`+${omittedChars} char${omittedChars === 1 ? "" : "s"}`);
-  const notice = parts.join(", ");
-  const truncated = theme.fg("warning", `[${notice} truncated]`);
-  return keptText ? `${theme.fg("text", keptText)}\n${truncated}` : truncated;
+  const notice = theme.fg("warning", `[${parts.join(", ")} truncated]`);
+  return keptText ? `${theme.fg("text", keptText)}\n${notice}` : notice;
 }
 
 /**
- * Build the message body for the tool permission prompt.
- *
- * Shell tools: the command, rendered via truncateText. Empty line between the
- * title and the command comes from joining title and message in the caller.
- *
- * Other tools: no message.
+ * Build the full text of the tool permission prompt: an "Accept tool?" title
+ * with the file path (if any) appended in dim gray; for shell tools, the
+ * command appended as a truncated message block.
  */
-function promptMessage(name: string, input: unknown, theme: Theme): string {
-  const i = (input ?? {}) as Record<string, unknown>;
-  if (name === "bash" || name === "powershell") {
-    const raw = String(i.command ?? i.cmd ?? "").trim();
-    return raw ? truncateText(raw, theme) : "";
-  }
-  return "";
+function buildPrompt(name: string, input: unknown, theme: Theme): string {
+  const title = `Accept ${name}?`;
+  const path = firstString(input, PATH_KEYS);
+  const head = path ? `${title} ${theme.fg("dim", path)}` : title;
+  if (name !== "bash" && name !== "powershell") return head;
+  const command = firstString(input, ["command", "cmd"]);
+  return command ? `${head}\n\n${truncateText(command, theme)}` : head;
 }
+
+// -- Extension ---------------------------------------------------------------
 
 export default function (pi: ExtensionAPI) {
   let mode = loadMode();
 
-  // Editor-changes-only detection for permission-prompt debouncing: keystrokes
-  // used to answer a dialog never register as activity. TUI mode only.
-  type PromptActivity = { at: number; kind: "typed" | "submitted" };
-  let lastActivity: PromptActivity = { at: 0, kind: "typed" };
-  // The editor clear on submit is the submit itself, not new typing.
-  let expectSubmitClear = false;
+  // --permission-mode <mode>: for this session only (not persisted).
+  pi.registerFlag("permission-mode", {
+    description:
+      "Permission mode for this session: relaxed | balanced | careful | strict",
+    type: "string",
+  });
+  const flagMode = pi.getFlag("permission-mode");
+  if (typeof flagMode === "string" && isMode(flagMode)) mode = flagMode;
 
-  // Session-scoped polling: currentCtx is refreshed on every session_start and
-  // the timer is torn down in session_shutdown, so it never touches a
-  // context that was invalidated by session replacement or reload.
+  // Debounce: poll the prompt editor, and only prompt once it has been quiet
+  // for a while. Polling editor text (rather than listening for keystrokes) is
+  // deliberate: keys pressed to answer a dialog must not register as activity.
+  // A new submit always restarts the quiet window via the "input" event; an
+  // editor that becomes empty (submit clear, or deleting everything) counts as
+  // stopped typing.
   let currentCtx: ExtensionContext | undefined;
   let activityTimer: NodeJS.Timeout | undefined;
+  let quietUntil = 0; // absolute time from which a prompt may be shown
+
   const stopActivityTracking = () => {
     if (activityTimer) {
       clearInterval(activityTimer);
       activityTimer = undefined;
     }
   };
+
+  // Session-scoped: currentCtx is refreshed on every session_start and the
+  // timer is torn down in session_shutdown, so it never touches a context
+  // that was invalidated by session replacement or reload.
   const ensureActivityTracking = (ctx: ExtensionContext) => {
     currentCtx = ctx;
     stopActivityTracking();
@@ -195,73 +203,39 @@ export default function (pi: ExtensionAPI) {
         const text = currentCtx.ui.getEditorText();
         if (text === lastEditorText) return;
         lastEditorText = text;
-        if (expectSubmitClear && text === "") {
-          expectSubmitClear = false;
-          return;
-        }
-        expectSubmitClear = false;
-        lastActivity = { at: Date.now(), kind: "typed" };
+        if (text !== "") quietUntil = Date.now() + TYPE_IDLE_MS;
       } catch {
         // Stale ctx after session replacement: wait for a fresh session_start.
       }
-    }, 100);
+    }, ACTIVITY_POLL_MS);
     activityTimer.unref?.();
   };
 
   // A submitted prompt restarts the quiet window with SUBMIT_IDLE_MS.
   pi.on("input", () => {
-    lastActivity = { at: Date.now(), kind: "submitted" };
-    expectSubmitClear = true;
+    quietUntil = Date.now() + SUBMIT_IDLE_MS;
   });
 
   /** Hold the prompt back until the quiet window has elapsed. */
   const waitForQuietPrompt = async (ctx: ExtensionContext) => {
     ensureActivityTracking(ctx);
-    if (ctx.mode !== "tui") return;
+    if (ctx.mode !== "tui" || Date.now() >= quietUntil) return;
 
-    let waiting = false;
-    const quietMs = () =>
-      lastActivity.kind === "submitted" ? SUBMIT_IDLE_MS : TYPE_IDLE_MS;
-    while (Date.now() - lastActivity.at < quietMs()) {
-      if (!waiting) {
-        waiting = true;
-        ctx.ui.setWorkingMessage("Permission prompt deferred while typing...");
-      }
-      await new Promise<void>((resolve) => setTimeout(resolve, 100));
+    ctx.ui.setWorkingMessage("Permission prompt deferred while typing...");
+    while (Date.now() < quietUntil) {
+      // The poller keeps pushing quietUntil forward while typing continues,
+      // so this loop naturally extends as long as the user is typing.
+      await new Promise((resolve) => setTimeout(resolve, ACTIVITY_POLL_MS));
     }
-    if (waiting) ctx.ui.setWorkingMessage();
+    ctx.ui.setWorkingMessage();
   };
 
-  // --permission-mode <mode>: for this session only (not persisted).
-  pi.registerFlag("permission-mode", {
-    description:
-      "Permission mode for this session: relaxed | balanced | careful | strict",
-    type: "string",
-  });
-  const flagMode = pi.getFlag("permission-mode");
-  if (typeof flagMode === "string" && MODES.includes(flagMode as Mode)) {
-    mode = flagMode as Mode;
-  }
-
-  /** Footer status showing the mode and which tools require permission. */
+  /** Footer status showing the mode and what needs permission. */
   const statusText = (ctx: ExtensionContext) => {
     const theme = ctx.ui.theme;
-    const gated = GATED[mode];
-    let require: string;
-    if (gated === "*") {
-      require = "all tools require permission";
-    } else if (gated.length === 0) {
-      require = "no tools require permission";
-    } else {
-      const names =
-        gated.length <= 2
-          ? gated.join(" and ")
-          : `${gated.slice(0, -1).join(", ")} and ${gated[gated.length - 1]}`;
-      require = `${names} require${gated.length === 1 ? "s" : ""} permission`;
-    }
     const label = theme.fg("text", "permissions:");
     const modeText = theme.style(mode, { fg: parseColor(MODE_COLOR[mode]) });
-    const detail = theme.fg("dim", `(${require})`);
+    const detail = theme.fg("dim", `(${gatedLabel(mode)})`);
     return `${label} ${modeText} ${detail}`;
   };
 
@@ -290,40 +264,47 @@ export default function (pi: ExtensionAPI) {
       );
 
       const choice = await ctx.ui.select(`Permission mode (${mode})`, options);
-      const index = typeof choice === "string" ? options.indexOf(choice) : -1;
+      const index = choice ? options.indexOf(choice) : -1;
       const selected = index >= 0 ? MODES[index] : undefined;
       if (!selected) return;
 
       // Ask whether the change should persist beyond this session.
       const scope = await ctx.ui.select(
         `How long should "${selected}" mode stay active?`,
-        [`this session only`, `set as default`],
+        ["this session only", "set as default"],
       );
+      const isDefault = scope?.startsWith("set as default") ?? false;
 
       mode = selected;
-      const modeName = theme.style(mode, {
-        fg: parseColor(MODE_COLOR[mode]),
-      });
-      const isDefault = scope?.startsWith("set as default");
-      if (isDefault) {
-        saveMode(mode);
-        ctx.ui.notify(`Permission mode: ${modeName} (new default)`, "info");
-      } else {
-        ctx.ui.notify(
-          `Permission mode: ${modeName} (this session only)`,
-          "info",
-        );
-      }
+      if (isDefault) saveMode(mode);
+      ctx.ui.notify(
+        `Permission mode: ${theme.style(mode, { fg: parseColor(MODE_COLOR[mode]) })}` +
+          (isDefault ? " (new default)" : " (this session only)"),
+        "info",
+      );
       updateStatus(ctx);
     },
   });
+
+  /** Loop until the user enters a non-empty rejection reason or cancels. */
+  const askRejectionReason = async (ctx: ExtensionContext) => {
+    for (;;) {
+      const reason = await ctx.ui.input(
+        "Reason for rejection",
+        "enter a reason",
+      );
+      if (reason === undefined) return undefined;
+      const trimmed = reason.trim();
+      if (trimmed) return trimmed;
+      ctx.ui.notify("Please provide a rejection reason", "warning");
+    }
+  };
 
   pi.on("tool_call", async (event, ctx) => {
     const gated = GATED[mode];
     if (gated !== "*" && !gated.includes(event.toolName)) return undefined;
 
-    await waitForQuietPrompt(ctx);
-
+    // Checked before debouncing: with no UI there is no editor to wait on.
     if (!ctx.hasUI) {
       return {
         block: true,
@@ -333,32 +314,25 @@ export default function (pi: ExtensionAPI) {
       };
     }
 
-    const theme = ctx.ui.theme;
-    const title = promptTitle(event.toolName, event.input, theme);
-    const message = promptMessage(event.toolName, event.input, theme);
+    await waitForQuietPrompt(ctx);
 
     // Let ping.ts (and anything else listening) know a permission is requested.
     // Core's ui_prompt_start is intentionally not pinged, so this fires it here.
-    pi.events.emit("ping:input", { source: "permission-gate", tool: event.toolName });
+    pi.events.emit("ping:input", {
+      source: "permission-gate",
+      tool: event.toolName,
+    });
 
     const choice = await ctx.ui.select(
-      message ? `${title}\n\n${message}` : title,
+      buildPrompt(event.toolName, event.input, ctx.ui.theme),
       ["accept", "reject with reason", "abort"],
     );
+
     if (choice === "accept") return undefined;
 
     if (choice === "reject with reason") {
-      let reason: string | undefined;
-      while (!reason?.trim()) {
-        reason = await ctx.ui.input("Reason for rejection", "enter a reason");
-        if (reason === undefined) break;
-        if (!reason.trim()) {
-          ctx.ui.notify("Please provide a rejection reason", "warning");
-        }
-      }
-      if (reason?.trim()) {
-        return { block: true, reason: `Rejected by user: ${reason.trim()}` };
-      }
+      const reason = await askRejectionReason(ctx);
+      if (reason) return { block: true, reason: `Rejected by user: ${reason}` };
     }
 
     ctx.abort();

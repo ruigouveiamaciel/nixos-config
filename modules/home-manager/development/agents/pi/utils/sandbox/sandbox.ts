@@ -1,4 +1,5 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import EventEmitter from "node:events";
 import { chmod, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -339,6 +340,46 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
     });
   }
 
+  /**
+   * Kill a guest-exec process tree. QGA does NOT give guest-exec children
+   * their own process group (they share qemu-ga's group), so group kills are
+   * off the table — they would kill qemu-ga itself. Instead, collect the
+   * target's descendants (BFS via pgrep -P), SIGKILL them all, then verify
+   * every collected pid is dead (gone or zombie). Exit code 1 = survivors.
+   */
+  private async killExecTree(pid: number) {
+    return await this.execCommandRoot({
+      command: [
+        "bash",
+        "-c",
+        `
+          all=""
+          front="$1"
+          while [ -n "$front" ]; do
+            next=""
+            for p in $front; do
+              kids=$(pgrep -P "$p" 2>/dev/null || true)
+              [ -n "$kids" ] && next="$next $kids"
+            done
+            all="$all $front"
+            front="\${next# }"
+          done
+          kill -9 $all 2>/dev/null
+          sleep 0.1
+          for p in $all; do
+            st=$(ps -o state= -p "$p" 2>/dev/null || true)
+            if [ -n "$st" ] && [ "$st" != Z ]; then
+              exit 1
+            fi
+          done
+        `,
+        "kill-exec-tree",
+        String(pid),
+      ],
+      timeout: 10_000,
+    });
+  }
+
   private async waitExecStatus(args: {
     pid: number;
     timeout?: number;
@@ -356,9 +397,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
 
     while (!exited) {
       if (args.signal?.aborted) {
-        const { exitCode, stdout } = await this.execCommandRoot({
-          command: ["bash", "-lc", 'kill -9 "$0"', String(args.pid)],
-        });
+        const { exitCode, stdout } = await this.killExecTree(args.pid);
 
         if (exitCode !== 0) {
           throw new Error(
@@ -369,9 +408,7 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
         throw new Error("Command aborted");
       }
       if (deadline && Date.now() > deadline) {
-        const { exitCode, stdout } = await this.execCommandRoot({
-          command: ["bash", "-lc", 'kill -9 "$0"', String(args.pid)],
-        });
+        const { exitCode, stdout } = await this.killExecTree(args.pid);
 
         if (exitCode !== 0) {
           throw new Error(
@@ -448,41 +485,74 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
     const socket = this.socket;
     if (!socket) throw new Error("Sandbox QGA socket is not available");
 
-    const script = `
-      __pi_out=$(mktemp 2>/dev/null)
-      (
-        cd -- "$0" && exec runuser -u "$1" -- bash -lc "$2"
-      ) >"$__pi_out" 2>&1
-      __pi_rc=$?
-      echo "$__pi_out"
-      exit $__pi_rc
-    `;
+    // The output file is created up-front with a host-generated path so its
+    // content can still be read if the command is killed or times out.
+    const outPath = `/tmp/.pi-sandbox-out-${randomUUID()}`;
 
-    const { stdout, ...rest } = await this.execCommandRoot({
+    const prep = await this.execCommandRoot({
       command: [
         "bash",
         "-c",
-        script,
-        args.cwd ?? this.cwd,
+        ': >> "$1"',
+        "prepare-output-file",
+        outPath,
         this.user,
-        args.command,
+        this.group,
       ],
-      signal: args.signal,
-      timeout: args.timeout,
+      timeout: 10_000,
     });
-
-    if (stdout.split("\n").length !== 2) {
+    if (prep.exitCode !== 0) {
       throw new Error(
-        `QGA command "guest-exec" did not return a valid path in out-data; response: ${JSON.stringify(stdout)}`,
+        `Failed to create sandbox output file ${outPath};\n${prep.stdout}`,
       );
     }
 
-    const outFile = stdout.split("\n")[0];
+    const script = `
+      (
+        cd -- "$0" && exec runuser -u "$1" -- bash -lc "$2"
+      ) >"$3" 2>&1
+      exit $?
+    `;
 
-    return {
-      ...rest,
-      stdout: (await this.readFile(outFile)).toString("utf8"),
-    };
+    try {
+      const { stdout: _qgaOut, ...rest } = await this.execCommandRoot({
+        command: [
+          "bash",
+          "-c",
+          script,
+          args.cwd ?? this.cwd,
+          this.user,
+          args.command,
+          outPath,
+        ],
+        signal: args.signal,
+        timeout: args.timeout,
+      });
+
+      return {
+        ...rest,
+        stdout: (await this.readFile(outPath)).toString("utf8"),
+      };
+    } catch (e) {
+      // Command was aborted, timed out or otherwise killed: salvage whatever
+      // it managed to write to the output file before dying. Give surviving
+      // children a moment to flush their output first.
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      let partial: string | undefined;
+      try {
+        partial = (await this.readFile(outPath)).toString("utf8");
+      } catch {}
+
+      if (e instanceof Error && partial) {
+        e.message += `\n\n--- partial output before the command was killed ---\n${partial}`;
+      }
+      throw e;
+    } finally {
+      this.execCommandRoot({
+        command: ["bash", "-c", 'rm -f -- "$1"', "cleanup", outPath],
+        timeout: 10_000,
+      }).catch(() => {});
+    }
   }
 
   public async destroy() {
