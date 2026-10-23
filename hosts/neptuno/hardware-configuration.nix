@@ -15,7 +15,7 @@
     kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = ["xhci_pci" "nvme" "usb_storage" "sd_mod"];
     initrd.kernelModules = [];
-    kernelModules = ["kvm-intel"];
+    kernelModules = ["kvm-intel" "i2c-dev"];
     extraModulePackages = [];
   };
 

@@ -13,7 +13,7 @@
     kernelPackages = pkgs.linuxPackages_7_2;
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "igc"];
     initrd.kernelModules = [];
-    kernelModules = ["kvm-amd"];
+    kernelModules = ["kvm-amd" "i2c-dev"];
     kernelParams = ["amd_pstate=active"];
     extraModulePackages = [];
   };

@@ -45,6 +45,11 @@
                 fi
               }
 
+              if [[ "$1" == "lo" ]]; then
+                logger -t nm-wg-dispatch "loopback iface, ignoring"
+                exit 0
+              fi
+
               if [[ -z "$ssid" ]]; then
                 logger -t nm-wg-dispatch "empty ssid, ignoring"
                 exit 0

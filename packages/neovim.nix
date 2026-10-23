@@ -559,7 +559,8 @@
       yaml.enable = true;
       rust.enable = true;
       python.enable = true;
-      sql.enable = true;
+      # SQL was broken on latest
+      # sql.enable = true;
       json.enable = true;
       vue = {
         enable = true;

@@ -4,6 +4,7 @@
     "${myModulesPath}/shell/starship.nix"
     "${myModulesPath}/development/shell/git.nix"
     "${myModulesPath}/development/toolchains"
+    "${myModulesPath}/desktop/apps/3d-printing.nix"
   ];
 
   config = {
