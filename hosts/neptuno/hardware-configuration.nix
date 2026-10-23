@@ -22,6 +22,7 @@
   services.xserver.videoDrivers = ["modesetting"];
 
   hardware = {
+    i2c.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -30,6 +31,8 @@
     enableRedistributableFirmware = true;
     bluetooth.enable = true;
   };
+
+  environment.systemPackages = [pkgs.ddcutil];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
