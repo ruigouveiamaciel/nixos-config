@@ -545,6 +545,7 @@
       enableTreesitter = true;
       enableExtraDiagnostics = true;
 
+      clang.enable = true;
       nix.enable = true;
       markdown = {
         enable = true;
