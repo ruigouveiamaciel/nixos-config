@@ -10,6 +10,6 @@
     ./stylus.nix
     ./signal.nix
     ./university.nix
-    ./anki.nix
+    # ./anki.nix
   ];
 }
