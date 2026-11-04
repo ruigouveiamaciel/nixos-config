@@ -292,6 +292,7 @@ in {
       };
       baloofilerc."Basic Settings"."Indexing-Enabled".value = false;
       kwinrc = {
+        "Plugins"."zoomEnabled".value = false;
         "Effect-overview"."BorderActivate".value = 9;
         "Wayland" = {
           "VirtualKeyboardEnabled".value = true;
