@@ -37,6 +37,7 @@
 
     options = {
       wrap = false;
+      autoread = true;
       updatetime = 250;
       scrolloff = 15;
       colorcolumn = "80";
@@ -378,6 +379,28 @@
         event = ["VimResized"];
         pattern = ["*"];
         command = "wincmd =";
+      }
+      {
+        # checktime (CursorHold/FocusGained) detects files changed on disk and
+        # autoread reloads them; this surfaces that as a visible notification
+        # instead of a silent reload, so edits by e.g. an agent are noticed.
+        # Only fires for buffers actually reloaded — buffers with local
+        # unsaved changes are untouched and keep the usual conflict prompt.
+        event = ["FileChangedShellPost"];
+        pattern = ["*"];
+        callback =
+          lib.mkLuaInline
+          /*
+          lua
+          */
+          ''
+            function(args)
+              vim.notify(
+                "File changed on disk — buffer reloaded: " .. args.file,
+                vim.log.levels.WARN
+              )
+            end
+          '';
       }
       {
         # https://github.com/folke/snacks.nvim/issues/1155#issuecomment-2658383937
