@@ -184,7 +184,11 @@ export class Sandbox extends EventEmitter<SandboxEvents> {
       ? args.path
       : path.join(this.cwd, args.path);
 
-    const chunkSize = 4 * 1024 * 1024; // 4 MiB
+    // Each chunk is sent as a single `echo <base64> | base64 -d > file` command string, passed
+    // as one argument to `bash -lc` through QGA. Linux's per-argument limit (MAX_ARG_STRLEN,
+    // 128 KiB) makes commands above ~129 KB fail with "Argument list too long" (E2BIG), which
+    // silently fails writes. 64 KiB of content encodes to an ~87 KB command, safely under it.
+    const chunkSize = 64 * 1024; // 64 KiB
 
     for (let offset = 0; offset < args.content.length; offset += chunkSize) {
       const chunk = args.content.subarray(

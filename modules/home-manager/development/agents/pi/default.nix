@@ -25,6 +25,7 @@
           cp -r --no-preserve=mode "${./extensions}/." "$HOME/.pi/agent/extensions/"
           cp -r --no-preserve=mode "${./utils}/." "$HOME/.pi/agent/utils/"
           chmod -R u+w "$HOME/.pi/agent/extensions" "$HOME/.pi/agent/utils"
+          install -m 644 "${./mcp.json}" "$HOME/.pi/agent/mcp.json"
         '';
 
         programs.fish.loginShellInit = ''

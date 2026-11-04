@@ -1,5 +1,8 @@
 import {
   BashOperations,
+  isBashToolResult,
+  isPowerShellToolResult,
+  type ToolResultEvent,
   createBashToolDefinition,
   createEditToolDefinition,
   createReadToolDefinition,
@@ -11,7 +14,9 @@ import {
   type ToolDefinition,
 } from "@earendil-works/pi-coding-agent";
 import { parseColor } from "@earendil-works/pi-tui";
-import { userInfo } from "node:os";
+import { readFile } from "node:fs/promises";
+import { tmpdir, userInfo } from "node:os";
+import path from "node:path";
 import { Sandbox, SandboxStatus } from "../utils/sandbox/sandbox";
 import { type TSchema } from "typebox/type";
 import { shellQuote } from "../utils/sandbox/shell-quote";
@@ -111,6 +116,55 @@ function createEditOps(sandbox: Sandbox): EditOperations {
   };
 }
 
+/** Type guard for custom tools' result details (MCP tools carry `details: unknown`). */
+function hasFullOutputPath(details: unknown): details is { fullOutputPath: string } {
+  return (
+    typeof details === "object" && details !== null && "fullOutputPath" in details &&
+    typeof (details as Record<string, unknown>).fullOutputPath === "string"
+  );
+}
+
+/**
+ * The host temp file holding the full (untruncated) output of a tool result, if any.
+ * Only returns absolute paths inside the OS temp directory, so nothing else from the host
+ * is ever mirrored into the sandbox. Does not parse result content: paths come exclusively
+ * from the result's structured `details`.
+ */
+function extractFullOutputPath(event: ToolResultEvent): string | undefined {
+  let hostPath: string | undefined;
+  if (isBashToolResult(event) || isPowerShellToolResult(event)) {
+    // details: BashToolDetails, with truncation set only when output was actually truncated.
+    const details = event.details;
+    if (details?.truncation?.truncated && details.fullOutputPath)
+      hostPath = details.fullOutputPath;
+  } else if (hasFullOutputPath(event.details)) {
+    // Custom tools (MCP `mcp__*` and others pi wraps the same way): they set
+    // details.fullOutputPath only when their output was truncated and saved to a file.
+    hostPath = event.details.fullOutputPath;
+  }
+
+  if (!hostPath || !path.isAbsolute(hostPath)) return undefined;
+  // `resolve` norms away `..`/`.` segments (purely lexical, no fs access), so e.g.
+  // `/tmp/../etc/shadow` resolves to `/etc/shadow` and fails the temp-dir check.
+  const resolvedHostPath = path.resolve(hostPath);
+  if (!resolvedHostPath.startsWith(`${tmpdir()}/`)) return undefined;
+  return resolvedHostPath;
+}
+
+/**
+ * Copy a host file into the sandbox VM. Mirroring at the same absolute path keeps the
+ * `Full output: <path>` reference from the tool result valid inside the sandbox.
+ */
+async function mirrorFileToSandbox(sandbox: Sandbox, hostPath: string): Promise<void> {
+  const content = await readFile(hostPath);
+  const { exitCode, stdout } = await sandbox.execCommand({
+    command: `mkdir -p ${shellQuote(path.dirname(hostPath))}`,
+    timeout: 5_000,
+  });
+  if (exitCode !== 0) throw new Error(stdout);
+  await sandbox.writeFile({ content, path: hostPath });
+}
+
 export default function (pi: ExtensionAPI) {
   let sb: Sandbox | undefined;
   let sandboxEnabled = true;
@@ -180,6 +234,26 @@ export default function (pi: ExtensionAPI) {
     default: false,
   });
 
+  // After each tool call, mirror the temp file that holds truncated output into the VM so the
+  // model can read it: the `Full output: <path>` reference in the result becomes valid in-sandbox.
+  pi.on("tool_result", async (event: ToolResultEvent, ctx) => {
+    if (!sandboxEnabled || !sb) return;
+
+    const hostPath = extractFullOutputPath(event);
+    if (!hostPath) return;
+
+    try {
+      await mirrorFileToSandbox(sb, hostPath);
+    } catch (error) {
+      ctx.ui.notify(
+        `Could not mirror truncated tool output into the sandbox: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        "warning",
+      );
+    }
+  });
+
   pi.on("session_start", async (_event, ctx) => {
     sandboxEnabled = !pi.getFlag("no-sandbox");
     if (!sandboxEnabled) return;
@@ -214,9 +288,11 @@ export default function (pi: ExtensionAPI) {
     event.systemPromptOptions.sections.sandbox_environment = [
       "You are running inside a sandboxed QEMU virtual machine, not directly on the host.",
       "- All tool commands (bash, read, write, edit) execute inside this VM, isolated from the host OS.",
-      `- The ONLY connection to the host is the working directory (\`$PWD\`, currently ${sb.cwd}), which is bind-mounted from the host into the VM. Files you create or modify under \`$PWD\` are visible on the host; everything else in the VM is ephemeral and discarded when the session ends.`,
-      "- Host paths do not exist inside the VM: never try to access files outside `$PWD`, and do not treat `$PWD`'s absolute path as a host path.",
-      "- The VM has its own OS, users, and filesystem. Inspect the actual environment with tools (e.g. `uname -a`, `ls`) instead of assuming host facts.",
+      `- \`$PWD\` (currently ${sb.cwd}) is bind-mounted from the host: files created or changed there persist to the host. Everything else in the VM is ephemeral and wiped when the session ends.`,
+      "- Host paths do not exist inside the VM; never access files outside `$PWD`.",
+      "- The VM runs NixOS, trimmed down relative to the host system: some tools available on the host may be absent. Verify (`uname -a`, command -v) instead of assuming host facts.",
+      "- `/tmp` is an unrestricted scratch box (exempt from the read/write/edit permission gate): use it for throwaway scripts, fixtures, and prototypes. Copy anything worth keeping under `$PWD` — `/tmp` is wiped when the session ends.",
+      "- Truncated tool output is saved to a temp file (e.g. `Full output: /tmp/pi-bash-….log`) mirrored into the VM at the same path, so the reference is readable.",
     ].join("\n");
 
     return undefined;

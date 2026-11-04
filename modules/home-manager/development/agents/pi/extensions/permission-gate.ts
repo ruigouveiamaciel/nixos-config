@@ -13,6 +13,11 @@
  * shown until the prompt window has been quiet — no text typed — for a set
  * amount of time (3s after typing, 1s after submitting a prompt), so approval
  * dialogs don't interrupt you while you are still typing.
+ *
+ * Exemption: read/write/edit calls that target an absolute path inside the OS
+ * temp dir (/tmp) are auto-approved in every mode — it is scratch space only.
+ * Calls with a relative or missing path, or traversal like /tmp/../etc (resolve
+ * () collapses it outside the temp dir), are gated as usual.
  */
 
 import type {
@@ -22,8 +27,8 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { parseColor } from "@earendil-works/pi-tui";
 import { readFileSync, writeFileSync } from "fs";
-import { homedir } from "os";
-import { join } from "path";
+import { homedir, tmpdir } from "os";
+import { isAbsolute, join, resolve } from "path";
 
 type Mode = "relaxed" | "balanced" | "careful" | "strict";
 
@@ -302,6 +307,22 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("tool_call", async (event, ctx) => {
     const gated = GATED[mode];
+
+    // File tools: target an absolute path inside the OS temp dir (/tmp) and it
+    // is allowed in every mode — scratch space only. Traversal like /tmp/../etc
+    // is not exempt, since resolve() collapses it outside the temp dir first.
+    if (
+      event.toolName === "read" ||
+      event.toolName === "write" ||
+      event.toolName === "edit"
+    ) {
+      const target = firstString(event.input, PATH_KEYS);
+      if (target && isAbsolute(target)) {
+        const abs = resolve(target); // resolves /tmp/../etc -> /etc, etc.
+        if (abs === tmpdir() || abs.startsWith(`${tmpdir()}/`)) return undefined;
+      }
+    }
+
     if (gated !== "*" && !gated.includes(event.toolName)) return undefined;
 
     // Checked before debouncing: with no UI there is no editor to wait on.
@@ -323,18 +344,28 @@ export default function (pi: ExtensionAPI) {
       tool: event.toolName,
     });
 
-    const choice = await ctx.ui.select(
-      buildPrompt(event.toolName, event.input, ctx.ui.theme),
-      ["accept", "reject with reason", "abort"],
-    );
+    // "rejected with reason" loops back to the accept/reject/abort menu when
+    // the reason input is cancelled (e.g. Escape) instead of aborting outright.
+    let choice: string | undefined;
+    let backToMenu = false;
+    do {
+      choice = await ctx.ui.select(
+        buildPrompt(event.toolName, event.input, ctx.ui.theme),
+        ["accept", "reject with reason", "abort"],
+      );
+      backToMenu = false;
 
-    if (choice === "accept") return undefined;
+      if (choice === "accept") return undefined;
 
-    if (choice === "reject with reason") {
-      const reason = await askRejectionReason(ctx);
-      if (reason) return { block: true, reason: `Rejected by user: ${reason}` };
-    }
+      if (choice === "reject with reason") {
+        const reason = await askRejectionReason(ctx);
+        if (reason) return { block: true, reason: `Rejected by user: ${reason}` };
+        // Reason input cancelled: show the menu again.
+        backToMenu = true;
+      }
+    } while (backToMenu);
 
     ctx.abort();
+    return { block: true, reason: "Aborted by user" };
   });
 }

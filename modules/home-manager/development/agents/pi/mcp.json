@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kagi": {
+      "url": "https://mcp.kagi.com/mcp",
+      "headers": {
+        "Authorization": "!echo Bearer $(jq -r .apiKey ~/.pi/agent/kagi-api.json)"
+      },
+      "exposure": "direct"
+    }
+  }
+}
