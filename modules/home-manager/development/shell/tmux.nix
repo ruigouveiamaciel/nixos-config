@@ -1,6 +1,17 @@
 {pkgs, ...}: let
+  inherit (pkgs) fd fzf tmux;
+  # Shared: switch to $target if already inside tmux, otherwise attach.
+  open-session = ''
+    if [ -n "''${TMUX:-}" ]; then
+      tmux switch-client -t "$target"
+    else
+      tmux attach-session -t "$target"
+    fi
+  '';
+
   tmux-dev = pkgs.writeShellApplication {
     name = "tmux-dev";
+    runtimeInputs = [tmux];
     text = ''
       set -euo pipefail
 
@@ -26,17 +37,14 @@
         tmux select-window -t "$session:1"
       fi
 
-      if [ -n "''${TMUX:-}" ]; then
-        tmux switch-client -t "$session"
-      else
-        tmux attach-session -t "$session"
-      fi
+      target="$session"
+      ${open-session}
     '';
   };
 
   tmux-repo = pkgs.writeShellApplication {
     name = "tmux-repo";
-    runtimeInputs = [tmux-dev];
+    runtimeInputs = [tmux-dev fzf fd];
     text = ''
       set -euo pipefail
 
@@ -44,7 +52,8 @@
 
       path=$(fd -H -t d '^\.git$' "$DIR/" --max-depth 3 -x dirname {} \
         | sort \
-        | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2) || exit 0
+        | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2 \
+              --prompt "Repositories: ") || exit 0
 
       [ -z "''${path:-}" ] && exit 0
 
@@ -55,6 +64,7 @@
 
   tmux-recent = pkgs.writeShellApplication {
     name = "tmux-recent";
+    runtimeInputs = [tmux fzf];
     text = ''
       set -euo pipefail
 
@@ -62,21 +72,19 @@
         | sort -rn \
         | cut -d'|' -f2 \
         | grep -Ev '^[0-9]+$' \
-        | fzf --tmux center,80%,60%) || exit 0
+        | fzf --tmux center,80%,60% \
+              --prompt "Recent sessions: ") || exit 0
 
       [ -z "''${session:-}" ] && exit 0
 
-      if [ -n "''${TMUX:-}" ]; then
-        tmux switch-client -t "$session"
-      else
-        tmux attach-session -t "$session"
-      fi
+      target="$session"
+      ${open-session}
     '';
   };
 
   tmux-proj = pkgs.writeShellApplication {
     name = "tmux-proj";
-    runtimeInputs = [tmux-dev];
+    runtimeInputs = [tmux-dev fzf fd];
     text = ''
       set -euo pipefail
 
@@ -84,7 +92,8 @@
 
       path=$(fd -t d . "$DIR/" --max-depth 1 \
         | sort \
-        | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2) || exit 0
+        | fzf --tmux center,80%,60% --delimiter="$DIR/" --with-nth=2 \
+              --prompt "Projects: ") || exit 0
 
       [ -z "''${path:-}" ] && exit 0
 

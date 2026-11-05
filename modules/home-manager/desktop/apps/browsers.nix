@@ -44,9 +44,9 @@
             isDefault = true;
             search = {
               force = true;
-              default = "searxng";
-              privateDefault = "searxng";
-              order = ["searxng"];
+              default = "kagi";
+              privateDefault = "kagi";
+              order = ["kagi" "searxng"];
               engines.searxng = {
                 name = "SearXNG";
                 urls = [
@@ -78,6 +78,22 @@
                 ];
                 icon = "http://10.0.50.42:8888/static/themes/simple/img/favicon.png";
                 definedAliases = ["@sx"];
+              };
+              engines.kagi = {
+                name = "Kagi";
+                urls = [
+                  {
+                    template = "https://kagi.com/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+                icon = "https://kagi.com/favicon.ico";
+                definedAliases = ["@k"];
               };
             };
             settings = {
