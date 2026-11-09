@@ -381,6 +381,15 @@
         command = "wincmd =";
       }
       {
+        # autoread only reloads when checktime runs, which neovim does not do
+        # on its own for background changes (e.g. files edited by an agent
+        # while the buffer is idle). Hammer it on these frequent events so
+        # on-disk edits show up within a beat of returning to the buffer.
+        event = ["FocusGained" "BufEnter" "CursorHold" "CursorHoldI"];
+        pattern = ["*"];
+        command = "checktime";
+      }
+      {
         # checktime (CursorHold/FocusGained) detects files changed on disk and
         # autoread reloads them; this surfaces that as a visible notification
         # instead of a silent reload, so edits by e.g. an agent are noticed.
