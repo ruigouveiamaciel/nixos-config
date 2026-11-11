@@ -1,6 +1,7 @@
 {
   myModulesPath,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -20,6 +21,8 @@
     battery.powerButtonAction = lib.mkForce action;
     lowBattery.powerButtonAction = lib.mkForce action;
   };
+
+  home.packages = with pkgs; [zoom-us];
 
   home.stateVersion = "26.05";
 }
