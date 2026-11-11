@@ -9,7 +9,7 @@
   ];
 
   programs.fish.shellAbbrs = {
-    "root-diff" = "sudo zfs diff zroot/encrypted/root@blank | nvim";
+    "root-diff" = "sudo find / -xdev | nvim";
   };
 
   programs.plasma.powerdevil.AC.autoSuspend = {

@@ -10,7 +10,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_7_2;
+    kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "igc"];
     initrd.kernelModules = [];
     kernelModules = ["kvm-amd" "i2c-dev"];

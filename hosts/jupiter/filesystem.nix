@@ -1,7 +1,6 @@
 {
   inputs,
   myModulesPath,
-  config,
   ...
 }: {
   imports = [
@@ -9,17 +8,10 @@
     "${myModulesPath}/system/impermanence.nix"
   ];
 
-  boot = {
-    supportedFilesystems = ["zfs"];
-    zfs = {
-      devNodes = "/dev/disk/by-partlabel";
-      forceImportRoot = false;
-    };
-  };
-
-  services.zfs = {
-    autoScrub.enable = true;
-    trim.enable = true;
+  services.fstrim.enable = true;
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
   };
 
   disko.devices = {
@@ -40,12 +32,35 @@
               mountOptions = ["umask=0077"];
             };
           };
-          zfs = {
+          luks = {
             name = "nixos";
             size = "100%";
             content = {
-              type = "zfs";
-              pool = "zroot";
+              type = "luks";
+              name = "cryptroot";
+              settings = {
+                allowDiscards = true;
+              };
+              content = {
+                type = "btrfs";
+                extraArgs = ["-f"];
+
+                subvolumes = {
+                  "/root" = {
+                    mountpoint = "/";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                  "/root-blank" = {};
+                  "/nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                  "/persist" = {
+                    mountpoint = "/persist";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                };
+              };
             };
           };
           swap = {
@@ -59,66 +74,36 @@
         };
       };
     };
-    zpool.zroot = {
-      type = "zpool";
-      rootFsOptions = {
-        compression = "zstd";
-        mountpoint = "none";
-        "com.sum:auto-snapshot" = "false";
-        acltype = "posixacl";
-        atime = "off";
-        relatime = "on";
-        xattr = "sa";
-      };
-
-      datasets = {
-        encrypted = {
-          type = "zfs_fs";
-          options = {
-            mountpoint = "none";
-            encryption = "aes-256-gcm";
-            keyformat = "passphrase";
-            keylocation = "prompt";
-          };
-        };
-        "encrypted/root" = {
-          type = "zfs_fs";
-          options.mountpoint = "legacy";
-          mountpoint = "/";
-          postCreateHook = "zfs snapshot zroot/encrypted/root@blank";
-        };
-        "encrypted/nix" = {
-          type = "zfs_fs";
-          options.mountpoint = "legacy";
-          mountpoint = "/nix";
-        };
-        "encrypted/persist" = {
-          type = "zfs_fs";
-          options = {
-            mountpoint = "legacy";
-            "com.sun:auto-snapshot" = "true";
-          };
-          mountpoint = "/persist";
-        };
-      };
-    };
   };
-
   boot.initrd.systemd = {
     enable = true;
     services.rollback = {
       description = "Rollback root to an empty state";
       wantedBy = ["initrd.target"];
       after = [
-        "zfs-import-zroot.service"
         "initrd-root-device.target"
+        "cryptsetup.target"
       ];
       before = ["sysroot.mount"];
-      path = [config.boot.zfs.package];
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
       script = ''
-        zfs rollback -r zroot/encrypted/root@blank
+        set -e
+
+        mkdir -p /mnt
+        mount -t btrfs /dev/mapper/cryptroot /mnt
+
+        # Recursively delete all nested subvolumes inside /mnt/root
+        btrfs subvolume list -o /mnt/root |
+          cut -f9 -d' ' |
+          while read -r subvolume; do
+            btrfs subvolume delete "/mnt/$subvolume"
+          done
+
+        btrfs subvolume delete /mnt/root
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        umount /mnt
       '';
     };
   };
