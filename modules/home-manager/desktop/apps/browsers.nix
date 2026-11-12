@@ -15,6 +15,28 @@
           enable = true;
           configPath = ".librewolf";
           policies = {
+            ExtensionSettings = {
+              # Proton Pass
+              "78272b6fa58f4a1abaac99321d503a20@proton.me" = {
+                installation_mode = "force_installed";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/proton-pass/addon.xpi";
+              };
+              # uBlock Origin
+              "uBlock0@raymondhill.net" = {
+                installation_mode = "force_installed";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon.xpi";
+              };
+              # Bypass Paywalls Clean (unsigned, not on AMO; LibreWolf allows it)
+              "magnolia@12.34" = {
+                installation_mode = "force_installed";
+                install_url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi";
+              };
+              # SponsorBlock
+              "sponsorBlocker@ajay.app" = {
+                installation_mode = "force_installed";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/addon.xpi";
+              };
+            };
             HttpAllowlist = [
               "http://10.0.0.1" # OpenWrt
               "http://10.0.50.42:8096" # Jellyfin

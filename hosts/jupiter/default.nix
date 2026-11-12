@@ -32,6 +32,17 @@
   networking = {
     hostName = "jupiter";
     hostId = "397d7c75";
+
+    networkmanager.ensureProfiles.profiles."10-lan" = {
+      connection = {
+        id = "10-lan";
+        type = "ethernet";
+        interface-name = "eno1";
+      };
+      ethernet = { };
+      ipv4.method = "auto";
+      ipv6.method = "dhcp";
+    };
   };
 
   boot.initrd.systemd.network = {
