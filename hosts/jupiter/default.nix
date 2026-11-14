@@ -1,4 +1,8 @@
-{myModulesPath, ...}: {
+{
+  pkgs,
+  myModulesPath,
+  ...
+}: {
   imports = [
     ./filesystem.nix
     ./hardware-configuration.nix
@@ -33,15 +37,20 @@
     hostName = "jupiter";
     hostId = "397d7c75";
 
-    networkmanager.ensureProfiles.profiles."10-lan" = {
+    # DHCP config for the runtime desktop session only (NetworkManager).
+    # The initrd below keeps its own static IPv4 setup.
+    networkmanager.ensureProfiles.profiles."lan" = {
       connection = {
-        id = "10-lan";
+        id = "lan";
         type = "ethernet";
         interface-name = "eno1";
+        # Outrank any auto-created "Wired connection N" profile
+        autoconnect-priority = 100;
       };
       ethernet = { };
-      ipv4.method = "auto";
-      ipv6.method = "dhcp";
+      ipv4.method = "auto"; # DHCPv4 at runtime
+      ipv6.method = "auto";
+      ipv6.addr-gen-mode = "stable-privacy";
     };
   };
 
@@ -56,7 +65,7 @@
         }
       ];
       dns = ["10.0.0.1"];
-      networkConfig.IPv6AcceptRA = false;
+      networkConfig.IPv6AcceptRA = false; # IPv6 off in initrd, comes up with NM at runtime
       linkConfig.RequiredForOnline = "routable";
     };
 
@@ -64,6 +73,25 @@
   };
 
   systemd.network.wait-online.enable = false;
+
+  # The initrd's static config leaves eno1 "externally managed" when NM starts;
+  # NM then *assumes* it as an in-memory connection named "eno1" and never
+  # autoconnects the declarative profile over it. Activating "lan" explicitly
+  # replaces the assumed connection with our managed DHCP profile.
+  systemd.services.nm-takeover-lan = {
+    description = "Activate the declarative lan profile on eno1";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "NetworkManager.service"
+      "NetworkManager-ensure-profiles.service"
+    ];
+    path = [ pkgs.networkmanager ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.networkmanager}/bin/nmcli --wait 30 connection up lan";
+    };
+  };
 
   system.stateVersion = "25.05";
 }
