@@ -3,6 +3,7 @@
     mkScript = {
       name,
       action,
+      useSudo ? true,
     }:
       pkgs.writeShellApplication {
         inherit name;
@@ -23,10 +24,12 @@
           fi
 
           cd "$config_dir"
+
+          ${if useSudo then "sudo_cmd=(sudo)" else "sudo_cmd=()"}
           if [[ -t 0 && -t 1 ]]; then
-            sudo nixos-rebuild ${action} --log-format internal-json -v --flake ".#$host" 2>&1 | nom --json
+            "''${sudo_cmd[@]}" nixos-rebuild ${action} --log-format internal-json -v --flake ".#$host" 2>&1 | nom --json
           else
-            sudo nixos-rebuild ${action} --flake ".#$host" 2>&1 | tail -n 200
+            "''${sudo_cmd[@]}" nixos-rebuild ${action} --flake ".#$host" 2>&1 | tail -n 200
           fi
         '';
       };
@@ -34,6 +37,7 @@
     (mkScript {
       name = "build";
       action = "build";
+      useSudo = false;
     })
     (mkScript {
       name = "rebuild";

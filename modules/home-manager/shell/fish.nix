@@ -9,6 +9,7 @@
 in {
   config = lib.mkMerge ([
       {
+
         programs.fish = {
           enable = true;
           package = pkgs.fish;

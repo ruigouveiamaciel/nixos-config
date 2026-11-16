@@ -3,13 +3,31 @@
   lib,
   config,
   ...
-}: {
+}: let
+  notify = pkgs.writeShellApplication {
+    name = "notify";
+    runtimeInputs = [pkgs.kitty];
+    text = ''
+      if [[ -n "''${TMUX:-}" ]]; then
+        esc=$(kitten notify --only-print-escape-code "$@" | sed $'s/\x1b/\x1b\x1b/g')
+        printf '%sPtmux;%s%s' $'\033' "$esc" $'\033\\'
+      else
+        exec kitten notify "$@"
+      fi
+    '';
+  };
+in {
   # Required for custom fonts to be detected
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs; [
-    myPackages.iosevka-kitty
+  home.packages = [
+    notify
+    pkgs.myPackages.iosevka-kitty
   ];
+
+  home.file."kitty/ssh.conf".text = ''
+    share_connections no
+  '';
 
   programs.kitty = {
     enable = true;
