@@ -12,6 +12,9 @@
  * Features:
  *   /usage             Show rolling / weekly / monthly usage and reset times
  *   Footer status line Refreshes fresh after each turn, cached otherwise (2-minute TTL)
+ *   Notifications      Usage is shown as a notification whenever the agent
+ *                      settles (agent_end), and periodically afterwards whenever
+ *                      any window's percentage or status changes
  */
 
 import { readFile } from "node:fs/promises";
@@ -173,6 +176,7 @@ export default function (pi: ExtensionAPI) {
   let inFlight: Promise<UsageResponse> | null = null;
   let statusTimer: ReturnType<typeof setInterval> | null = null;
   let lastCtx: ExtensionContext | null = null;
+  let lastNotifiedKey: string | null = null;
 
   /** Fetch usage over the network. */
   async function fetchFromApi(): Promise<UsageResponse> {
@@ -250,12 +254,67 @@ export default function (pi: ExtensionAPI) {
     );
   }
 
-  /** Footer status: refreshed on session start and after each turn; forced fresh on agent_end. */
-  const updateStatus = async (ctx: ExtensionContext, force = false) => {
+  /** Multi-line usage summary, identical to what /usage shows. */
+  function usageNotificationText(usage: UsageResponse["usage"]): string {
+    return [
+      windowLine("rolling:", usage.rolling),
+      windowLine("weekly:", usage.weekly),
+      windowLine("monthly:", usage.monthly),
+    ].join("\n");
+  }
+
+  /** Compact key used to detect changes between periodic notifications. */
+  function usageKey(usage: UsageResponse["usage"]): string {
+    return [
+      usage.rolling.status,
+      usage.rolling.percent,
+      usage.weekly.status,
+      usage.weekly.percent,
+      usage.monthly.status,
+      usage.monthly.percent,
+    ].join("|");
+  }
+
+  /**
+   * Show usage as a notification, but only when it differs from the last
+   * one we notified about (unless force=true). Keeps periodic timers from
+   * spamming identical messages while still surfacing every real change.
+   */
+  const notifyUsage = (
+    ctx: ExtensionContext,
+    usage: UsageResponse["usage"],
+    force = false,
+  ) => {
+    const key = usageKey(usage);
+    if (!force && key === lastNotifiedKey) return;
+    lastNotifiedKey = key;
+    ctx.ui.notify(usageNotificationText(usage), "info");
+  };
+
+  /**
+   * Footer status: refreshed on session start and after each turn; forced
+   * fresh on agent_end.
+   *
+   * notifyMode controls the usage notification:
+   *   "auto"   — notify only when usage changed since the last notification
+   *   "always" — always notify (session start, agent settling)
+   *   "never"  — footer only
+   */
+  const updateStatus = async (
+    ctx: ExtensionContext,
+    force = false,
+    notifyMode: "auto" | "always" | "never" = "auto",
+  ) => {
     lastCtx = ctx;
     try {
       const usage = (await fetchUsage(force)).usage;
       ctx.ui.setStatus("usage", footerText(ctx, usage));
+      if (notifyMode === "always") {
+        notifyUsage(ctx, usage, true);
+      } else if (notifyMode === "auto") {
+        // Periodic notification: same data as /usage, only on change.
+        notifyUsage(ctx, usage);
+      }
     } catch {
       // no key or offline — leave the status slot empty rather than error spam
     }
@@ -274,14 +333,7 @@ export default function (pi: ExtensionAPI) {
     handler: async (_args, ctx) => {
       try {
         const usage = (await fetchUsage(true)).usage;
-        ctx.ui.notify(
-          [
-            windowLine("rolling:", usage.rolling),
-            windowLine("weekly:", usage.weekly),
-            windowLine("monthly:", usage.monthly),
-          ].join("\n"),
-          "info",
-        );
+        notifyUsage(ctx, usage, true);
       } catch (error) {
         ctx.ui.notify(`usage: ${toErrorMessage(error)}`, "error");
       }
@@ -289,7 +341,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("session_start", async (_event, ctx) => {
-    await updateStatus(ctx);
+    await updateStatus(ctx, true, "always");
 
     stopTimer();
     statusTimer = setInterval(() => {
@@ -298,8 +350,10 @@ export default function (pi: ExtensionAPI) {
     statusTimer.unref();
   });
 
+  // When the agent settles: refresh usage and always show a notification,
+  // even if nothing changed since the last one.
   pi.on("agent_end", async (_event, ctx) => {
-    await updateStatus(ctx, true);
+    await updateStatus(ctx, true, "always");
   });
 
   pi.on("session_shutdown", async () => {
