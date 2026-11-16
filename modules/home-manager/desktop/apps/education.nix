@@ -11,11 +11,21 @@
           packages = with pkgs; [
             xournalpp
             rnote
-            krita
+            qalculate-gtk
 
             # Software for my AMS classes
             camunda-modeler
           ];
+        };
+
+        programs.anki = {
+          enable = true;
+          reduceMotion = true;
+          profiles = {
+            smokewow = {
+              default = true;
+            };
+          };
         };
 
         dconf.settings."com/github/flxzt/rnote" = {
@@ -57,26 +67,16 @@
             mode = "0700";
           }
           {
-            directory = ".cache/krita";
-            mode = "0700";
-          }
-          {
-            directory = ".local/share/krita";
-            mode = "0700";
-          }
-          {
             directory = ".local/share/rnote";
             mode = "0700";
           }
-        ];
-        files = [
           {
-            file = ".config/kritadisplayrc";
-            parentDirectory.mode = "0700";
+            directory = ".cache/Anki";
+            mode = "0700";
           }
           {
-            file = ".config/kritarc";
-            parentDirectory.mode = "0700";
+            directory = ".local/share/Anki2";
+            mode = "0700";
           }
         ];
       };

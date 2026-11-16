@@ -1,15 +1,15 @@
 {
   imports = [
-    # ./discord.nix
     ./3d-printing.nix
     ./browsers.nix
-    ./kitty.nix
+    ./terminals.nix
     ./flameshot.nix
-    ./media.nix
+    ./audio-and-video.nix
+    ./graphics.nix
     ./bottles.nix
     ./education.nix
-    ./signal.nix
-    ./university.nix
-    ./anki.nix
+    ./messaging.nix
+    ./development.nix
+    ./office.nix
   ];
 }

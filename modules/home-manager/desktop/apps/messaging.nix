@@ -7,7 +7,8 @@
   config = lib.mkMerge ([
       {
         home.packages = with pkgs; [
-          vesktop
+          # vesktop
+          signal-desktop
         ];
       }
     ]
@@ -15,6 +16,10 @@
       home.persistence = {
         "/persist" = {
           directories = [
+            {
+              directory = ".config/Signal";
+              mode = "0700";
+            }
             {
               directory = ".config/vesktop";
               mode = "0700";

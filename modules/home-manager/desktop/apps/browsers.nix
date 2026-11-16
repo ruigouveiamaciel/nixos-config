@@ -94,6 +94,38 @@
                   icon = "https://kagi.com/favicon.ico";
                   definedAliases = ["@k"];
                 };
+                engines.nixos-packages = {
+                  name = "NixOS Packages";
+                  urls = [
+                    {
+                      template = "https://search.nixos.org/packages";
+                      params = [
+                        {
+                          name = "query";
+                          value = "{searchTerms}";
+                        }
+                      ];
+                    }
+                  ];
+                  icon = "https://search.nixos.org/favicon.ico";
+                  definedAliases = ["@pkgs"];
+                };
+                engines.nixos-options = {
+                  name = "NixOS Options";
+                  urls = [
+                    {
+                      template = "https://search.nixos.org/options";
+                      params = [
+                        {
+                          name = "query";
+                          value = "{searchTerms}";
+                        }
+                      ];
+                    }
+                  ];
+                  icon = "https://search.nixos.org/favicon.ico";
+                  definedAliases = ["@opts"];
+                };
               };
               settings = {
                 "privacy.sanitize.sanitizeOnShutdown" = true;
