@@ -121,6 +121,10 @@ in {
       set -as terminal-features ",xterm-kitty:RGB"
       set -as terminal-features ",tmux-256color:RGB"
 
+      # OSC 52: yanks in tmux copy to the local kitty clipboard,
+      # even when ssh'ing through the kitty ssh kitten
+      set -g set-clipboard on
+
       # Status bar
       set -g status-left-length 35
       set -g status-left "[#{=/30/…:session_name}]"
