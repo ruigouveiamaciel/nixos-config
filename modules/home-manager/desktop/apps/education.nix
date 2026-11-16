@@ -12,6 +12,9 @@
             xournalpp
             rnote
             krita
+
+            # Software for my AMS classes
+            camunda-modeler
           ];
         };
 

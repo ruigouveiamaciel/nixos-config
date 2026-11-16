@@ -7,7 +7,7 @@
     ./flameshot.nix
     ./media.nix
     ./bottles.nix
-    ./stylus.nix
+    ./education.nix
     ./signal.nix
     ./university.nix
     ./anki.nix
