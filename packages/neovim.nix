@@ -523,6 +523,7 @@
     lsp = {
       enable = true;
       formatOnSave = true;
+      mappings.toggleFormatOnSave = "<leader>tf";
       otter-nvim.enable = true;
       presets.tailwindcss-language-server.enable = true;
     };
@@ -563,12 +564,6 @@
     formatter = {
       conform-nvim = {
         enable = true;
-        setupOpts = {
-          format_on_save = {
-            lsp_format = "fallback";
-            timeout_ms = 1000;
-          };
-        };
       };
     };
 
