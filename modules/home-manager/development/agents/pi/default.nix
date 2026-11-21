@@ -6,6 +6,7 @@
   ...
 }: let
   jq = lib.getExe pkgs.jq;
+  rsync = lib.getExe pkgs.rsync;
 in {
   config = lib.mkMerge ([
       {
@@ -24,9 +25,12 @@ in {
         # re-applied on every home-manager activation.
         home.activation.copyPiAgentFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
           mkdir -p "$HOME/.pi/agent/extensions" "$HOME/.pi/agent/utils" "$HOME/.pi/agent/prompts"
-          cp -r --no-preserve=mode "${./extensions}/." "$HOME/.pi/agent/extensions/"
-          cp -r --no-preserve=mode "${./utils}/." "$HOME/.pi/agent/utils/"
-          cp -r --no-preserve=mode "${./prompts}/." "$HOME/.pi/agent/prompts/"
+          ${rsync} -r --delete --checksum --no-perms --no-owner --no-group \
+            "${./extensions}/" "$HOME/.pi/agent/extensions/"
+          ${rsync} -r --delete --checksum --no-perms --no-owner --no-group \
+            "${./utils}/" "$HOME/.pi/agent/utils/"
+          ${rsync} -r --delete --checksum --no-perms --no-owner --no-group \
+            "${./prompts}/" "$HOME/.pi/agent/prompts/"
           chmod -R u+w "$HOME/.pi/agent/extensions" "$HOME/.pi/agent/utils" "$HOME/.pi/agent/prompts"
           install -m 644 "${./mcp.json}" "$HOME/.pi/agent/mcp.json"
 
