@@ -39,6 +39,12 @@
                   install_url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi";
                   private_browsing = true;
                 };
+                # YouTube Anti Translate
+                "{458160b9-32eb-4f4c-87d1-89ad3bdeb9dc}" = {
+                  installation_mode = "force_installed";
+                  install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-anti-translate/addon.xpi";
+                  private_browsing = true;
+                };
                 # SponsorBlock
                 "sponsorBlocker@ajay.app" = {
                   installation_mode = "force_installed";
