@@ -1,6 +1,7 @@
 {
   myModulesPath,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -16,6 +17,8 @@
     action = lib.mkForce "nothing";
     idleTimeout = lib.mkForce null;
   };
+
+  home.packages = [pkgs.zoom-us];
 
   home.stateVersion = "24.11";
 }
