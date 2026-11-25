@@ -1,11 +1,16 @@
 {
   lib,
   options,
+  pkgs,
   ...
 }: {
   config = lib.mkMerge (
     [
       {
+        environment.systemPackages = with pkgs; [
+          pulseaudio
+        ];
+
         services.pipewire = {
           enable = true;
           alsa = {
