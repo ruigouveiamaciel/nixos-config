@@ -18,7 +18,12 @@
     idleTimeout = lib.mkForce null;
   };
 
-  home.packages = [pkgs.zoom-us];
+  home.packages = [
+    pkgs.zoom-us
+
+    (pkgs.writeShellScriptBin "simultaneous-output"
+      (builtins.readFile ./simultaneous-output.sh))
+  ];
 
   home.stateVersion = "24.11";
 }
